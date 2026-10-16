@@ -2,9 +2,18 @@
 
 Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-titulo-corto.md` en esta carpeta. El proceso completo está en [`docs/README.md`](../README.md).
 
+## Estado actual
+
+Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trabajo.
+
+- **Última sesión (2026-10-16):** entrevista de requerimientos terminada y diseño v0.2 cerrado (tag `diseno-v0.2`). Se definió la forma de trabajo (`docs/README.md`) y se decidió quedarse en Phaser 3.90.
+- **Fase:** planeación, de requerimientos a hitos y tareas.
+- **Siguiente paso:** definir los hitos y crear las primeras tareas. Propuesta inicial: una prueba técnica de controles en el iPhone y una investigación de minijuegos (WarioWare / Mario Party).
+- **Pendiente de decidir:** cómo cortar el primer hito.
+
 ## Tablero
 
-Sin tareas todavía. Se crearán cuando el diseño v0.2 esté aprobado.
+Sin tareas todavía.
 
 <!-- Formato del tablero: una tabla por hito.
 

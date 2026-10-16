@@ -41,9 +41,9 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 
 ## Sesiones con Claude
 
-- **Al empezar:** preguntar "¿qué sigue?". Claude lee el tablero y propone la siguiente tarea.
+- **Al empezar:** preguntar "¿qué sigue?". Claude lee el "Estado actual" y el tablero (`tareas/README.md`) y propone la siguiente tarea.
 - **Durante:** una tarea `en-progreso` a la vez. Decisiones y bloqueos van a la bitácora de la tarea.
-- **Al terminar:** Claude actualiza el estado de la tarea, su bitácora y el tablero.
+- **Al terminar:** Claude actualiza el estado de la tarea, su bitácora, el tablero y el "Estado actual".
 
 ## Definición de "hecho"
 

@@ -1,66 +1,27 @@
 # Cambios del diseño
 
-Cada versión del diseño, con qué cambió y por qué. El diseño vigente siempre está en esta carpeta; las versiones viejas se consultan con el tag de git `diseno-vX.Y`.
+Cada versión del diseño, con qué cambió y por qué. El diseño vigente siempre está en esta carpeta; las versiones viejas se consultan con el tag de git `diseno-vX.Y` (por ejemplo, `git show diseno-v0.2:docs/diseno/reglas.md`).
 
-## v0.2 (en curso)
+## v0.2 (2026-10-16)
 
-Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a los demás documentos de `diseno/`; se aplicará al aprobar la versión.
+Surge de una entrevista de requerimientos. La v0.1 tenía las reglas básicas, pero los minijuegos, que son el centro del juego, estaban vacíos.
 
-### Propósito
-
-- El juego es un proyecto para aprender a hacer videojuegos y, a la vez, un regalo para **Mi vo**.
-- El objetivo de aprendizaje es el ciclo completo de desarrollo desde todos los roles: product owner, manager y desarrollador. Los agentes de IA escriben el código; nosotros lo dirigimos y lo revisamos.
-- La v1 no tiene fecha: se entrega cuando esté lista.
-- Mi vo juega de forma casual: puede haber reto, pero las reglas deben entenderse rápido.
-
-### Decisiones
-
-- **Protagonista:** Mi vo en versión caricatura. Su diseño lo genera una IA por fuera del proyecto.
-- **Vecinos:** personas cualquiera con disfraces, no gente real.
-- **Partida:** dura de 10 a 15 minutos. Cada minijuego dura de 45 a 90 segundos.
-- **Variedad:** cada partida es distinta, porque los minijuegos y la dificultad se sortean en cada casa.
-- **Calle:** tiene 8 casas y cada una se visita una sola vez.
-- **Dificultad y recompensa:** cada casa muestra cuántos dulces da, y eso indica su dificultad: fácil da 1, media 2 y difícil 3. Mi vo elige a qué casa ir.
-- **Victoria:** juntar 10 dulces. No hay redondeo: con 9½ todavía no se gana.
-- **Derrota:** 3 sustos, o quedarse sin casas antes de juntar 10 dulces. La calle siempre se genera con dulces suficientes para poder ganar.
-- **Minijuegos:** cada uno tiene 3 dificultades (fácil, media, difícil) y define cómo se gana o se pierde. En una partida pueden repetirse con otra dificultad. Las referencias son WarioWare y Mario Party, y a futuro pueden crecer hacia mini misiones.
-
-  **La lista es tentativa:** son candidatos, no compromisos. Antes de diseñar o programar cada minijuego hay una tarea de diseño que lo define bien, y en esa etapa se elige cuáles entran en la v1.
-
-  | Tipo | Minijuego | Cómo se juega | Ganar / perder | Qué sube con la dificultad |
-  |---|---|---|---|---|
-  | Reflejos | Lluvia de dulces | Mover la bolsa con el dedo para atrapar dulces que caen, esquivando arañas | Gana con N dulces antes de que acabe el tiempo; pierde con 3 arañas | Velocidad, cantidad de arañas, N |
-  | Memoria | Calderos de la bruja | Repetir la secuencia en que burbujean los calderos (tipo Simon) | Gana al completar X rondas; pierde con 2 errores | Cantidad de calderos (3/4/5), largo de la secuencia, velocidad |
-  | Puzzle | Enciende las calabazas | Girar piezas de enredadera para llevar la luz de la linterna a todas las calabazas (tipo Pipe Mania) | Gana si todas encienden antes de que acabe el tiempo | Tablero de 4×4, 5×5 o 6×6 |
-  | Puzzle | Dulces en línea | Match-3 simplificado (tipo Candy Crush): intercambiar dulces vecinos y romper 3 o más iguales | Gana al romper N del dulce pedido antes de que acabe el tiempo | Tipos de dulce (4/5/6) y N |
-  | Plataformas | Carrera por los techos | Correr y saltar por techos esquivando obstáculos que se mueven (tipo Fall Guys en 2D) | Gana si llega a la meta antes de que acabe el tiempo; si cae, vuelve al último punto de control | Largo del recorrido, obstáculos, tiempo |
-  | Ritmo | Baile de esqueletos | Tocar las flechas al ritmo de la música en 3 carriles (tipo Guitar Hero simplificado) | Gana con 70% o más de aciertos | Tempo y densidad de notas |
-  | Puntería | Defiende la casa | Unos niños vandalizan la casa del vecino lanzándole huevos; Mi vo los derriba lanzándoles proyectiles (mini shooter) | Gana si resiste hasta que acabe el tiempo; pierde si la casa queda demasiado sucia y el vecino la manda a volar | Cantidad y velocidad de los niños, tamaño del medidor de suciedad |
-
-- **Disfraces (provisional, se definen después):** uno por **tipo** de reto, no por minijuego. Así, un minijuego nuevo hereda el disfraz de su tipo. Todos están disponibles desde el inicio. Falta el disfraz del tipo Puntería.
-
-  | Disfraz | Tipo | Ventaja |
-  |---|---|---|
-  | Gata negra | Reflejos | Todo cae un 20% más lento |
-  | Bruja | Memoria | La bola de cristal repite la secuencia una vez por minijuego |
-  | Vampira | Puzzle | Visión nocturna, que da una pista: en Calabazas brillan las piezas bien puestas; en Dulces en línea brilla una jugada posible |
-  | Fantasma | Plataformas | Levita brevemente al caer, lo que le da tiempo para corregir el salto |
-  | Esqueleto | Ritmo | Margen de acierto más amplio |
-- **Exploración (en v1):** hay dulces escondidos en la calle que dan ½ dulce. Para alcanzarlos hay que hacer acciones: romper objetos (un auto), trepar árboles o subir a techos. Para trepar, un botón engancha los brazos y el movimiento sube o baja a Mi vo.
-- **Vista:** lateral con scroll horizontal y fondo en capas con parallax (cielo, casas lejanas, calle). Se descartó la vista desde arriba (tipo Zelda o Pokémon) porque saltar, trepar y la carrera por los techos necesitan gravedad, y porque obligaría a animar 4 direcciones por cada disfraz.
-- **Controles en la calle:** joystick a la izquierda para moverse y para subir o bajar al trepar. A la derecha, dos botones: **Saltar** y **Brazos**. Brazos depende de dónde esté Mi vo: se engancha a un árbol, golpea un objeto o toca una puerta. Dentro de los minijuegos, cada uno usa toques directos en la pantalla.
-- **Final:** al ganar, una celebración simple y la opción de jugar otra vez.
-- **Privacidad:** no hay problema con que el repo sea público.
-
-### Por definir
-
-
-### Riesgos detectados
-
-- **Ritmo en iPhone:** la latencia del audio web puede desincronizar la música y los toques. Validarlo pronto. Además, la música debe ser libre de derechos o propia.
-- **Saltar con botones táctiles:** hay que validar que se sienta bien (prueba técnica del primer hito).
-- **Alcance:** hay 7 candidatos con 3 dificultades cada uno, es decir, 21 variantes si entraran todos. Al definir los minijuegos se elige cuáles entran en la v1, y los demás se mueven a v1.1.
-- El nombre del juego.
+| Cambio | Por qué |
+|---|---|
+| Se define el propósito: regalo para Mi vo y proyecto para aprender el ciclo completo desde todos los roles | Sin propósito claro no se puede priorizar |
+| La protagonista pasa a ser **Mi vo** en caricatura | Es lo que hace personal el regalo |
+| Los vecinos son personas cualquiera con disfraces | No hace falta referenciar gente real |
+| La victoria pasa de 5 dulces a **10**, y cada casa da 1, 2 o 3 según la dificultad, que se ve antes de tocar | Elegir casa se vuelve una decisión con riesgo y recompensa |
+| La calle queda fija en **8 casas**, con una nueva derrota: quedarse sin casas | La cantidad estaba sin definir; la nueva derrota hace que elegir casas importe |
+| La dificultad se sortea en cada casa, sin progresión | Cada partida es distinta |
+| La exploración se vuelve una mecánica: dulces escondidos de ½ que se alcanzan rompiendo, trepando o saltando | Le da sentido a curiosear por el vecindario y una forma de recuperarse |
+| La partida dura 10–15 min y cada minijuego 45–90 s | 20–40 s se sentía muy poco |
+| Hay **7 candidatos a minijuego** de 6 tipos (tentativos), con referencia en WarioWare y Mario Party | Llenar el hueco central del diseño; la lista final se elige al definir cada uno |
+| Los disfraces dan ventaja por **tipo** de reto (provisional) | Prepara la librería de minijuegos: uno nuevo hereda el disfraz de su tipo |
+| Se fija la vista lateral con parallax | Saltar y trepar necesitan gravedad; la vista desde arriba exigiría animar 4 direcciones por disfraz |
+| Controles: joystick + Saltar + Brazos (contextual) | Pocos botones para una jugadora casual en el celular |
+| El final al ganar es una celebración simple | Se prefirió algo sencillo a un mensaje personal |
+| Se descarta el laberinto del jardín | Poco emocionante (pasa a `ideas.md`) |
 
 ## v0.1
 

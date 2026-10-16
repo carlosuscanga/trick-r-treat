@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Juego web móvil de Halloween (Phaser + TypeScript + Vite). Es un regalo para **Mi vo**, que es la protagonista: refiérete a ella siempre así. Mi vo, disfrazada, toca puertas: cada vecino le pone un minijuego; si gana, recibe dulces, y si pierde, un susto. El diseño completo está en `docs/diseno/`. La v0.2 está en curso en `docs/diseno/CAMBIOS.md`, y donde contradiga a los demás docs, manda ella.
+Juego web móvil de Halloween (Phaser + TypeScript + Vite). Es un regalo para **Mi vo**, que es la protagonista: refiérete a ella siempre así. Mi vo, disfrazada, recorre una calle de 8 casas en vista lateral: cada vecino le pone un minijuego; si gana, recibe dulces, y si pierde, un susto. El diseño vigente (v0.2) está en `docs/diseno/`.
 
 ## Comandos
 
@@ -20,11 +20,13 @@ No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
 
 ## Arquitectura
 
-- **`GameState`**: módulo singleton con el estado global: disfraz elegido, dulces (0/5), sustos (0/3), casas visitadas e inventario.
+- **`GameState`**: módulo singleton con el estado global: disfraz elegido, dulces (0 a 10, en pasos de ½; nunca redondear), sustos (0/3), casas visitadas e inventario.
 - **Data-driven**: vecinos, ítems y disfraces se definen en JSON, no en código.
-- **Minijuegos desacoplados**: cada minijuego es su propia escena de Phaser. La escena Puerta lanza la escena del minijuego del vecino y espera el evento `finished(won: boolean)`. El juego principal no conoce el minijuego; solo recibe el resultado.
+- **Minijuegos desacoplados**: cada minijuego es su propia escena de Phaser. Recibe la dificultad (`facil | media | dificil`) y si el disfraz da ventaja, y emite `finished(won: boolean)`. La escena Puerta lanza el minijuego del vecino y espera ese evento; el juego principal no conoce el minijuego, solo el resultado.
+- **Catálogo de minijuegos**: los minijuegos se registran en un catálogo con su `tipo` de reto. El disfraz se asocia al tipo, no al minijuego, así que agregar un minijuego es registrarlo y nada más. Esto prepara la librería de minijuegos a futuro.
 - **Escenas**: Menú, SelectorDisfraz, Calle, Puerta, (una escena por minijuego), Resultado y FinJuego.
-- **Animación cutout**: la niña está hecha de piezas (cabeza, torso, brazos y piernas) dentro de un `Container`, animadas con tweens. Un disfraz solo cambia las texturas de las piezas, no la animación.
+- **Calle**: vista lateral con parallax y físicas Arcade (saltar, trepar, romper objetos). Controles táctiles: joystick a la izquierda, y botones Saltar y Brazos a la derecha.
+- **Animación cutout**: Mi vo está hecha de piezas (cabeza, torso, brazos y piernas) dentro de un `Container`, animadas con tweens. Un disfraz solo cambia las texturas de las piezas, no la animación.
 - `src/main.ts` hoy solo tiene la escena temporal `SmokeTest`, que se reemplazará.
 
 ## Restricciones de plataforma
@@ -44,7 +46,8 @@ El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está
 
 Reglas:
 
-- Al empezar una sesión sin instrucción concreta, leer el tablero y proponer la siguiente tarea.
+- Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md`. Sin instrucción concreta, proponer la siguiente tarea.
+- Al cerrar una sesión (o cuando yo lo pida), actualizar "Estado actual": qué se hizo, qué sigue y qué está pendiente de decidir.
 - Una rama por tarea (`T-005-calle-con-puertas`). `main` siempre es jugable.
 - Antes de empezar, marcar la tarea como `en-progreso`. Al terminar, marcar los criterios de aceptación y pasarla a `hecha`.
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
