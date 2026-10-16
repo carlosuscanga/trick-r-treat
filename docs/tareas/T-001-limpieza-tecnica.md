@@ -3,7 +3,7 @@ id: T-001
 titulo: Limpieza técnica del entorno
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: []
 plan: null
@@ -28,7 +28,7 @@ Es deuda anotada desde el diseño v0.2. Conviene arrancar el código sobre una b
 - [x] `npm install` y `npm run build` pasan sin errores.
 - [x] `package.json` sin `main` ni `test`, y con `description`.
 - [x] `.gitignore` solo con lo que aplica al proyecto y sigue ignorando `.local/`.
-- [ ] La rama `docs/estructura-trabajo` ya no existe.
+- [x] La rama `docs/estructura-trabajo` ya no existe.
 - [x] `CLAUDE.md` ya no menciona el inventario en `GameState` ni los ítems en JSON.
 - [x] El plugin `typescript-lsp` funciona con el proyecto instalado: marca un error de tipos de Phaser en `src/`.
 
@@ -41,3 +41,4 @@ Es deuda anotada desde el diseño v0.2. Conviene arrancar el código sobre una b
   - **Node:** `npm run build` fallaba en la base limpia con "Cannot find native binding" (`@rolldown/binding-darwin-arm64`). La causa es que Vite 8 y rolldown piden Node `^20.19.0 || >=22.12.0`, el Node por defecto de la máquina era 20.18.1 y npm omite en silencio las dependencias opcionales que no cumplen `engines`. Decisión del product owner: fijar Node 24 con `.nvmrc` y `engines` en `package.json`, usando nvm por proyecto sin cambiar el Node por defecto de la máquina. El lockfile se regeneró con npm 11 (solo quita campos `libc`). Se documentó en `CLAUDE.md` y en el paso 3 de `docs/README.md`.
   - **Borrar ramas:** el hook `dcg` bloquea que el agente borre ramas, incluso con `git branch -d`. El product owner borra `docs/estructura-trabajo` a mano. Se anotó en el paso 6 de `docs/README.md`.
 - 2026-10-16: LSP verificado. `typescript-language-server` usa el `tsserver` global de TypeScript 6.0.3, no el TypeScript 7 de `node_modules`. Con un archivo temporal en `src/`, marcó `Type 'string' is not assignable to type 'number'` en `new Phaser.Game({ type: 'AUTO' })` y `Expected 3-4 arguments, but got 2` en `scene.add.sprite(0, 0)`. Ojo: justo después de instalar, el primer hover devolvió `any` mientras el servidor cargaba el proyecto. Al reintentar, ya resolvió los tipos.
+- 2026-10-16: PR #1 mergeado sin squash (`874919c`). GitHub no deja aprobar un PR propio, así que la aprobación fue el visto bueno del product owner en la sesión. Se borraron el worktree y la rama remota, y el product owner borró las ramas locales `docs/estructura-trabajo` y `T-001-limpieza-tecnica`. El repo ahora borra solo la rama remota al hacer merge (`delete_branch_on_merge`).

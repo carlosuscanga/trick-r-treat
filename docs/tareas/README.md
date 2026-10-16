@@ -6,15 +6,14 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trabajo.
 
-- **Última sesión (2026-10-16):** planeación de la v1 terminada.
-  - Hay 5 hitos (H1 a H5) y 29 tareas (T-001 a T-029). Las decisiones y su porqué están abajo, en "Planeación de la v1".
-  - Se definió el trabajo en paralelo: un worktree por tarea en `.claude/worktrees/`, entrada a `main` por PR y estados del tablero solo en `main` (`docs/README.md`, "Trabajo en paralelo"). No hay límite fijo de tareas abiertas.
-  - Se instaló el plugin `typescript-lsp` a nivel proyecto (`.claude/settings.json`), con `typescript-language-server` 5.3.0 y `typescript@6.0.3` globales, porque TypeScript 7 no trae `tsserver`. Se activa al reiniciar Claude Code.
-  - `CLAUDE.md` ahora pide abrir Plannotator para pedir retroalimentación: `annotate` para documentos nuevos y `review` (el diff, antes del commit) para cambios.
-- **Fase:** H1 · Esqueleto en el iPhone. Todavía no hay código nuevo y `main` aún no se publica en Pages (eso es T-002).
-- **Siguiente paso:** T-001 (limpieza técnica), que abre la ruta crítica. Es la **primera tarea con el flujo de worktree y PR**: seguir los 6 pasos de `docs/README.md` y, si algo del flujo no funciona en la práctica, ajustar la documentación. En paralelo se pueden arrancar T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
-- **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida.
-- **Pendiente técnico:** en T-001, verificar que el LSP funciona con el TypeScript 7 de `node_modules` (es un criterio de aceptación).
+- **Última sesión (2026-10-16):** T-001 hecha (PR #1). Fue la primera tarea con el flujo de worktree y PR, y el flujo quedó probado.
+  - Node 24 queda fijado con `.nvmrc` y `engines`, porque Vite 8 no corre con Node anterior a 20.19. Hay que correr `nvm use` antes de npm (el Node por defecto de la máquina sigue en 20.18.1).
+  - `docs/README.md` se ajustó a lo visto en la práctica: renombrar la rama `worktree-…` que crea la herramienta nativa, correr `nvm use`, y el borrado de ramas locales lo hace el product owner (por el hook `dcg`). GitHub ya borra la rama remota sola al hacer merge.
+  - LSP verificado: usa el `tsserver` global de TypeScript 6.0.3 y marca errores de tipos de Phaser.
+  - GitHub no deja aprobar un PR propio. La aprobación es el visto bueno del product owner, y el merge sigue siendo sin squash.
+- **Fase:** H1 · Esqueleto en el iPhone. `main` todavía no se publica en Pages (eso es T-002).
+- **Siguiente paso:** T-003 (pantalla base, ruta crítica). En paralelo ya se pueden hacer T-002 (Pages) y T-006 (GameState). Siguen disponibles T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
+- **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. Si se automatiza el cierre de tareas después del merge (hook o GitHub Action).
 
 ## Planeación de la v1
 
@@ -52,7 +51,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
-| [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | en-progreso | alta | — | — |
+| [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | pendiente | alta | T-001 | — |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | pendiente | alta | T-001 | — |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
