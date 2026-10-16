@@ -60,6 +60,7 @@ Reglas:
 - Una rama y un worktree por tarea (`T-007-flujo-de-escenas`), creados con la herramienta nativa de worktrees en `.claude/worktrees/`. Entra a `main` por pull request. `main` siempre es jugable. Proceso completo en `docs/README.md`, "Trabajo en paralelo".
 - Antes de crear el worktree, marcar la tarea como `en-progreso` **en `main`** (commit y push). En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
 - El tablero y el "Estado actual" solo se editan en `main`, nunca en las ramas de tarea.
+- Todo plan de código incluye su sección "Pruebas": tests automáticos para la lógica y pasos de prueba manual para lo visual y lo táctil. Los tests entran en el mismo PR que el código. Detalle en `docs/planes/README.md`.
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
 - Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/` y `CAMBIOS.md`.
 
