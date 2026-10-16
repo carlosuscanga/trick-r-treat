@@ -109,7 +109,7 @@ export type TipoSusto = 'salta' | 'tiembla' | 'se-agranda';
 
 `TipoReto` y `Dificultad` los va a reutilizar el catálogo de minijuegos (T-009).
 
-Desvío al implementar: `tipos.ts` quedó **solo con tipos** (nada que exista al ejecutar). `DULCES_POR_DIFICULTAD` y las listas de valores válidos para el validador se movieron a `src/datos/index.ts`. Así, para Node, todo lo de `tipos.ts` es `import type` y se borra al ejecutar, y el script de verificación funciona sin cambiar `tsconfig.json` (ver "Verificación"). Las listas válidas son `Record<TipoReto, true>`: si alguien agrega un tipo y olvida la lista, `tsc` falla.
+Desvío al implementar: `tipos.ts` quedó **solo con tipos** (nada que exista al ejecutar). `DULCES_POR_DIFICULTAD` y las listas de valores válidos para el validador se movieron a `src/datos/index.ts`. Así, para Node, todo lo de `tipos.ts` es `import type` y se borra al ejecutar, y el script de verificación funciona sin cambiar `tsconfig.json` (ver "Verificación"). Con Vitest esa restricción ya no hace falta, pero la separación se queda: los tipos en un archivo y los valores en otro. Las listas válidas son `Record<TipoReto, true>`: si alguien agrega un tipo y olvida la lista, `tsc` falla.
 
 **`src/datos/disfraces.json`**: los 5 disfraces definidos en `personajes.md`. El de puntería sigue "por definir", así que no entra hasta que el diseño lo defina.
 
@@ -152,29 +152,31 @@ En backend sería la diferencia entre un archivo de configuración dentro del `.
 
 ## Verificación
 
-No hay tests en el proyecto. Propuesta sin dependencias nuevas:
+**Cambio de rumbo (2026-10-16): tests con Vitest.** La primera versión de este plan usaba un script casero (`scripts/verificar-estado.ts`, con `node:assert`). Al revisarlo, Carlos notó que el CI solo compilaba y no corría ese script, y decidió dos cosas: meter tests de verdad en esta misma tarea, y que **todo lleve tests** de aquí en adelante.
 
-- Un script `scripts/verificar-estado.ts` que usa `node:assert` (incluido en Node) y se corre con `node scripts/verificar-estado.ts`. Node 24 ejecuta TypeScript directo.
-- Para que funcione, el código de `src/` evita lo que Node no sabe leer: `enum`, y los imports entre archivos de `src/` en tiempo de ejecución (los `import type` sí se permiten, porque se borran al ejecutar). Por eso `GameState` no importa nada en tiempo de ejecución.
-- El editor marca `Cannot find name 'node:assert/strict'` en el script porque `scripts/` está fuera de `tsconfig.json` y no está instalado `@types/node`. Es solo visual: no afecta al build ni a la ejecución. Quitarlo requiere esa dependencia, así que queda a decisión de Carlos.
-- No es un framework de pruebas: es un script que falla con un error si algo no cumple.
+- **Vitest 5.0.3** como dependencia de desarrollo (versión exacta, compatible con Vite 8, con dos semanas de uso al elegirla). Es el framework de tests estándar para proyectos con Vite, el equivalente a JUnit. No llega al juego publicado.
+- `npm test` (`vitest run`) corre todos los `*.test.ts`. Los tests van al lado de su archivo: `src/estado/GameState.test.ts` y `src/datos/datos.test.ts`.
+- El CI corre `npm test` antes de `npm run build`. Si un test falla, el PR sale en rojo y `main` no se publica.
+- Se descartó `node:test` (el runner que trae Node, sin dependencias) porque obliga a que los archivos de `src/` no se importen entre sí al ejecutarse, y eso choca con T-008. Vitest lee el código igual que Vite, sin esa restricción. El código de esta tarea igual quedó compatible con ella, porque se escribió antes del cambio.
+- Se quitó el script casero; sus comprobaciones pasaron a los tests. Con eso desaparece el aviso del editor sobre `node:assert`, y ya no hace falta decidir lo de `@types/node`.
+- Regla nueva en `CLAUDE.md` y en la "Definición de hecho" de `docs/README.md`: la lógica va en módulos sin Phaser y con test; las escenas y lo visual se prueban en el navegador y en el celular.
+- Comprobación de que los tests sirven: se rompió a propósito la regla (`haGanado` con 19 medios) y falló el test "9½ no gana". Después se regresó.
 
-Decidido (2026-10-16): el script se commitea en `scripts/`, como base de pruebas a futuro (T-007 y T-011 lo pueden volver a correr). No pesa en el juego porque no está en `src/` y Vite no lo incluye. No se toca `package.json`, así que no habrá `npm test`.
-
-| Criterio | Cómo se verifica |
+| Criterio | Test que lo cubre |
 |---|---|
-| Los dulces suman en pasos de ½ y nunca se redondean (9½ no gana) | Script: 4 casas de 2 + 3 medios dulces = 9½ → `haGanado()` es `false` y `dulces` es `9.5`. Un medio más → `true`. Y 9 + casa de 3 → `dulces` es `10`, no `12`. |
-| Los sustos van de 0 a 3 | Script: 4 sustos → `sustos` es `3`; con 3, `haPerdido()` es `true`. |
-| Disfraces y vecinos se cargan desde JSON | Script: `DISFRACES` tiene 5 y `VECINOS` 8, con sus tipos válidos. Además, un JSON de prueba con un `tipo` inválido hace que el validador lance un error. Y `npm run build` pasa (Vite empaqueta los JSON). |
-| El estado se reinicia al empezar otra partida | Script: jugar una partida, `nuevaPartida()`, y todo vuelve a 0, sin disfraz ni casas visitadas. |
+| Los dulces suman en pasos de ½ y nunca se redondean (9½ no gana) | `dulces › suman en pasos de ½ y 9½ no gana`: 4 casas de 2 + 3 medios dulces = 9½ → `haGanado()` es `false`; un medio más → `true`. `dulces › no pasan de 10`: 9 + casa de 3 → `10`, no `12`. |
+| Los sustos van de 0 a 3 | `sustos › van de 0 a 3 y con 3 se pierde`: con 4 sustos, `sustos` es `3`; con 3, `haPerdido()` es `true`. |
+| Disfraces y vecinos se cargan desde JSON | `datos desde JSON › carga los disfraces y los vecinos`: 5 y 8, con sus tipos. `validarDisfraces` y `validarVecinos`: rechazan una lista inválida, un tipo o susto desconocido, textos vacíos, ids repetidos y una cantidad de vecinos distinta de 8. |
+| El estado se reinicia al empezar otra partida | `nuevaPartida › reinicia todo`: después de jugar, todo vuelve a 0, sin disfraz ni casas visitadas. |
 
 ## Archivos
 
 - Crear: `src/datos/tipos.ts`, `src/datos/disfraces.json`, `src/datos/vecinos.json`, `src/datos/index.ts` (carga y validación)
 - Crear: `src/estado/GameState.ts`
-- Crear: `scripts/verificar-estado.ts`
+- Crear: `src/estado/GameState.test.ts`, `src/datos/datos.test.ts`
+- Modificar: `package.json` y `package-lock.json` (Vitest y `npm test`), `.github/workflows/deploy.yml` (paso de tests), `CLAUDE.md` (línea de tests), `docs/README.md` ("Definición de hecho"). El orquestador asignó estos archivos a T-006 al cambiar el alcance.
 - Modificar: `docs/tareas/T-006-gamestate-y-datos.md` (campo `plan:`, criterios y bitácora)
-- No se toca: `tsconfig.json`, `src/main.ts` ni nada de T-002 o T-003.
+- No se toca: `tsconfig.json`, `src/main.ts` ni nada de T-003.
 
 ## Pasos
 
@@ -186,8 +188,10 @@ Cada paso es un commit `T-006: …`.
    - Verificar: `npm run build` pasa; el script carga los datos y rechaza un JSON inválido.
 3. `GameState`.
    - Verificar: `npm run build` pasa; el script cubre los 4 criterios.
-4. Script de verificación en `scripts/`.
-5. Cierre: marcar criterios, llenar la bitácora, push y PR `T-006: GameState y datos en JSON`.
+4. Script de verificación en `scripts/` (después reemplazado por el paso 5).
+5. Vitest: dependencia, `npm test`, tests, paso en el CI y reglas en los docs.
+   - Verificar: `npm test` y `npm run build` pasan; el CI del PR corre los tests en verde.
+6. Cierre: marcar criterios, llenar la bitácora, push y PR `T-006: GameState y datos en JSON`.
 
 Nota: como nada de esto se conecta todavía a `main.ts`, Vite lo descarta del build (no lo usa nadie). `npm run build` sí revisa sus tipos con `tsc`. Para no esperar a T-007, se hizo un build aparte con Vite de solo `src/datos/index.ts` (salida fuera del repo): empaqueta los JSON y carga 5 disfraces y 8 vecinos.
 
