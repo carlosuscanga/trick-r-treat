@@ -10,6 +10,7 @@ Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trab
 - **Fase:** planeación, de requerimientos a hitos y tareas.
 - **Siguiente paso:** definir los hitos y crear las primeras tareas. Propuesta inicial: una prueba técnica de controles en el iPhone y una investigación de minijuegos (WarioWare / Mario Party).
 - **Pendiente de decidir:** cómo cortar el primer hito.
+- **Pendiente técnico para la primera tarea de código (entorno local):** `npm install` y verificar que `npm run build` pasa; limpiar `package.json` (quitar `"main": "index.js"` y el script `test` que falla, llenar `description`); recortar `.gitignore` a lo que usa el proyecto; reemplazar la escena de prueba `SmokeTest` de `src/main.ts`.
 
 ## Tablero
 
