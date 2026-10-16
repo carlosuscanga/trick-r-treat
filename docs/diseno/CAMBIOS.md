@@ -9,7 +9,7 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 ### Propósito
 
 - El juego es un proyecto para aprender a hacer videojuegos y, a la vez, un regalo para **Mi vo**.
-- El objetivo de aprendizaje es el ciclo completo de desarrollo, desde el punto de vista de un manager. El código lo escriben agentes de IA.
+- El objetivo de aprendizaje es el ciclo completo de desarrollo desde todos los roles: product owner, manager y desarrollador. Los agentes de IA escriben el código; nosotros lo dirigimos y lo revisamos.
 - La v1 no tiene fecha: se entrega cuando esté lista.
 - Mi vo juega de forma casual: puede haber reto, pero las reglas deben entenderse rápido.
 
@@ -23,7 +23,9 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 - **Dificultad y recompensa:** cada casa muestra cuántos dulces da, y eso indica su dificultad: fácil da 1, media 2 y difícil 3. Mi vo elige a qué casa ir.
 - **Victoria:** juntar 10 dulces. No hay redondeo: con 9½ todavía no se gana.
 - **Derrota:** 3 sustos, o quedarse sin casas antes de juntar 10 dulces. La calle siempre se genera con dulces suficientes para poder ganar.
-- **Minijuegos v1:** 6 minijuegos de 5 tipos, cada uno con 3 dificultades (fácil, media, difícil). Cada minijuego define cómo se gana o se pierde. En una partida pueden repetirse con otra dificultad. La referencia es WarioWare, pero a futuro pueden crecer hacia mini misiones.
+- **Minijuegos:** cada uno tiene 3 dificultades (fácil, media, difícil) y define cómo se gana o se pierde. En una partida pueden repetirse con otra dificultad. Las referencias son WarioWare y Mario Party, y a futuro pueden crecer hacia mini misiones.
+
+  **La lista es tentativa:** son candidatos, no compromisos. Antes de diseñar o programar cada minijuego hay una tarea de diseño que lo define bien, y en esa etapa se elige cuáles entran en la v1.
 
   | Tipo | Minijuego | Cómo se juega | Ganar / perder | Qué sube con la dificultad |
   |---|---|---|---|---|
@@ -33,8 +35,9 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
   | Puzzle | Dulces en línea | Match-3 simplificado (tipo Candy Crush): intercambiar dulces vecinos y romper 3 o más iguales | Gana al romper N del dulce pedido antes de que acabe el tiempo | Tipos de dulce (4/5/6) y N |
   | Plataformas | Carrera por los techos | Correr y saltar por techos esquivando obstáculos que se mueven (tipo Fall Guys en 2D) | Gana si llega a la meta antes de que acabe el tiempo; si cae, vuelve al último punto de control | Largo del recorrido, obstáculos, tiempo |
   | Ritmo | Baile de esqueletos | Tocar las flechas al ritmo de la música en 3 carriles (tipo Guitar Hero simplificado) | Gana con 70% o más de aciertos | Tempo y densidad de notas |
+  | Puntería | Defiende la casa | Unos niños vandalizan la casa del vecino lanzándole huevos; Mi vo los derriba lanzándoles proyectiles (mini shooter) | Gana si resiste hasta que acabe el tiempo; pierde si la casa queda demasiado sucia y el vecino la manda a volar | Cantidad y velocidad de los niños, tamaño del medidor de suciedad |
 
-- **Disfraces:** 5, uno por **tipo** de reto, no por minijuego. Así, un minijuego nuevo hereda el disfraz de su tipo. Todos están disponibles desde el inicio.
+- **Disfraces (provisional, se definen después):** uno por **tipo** de reto, no por minijuego. Así, un minijuego nuevo hereda el disfraz de su tipo. Todos están disponibles desde el inicio. Falta el disfraz del tipo Puntería.
 
   | Disfraz | Tipo | Ventaja |
   |---|---|---|
@@ -56,7 +59,7 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 
 - **Ritmo en iPhone:** la latencia del audio web puede desincronizar la música y los toques. Validarlo pronto. Además, la música debe ser libre de derechos o propia.
 - **Saltar con botones táctiles:** hay que validar que se sienta bien (prueba técnica del primer hito).
-- **Alcance:** 6 minijuegos con 3 dificultades = 18 variantes. Al crear las tareas, asignar prioridad para decidir cuál se mueve a v1.1 si hace falta.
+- **Alcance:** hay 7 candidatos con 3 dificultades cada uno, es decir, 21 variantes si entraran todos. Al definir los minijuegos se elige cuáles entran en la v1, y los demás se mueven a v1.1.
 - El nombre del juego.
 
 ## v0.1

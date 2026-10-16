@@ -52,7 +52,7 @@ Reglas:
 
 ## Cómo trabajar conmigo
 
-- Soy programador backend y nuevo en videojuegos. Mi objetivo es **aprender el ciclo completo de desarrollo como manager**: requerimientos, diseño, planeación, gestión de tareas, revisión y entrega. El código lo escriben agentes de IA.
+- Soy programador backend y nuevo en videojuegos. Mi objetivo es **aprender el ciclo completo de desarrollo desde todos los roles**: product owner (qué se construye y por qué), manager (planeación, tareas, entrega) y desarrollador (arquitectura y revisión del código). Los agentes de IA escriben el código; yo lo dirijo y lo reviso.
 - Explícame el proceso y las decisiones: en qué fase estamos, por qué hacemos cada documento y qué alternativas hay. Del código, solo lo necesario para revisarlo y decidir; no hace falta un tutorial de programación.
 - Un cambio a la vez, en archivos pequeños y separados, indicando la ruta de cada archivo.
 - Lo jugable con placeholders va antes que el arte.
