@@ -4,7 +4,9 @@ Juego web móvil de Halloween hecho con Phaser 3, TypeScript y Vite. Una niña c
 
 ## Documentación
 
-- [Documento de diseño](docs/DISENO.md)
+- [Diseño del juego](docs/diseno/README.md): concepto, reglas y personajes.
+- [Tareas](docs/tareas/README.md): tablero con el avance.
+- [Planes](docs/planes/README.md): planes de implementación.
 
 ## Desarrollo
 
