@@ -68,7 +68,7 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 Una tarea está `hecha` cuando:
 
 1. Cumple todos sus criterios de aceptación.
-2. `npm run build` pasa y se probó en el navegador (y en el celular si toca controles o pantalla).
+2. Lo nuevo tiene tests, `npm test` y `npm run build` pasan, y se probó en el navegador (y en el celular si toca controles o pantalla).
 3. Está en `main` mediante un PR mergeado.
 4. La tarea y el tablero están actualizados.
 

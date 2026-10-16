@@ -1,6 +1,6 @@
-# Compila el juego y lo publica en GitHub Pages.
-# - Push a main (o botón "Run workflow"): compila y publica.
-# - Pull request a main: solo compila, para ver ✅/❌ antes del merge.
+# Prueba y compila el juego, y lo publica en GitHub Pages.
+# - Push a main (o botón "Run workflow"): tests, compila y publica.
+# - Pull request a main: solo tests y compilación, para ver ✅/❌ antes del merge.
 # Decisiones y alternativas: docs/planes/T-002-despliegue-github-pages.md
 
 name: Build y despliegue
@@ -22,6 +22,29 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Corre `npm test`. El nombre "tests" es estable: T-031 lo marca como check
+  # requerido para mergear, así que no hay que renombrarlo.
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          # Sin caché de npm: ver decisión 7 del plan.
+          package-manager-cache: false
+
+      - run: npm ci
+
+      - run: npm test
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -50,7 +73,8 @@ jobs:
 
   deploy:
     if: github.event_name != 'pull_request'
-    needs: build
+    # Si un test falla, main no se publica.
+    needs: [tests, build]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
