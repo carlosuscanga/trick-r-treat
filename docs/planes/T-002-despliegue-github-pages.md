@@ -78,7 +78,7 @@ Alternativa: el major flotante (`actions/checkout@v7`). Recibe arreglos solo, pe
 
 **7. Sin caché de npm**
 
-`setup-node` puede guardar `node_modules` entre ejecuciones (`cache: npm`). Con 3 dependencias, `npm ci` tarda segundos, y la caché compartida entre PRs y `main` es un vector conocido de *cache poisoning*. No se usa. Se puede agregar si el build se vuelve lento.
+`setup-node` puede guardar `node_modules` entre ejecuciones (`cache: npm`). Con 3 dependencias, `npm ci` tarda segundos, y la caché compartida entre PRs y `main` es un vector conocido de *cache poisoning*. No se usa. Se puede agregar si el build se vuelve lento. Desde v7, `setup-node` activa la caché sola si `package.json` declara `packageManager`; por eso el workflow pone `package-manager-cache: false` explícitamente, para que la decisión no cambie sin querer.
 
 **8. Tokens, secretos y variables de entorno**
 
