@@ -1,4 +1,4 @@
-# Trick-r-Treat
+# 🎃 Trick-r-Treat
 
 Juego web móvil de Halloween hecho con Phaser 3, TypeScript y Vite. Una niña con disfraz recorre la calle tocando puertas: cada vecino le pone un minijuego para darle su dulce, y si falla, le da un susto.
 

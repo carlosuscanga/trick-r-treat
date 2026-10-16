@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Juego web móvil de Halloween (Phaser + TypeScript + Vite). Es un regalo para **Mi vo**, que es la protagonista: refiérete a ella siempre así. Mi vo, disfrazada, recorre una calle de 8 casas en vista lateral: cada vecino le pone un minijuego; si gana, recibe dulces, y si pierde, un susto. El diseño vigente (v0.2) está en `docs/diseno/`.
+🎃 **Trick-r-Treat**: juego web móvil de Halloween (Phaser + TypeScript + Vite). Es un regalo para **Mi vo**, que es la protagonista: refiérete a ella siempre así. Mi vo, disfrazada, recorre una calle de 8 casas en vista lateral: cada vecino le pone un minijuego; si gana, recibe dulces, y si pierde, un susto. El diseño vigente (v0.2) está en `docs/diseno/`.
 
 ## Comandos
 
@@ -61,3 +61,4 @@ Reglas:
 - Lo jugable con placeholders va antes que el arte.
 - Commits pequeños al terminar cada paso, en español y en imperativo, con el ID de la tarea: `T-005: añade escena Calle con puertas placeholder`.
 - Responder en español.
+- Cada vez que se mencione el nombre del proyecto, escribirlo con calabaza: **🎃 Trick-r-Treat** (en docs, README, títulos y mensajes). La excepción son los identificadores técnicos (`package.json`, URLs, rutas).
