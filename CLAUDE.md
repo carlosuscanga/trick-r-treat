@@ -12,7 +12,7 @@
 - `npm test`: corre los tests (Vitest), también en el CI de cada PR.
 - `npm run test:e2e`: corre los tests end-to-end (Playwright, WebKit con emulación de iPhone) contra el build, en `e2e/*.e2e.ts`. La primera vez: `npx playwright install webkit`.
 
-**Todo lleva tests.** La lógica (estado, reglas, sorteos, datos, catálogo) va en módulos sin Phaser, con su test `*.test.ts` al lado del archivo. Las escenas y lo visual se prueban en el navegador y en el celular. Verificar siempre con `npm test` y `npm run build`.
+**Todo lleva tests, en tres capas.** Toda tarea de código trae, en el mismo PR: (1) **unitarias** (Vitest, `*.test.ts` al lado del archivo) para la lógica (estado, reglas, sorteos, datos, catálogo), que va en módulos sin Phaser; (2) **e2e** (Playwright, `e2e/*.e2e.ts`) para lo que se ve y se toca en el navegador; y (3) **prueba manual** en el iPhone, escrita como tabla en la descripción del PR. Si una capa no aplica, el plan dice por qué. Verificar siempre con `npm test`, `npm run test:e2e` y `npm run build`.
 
 ## Stack y versiones
 
@@ -64,7 +64,7 @@ Reglas:
 - Una rama y un worktree por tarea (`T-007-flujo-de-escenas`), creados con la herramienta nativa de worktrees en `.claude/worktrees/`. Entra a `main` por pull request. `main` siempre es jugable. Proceso completo en `docs/README.md`, "Trabajo en paralelo".
 - Antes de crear el worktree, marcar la tarea como `en-progreso` **en `main`** (commit y push). En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
 - El tablero y el "Estado actual" solo se editan en `main`, nunca en las ramas de tarea.
-- Todo plan de código incluye su sección "Pruebas": tests automáticos para la lógica y pasos de prueba manual para lo visual y lo táctil. Los tests entran en el mismo PR que el código. Detalle en `docs/planes/README.md`.
+- Todo plan de código incluye su sección "Pruebas" con las tres capas (unitarias, e2e y manual). Las pruebas se definen en el plan, antes de programar, y entran en el mismo PR que el código, nunca después. Detalle en `docs/planes/README.md`.
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
 - Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/` y `CAMBIOS.md`.
 

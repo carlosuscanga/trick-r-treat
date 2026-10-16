@@ -191,6 +191,7 @@ Para qué sirve o qué problema resuelve.
 ## Criterios de aceptación
 
 - [ ] Algo verificable.
+- [ ] Pruebas en tres capas según el plan: unitarias, e2e y manual en el iPhone (o el porqué de la que no aplica).
 
 ## Bitácora
 
