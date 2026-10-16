@@ -3,7 +3,7 @@ id: T-033
 titulo: e2e obligatorio antes del merge
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-003, T-031]
 plan: null
@@ -21,8 +21,8 @@ Los e2e protegen justo lo frágil del iPhone: el ancho variable, el aviso de gir
 
 - [x] `.github/rulesets/main.json` exige `tests`, `build` y `e2e`, y `src/ci/checks.test.ts` pasa.
 - [x] El comentario del job `e2e` en `deploy.yml` dice la verdad.
-- [ ] Después del merge, el product owner aplica el ruleset con su cuenta (el token de las sesiones no puede), y la API muestra los 3 checks.
-- [ ] Un PR con `e2e` en rojo queda bloqueado.
+- [x] Después del merge, el product owner aplica el ruleset con su cuenta (el token de las sesiones no puede), y la API muestra los 3 checks.
+- [x] Un PR con `e2e` en rojo queda bloqueado.
 
 ## Bitácora
 
@@ -31,3 +31,4 @@ Los e2e protegen justo lo frágil del iPhone: el ancho variable, el aviso de gir
 - 2026-10-16: el comentario del job `e2e` en `deploy.yml` decía que T-031 lo marcaba como requerido. Ahora dice que es requerido desde T-033 vía `.github/rulesets/main.json`.
 - 2026-10-16: desvío pequeño: `docs/README.md` decía en dos lugares ("Checks obligatorios en `main`" y el paso 6) que solo se exigen `tests` y `build`. Se actualizó a `tests`, `build` y `e2e` para que no quede desfasado.
 - 2026-10-16: verificación: `npm test` (32/32), `npm run build` y `actionlint` pasan. Los criterios 3 y 4 son después del merge: el product owner aplica el ruleset con su cuenta, y luego un PR de prueba con un e2e roto debe quedar bloqueado. Los marca el orquestador en `main`.
+- 2026-10-16: PR #7 mergeado sin squash (`957f3b1`) con el OK de Carlos. Carlos aplicó el ruleset con su cuenta, y la API muestra `tests`, `build` y `e2e`, con strict, y bypass solo para la deploy key. Prueba: el PR #8 (un solo e2e roto a propósito) dio `tests` ✅, `build` ✅ y `e2e` ❌ (run 38927141361), quedó BLOCKED, y `gh pr merge` se rechazó con "the base branch policy prohibits the merge". Se cerró sin mergear y se borró su rama remota. Tarea `hecha`.
