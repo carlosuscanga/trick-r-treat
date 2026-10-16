@@ -15,8 +15,8 @@ Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trab
   - **Flujo:** `docs/README.md` ya recoge lo visto: el merge lo hace solo la orquestadora, los criterios que solo se verifican en `main` se marcan al cerrar, el orden de limpieza de los worktrees, cómo retomar sesiones, la prueba manual en los PRs visuales y que todo plan lleva su sección "Pruebas".
   - Node: `.nvmrc` fija la 24, pero `engines` en `package.json` dice `>=22.12.0`. No bloquea nada.
 - **Sesión corta (2026-10-16, noche):** se preparó la investigación de performance, memoria y caché (prompt en `.local/prompts/investigacion-performance.md`). Objetivo: iPhone 13 o más nuevo con iOS 26.6.x o más nuevo. El entregable es una guía para crear un skill de programación eficiente que vivirá en el repo (`.claude/skills/`). Además, la revisión en Plannotator pasó a ser opcional: Claude pregunta "¿aquí o en Plannotator?" (`CLAUDE.md`).
-- **Fase:** H1 · Esqueleto en el iPhone. Solo falta T-004 para cerrar el hito.
-- **Siguiente paso:** primero la investigación de performance: la sesión nueva propone registrarla como T-034 y hacerla antes de T-004. Después, T-004 (prueba de controles táctiles), en la ruta crítica. Primero su plan, con el plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). En paralelo se pueden hacer T-005 (investigación de minijuegos), T-012 (pipeline de arte), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
+- **Fase:** H1 · Esqueleto en el iPhone. Faltan T-034 y T-004 para cerrar el hito.
+- **Siguiente paso:** T-034 (investigación de performance, memoria y caché), en progreso: su guía sale por PR en `docs/planes/`. Después, T-004 (prueba de controles táctiles), en la ruta crítica. Primero su plan, con el plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). En paralelo se pueden hacer T-005 (investigación de minijuegos), T-012 (pipeline de arte), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
 - **Pendiente de decidir:** el plan de T-004. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
@@ -37,7 +37,7 @@ Decidida el 2026-10-16.
 
 Se planea por oleadas: H1 a H3 van detallados, y H4 y H5 tienen tareas gruesas que se parten al llegar.
 
-**Ruta crítica hasta la demo:** T-001 → T-003 → T-004 → T-007 → T-009 → T-010 → T-015 → T-020 → T-021.
+**Ruta crítica hasta la demo:** T-001 → T-003 → T-034 → T-004 → T-007 → T-009 → T-010 → T-015 → T-020 → T-021.
 
 **Riesgos:**
 
@@ -59,14 +59,15 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | hecha | alta | T-001 | [plan](../planes/T-003-pantalla-base.md) |
-| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
+| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003, T-034 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
+| [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | en-progreso | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
 
 ```
-A (ruta crítica)  T-001 ─→ T-003 ─→ T-004
+A (ruta crítica)  T-001 ─→ T-003 ─→ T-034 ─→ T-004
 B                     └──→ T-002 ─→ T-030
 C                 T-005                       ← desde ya
 D (CI)            T-006 ─→ T-031 ─→ T-033     ← T-006 es de H2; no en paralelo con T-030
