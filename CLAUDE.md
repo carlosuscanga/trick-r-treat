@@ -4,6 +4,7 @@
 
 ## Comandos
 
+- `nvm use`: activa el Node del proyecto (`.nvmrc`). Va antes de cualquier comando de npm.
 - `npm install`: instala dependencias.
 - `npm run dev -- --host`: servidor de desarrollo (`--host` permite abrirlo desde el celular en la misma red).
 - `npm run build`: revisa tipos (`tsc --noEmit`) y genera `dist/`.
@@ -14,14 +15,15 @@ No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
 ## Stack y versiones
 
 - Phaser **3.90.0**, TypeScript 7.0.2 y Vite 8.3.4, con versiones exactas (`.npmrc` tiene `save-exact=true`).
+- Node **24** (`.nvmrc`). Vite 8 pide Node 20.19 o más nuevo: con una versión anterior, npm omite el binding nativo de rolldown y `vite build` falla con "Cannot find native binding".
 - Decisión del 2026-10-16: quedarse en Phaser 3.90 y no pasar a Phaser 4. Phaser 4 (estable desde abril de 2026) tiene poco material, y los agentes de IA mezclarían sus APIs con las de Phaser 3. La 3.90 ya tiene iluminación 2D y postFX, suficiente para el estilo del juego. Migrar a 4 más adelante sigue siendo posible.
 - Usar siempre APIs de Phaser 3.x. Nunca código de Phaser 4 ni de otros motores.
 - Para agregar dependencias, preguntar antes y fijar la versión exacta.
 
 ## Arquitectura
 
-- **`GameState`**: módulo singleton con el estado global: disfraz elegido, dulces (0 a 10, en pasos de ½; nunca redondear), sustos (0/3), casas visitadas e inventario.
-- **Data-driven**: vecinos, ítems y disfraces se definen en JSON, no en código.
+- **`GameState`**: módulo singleton con el estado global: disfraz elegido, dulces (0 a 10, en pasos de ½; nunca redondear), sustos (0/3) y casas visitadas. El inventario y los ítems son una idea a futuro (`docs/diseno/ideas.md`) y no entran en la v1.
+- **Data-driven**: vecinos y disfraces se definen en JSON, no en código.
 - **Minijuegos desacoplados**: cada minijuego es su propia escena de Phaser. Recibe la dificultad (`facil | media | dificil`) y si el disfraz da ventaja, y emite `finished(won: boolean)`. La escena Puerta lanza el minijuego del vecino y espera ese evento; el juego principal no conoce el minijuego, solo el resultado.
 - **Catálogo de minijuegos**: los minijuegos se registran en un catálogo con su `tipo` de reto. El disfraz se asocia al tipo, no al minijuego, así que agregar un minijuego es registrarlo y nada más. Esto prepara la librería de minijuegos a futuro.
 - **Escenas**: Menú, SelectorDisfraz, Calle, Puerta, (una escena por minijuego), Resultado y FinJuego.

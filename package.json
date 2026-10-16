@@ -1,10 +1,8 @@
 {
   "name": "trick-r-treat",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "🎃 Trick-r-Treat: juego web de Halloween para celular, hecho con Phaser, TypeScript y Vite.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"
@@ -17,6 +15,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "bugs": {
     "url": "https://github.com/carlosuscanga/trick-r-treat/issues"
   },

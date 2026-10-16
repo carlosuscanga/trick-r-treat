@@ -48,10 +48,10 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 
 1. **Elegir:** solo tareas cuyas dependencias estén `hecha`. Los carriles del tablero dicen qué puede ir en paralelo. No hay límite fijo de tareas abiertas: si se acumulan PRs sin revisar o las ramas se alejan mucho de `main`, abrir menos.
 2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push. Así cualquier sesión sabe qué está tomado.
-3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git), con la rama `T-NNN-titulo` desde `main` actualizado. Adentro: `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`.
+3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`.
 4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
 5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
-6. **Merge y cierre (en `main`):** merge sin squash, para conservar los commits pequeños. Después, en `main`: la tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual". Se borran la rama y el worktree.
+6. **Merge y cierre (en `main`):** merge sin squash, para conservar los commits pequeños. Después, en `main`: la tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual". Se borran la rama y el worktree. El hook de seguridad `dcg` no deja que el agente borre ramas, así que el borrado de la rama local lo hace el product owner (`git branch -d T-NNN-titulo`).
 
 ## Sesiones con Claude
 
