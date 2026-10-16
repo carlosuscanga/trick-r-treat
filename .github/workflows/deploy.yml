@@ -40,6 +40,9 @@ jobs:
 
       - run: npm ci
 
+      # Si un test falla, el PR sale en rojo y main no se publica.
+      - run: npm test
+
       - run: npm run build
 
       - name: Sube dist/ como artifact de Pages
