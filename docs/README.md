@@ -46,7 +46,7 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 
 Un *ruleset* de GitHub protege `main` (definido en `.github/rulesets/main.json`). Nada entra a `main` si no cumple:
 
-- Los checks `tests` y `build` del CI están en verde.
+- Los checks `tests`, `build` y `e2e` del CI están en verde.
 - La rama está **al día** con `main`: los checks corrieron con la versión más reciente de `main`. Si `main` avanzó, la rama trae `main` (`git merge origin/main`, o el botón "Update branch" del PR) y espera el CI otra vez.
 - No hay *force push* ni se borra `main`.
 
@@ -71,7 +71,7 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`. El checkout principal también necesita su propio `npm install`; sin él, el editor marca errores falsos como "Cannot find module 'vite'".
 4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
 5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
-6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. GitHub solo deja mergear con `tests` y `build` en verde y la rama al día con `main`. Después, en `main` (con `git pull` antes, y el push con la deploy key):
+6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. GitHub solo deja mergear con `tests`, `build` y `e2e` en verde y la rama al día con `main`. Después, en `main` (con `git pull` antes, y el push con la deploy key):
    - La tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual".
    - Si un criterio solo se puede verificar en `main` (por ejemplo, que Pages publique), el PR se mergea con esa casilla abierta y explicada en la bitácora. Se verifica después del merge y se marca en el mismo commit que pasa la tarea a `hecha`.
    - Si el merge afecta a otras ramas abiertas, se les avisa para que traigan `main` con `git merge origin/main`.
