@@ -42,8 +42,8 @@ describe('nombresDeJobs', () => {
 });
 
 describe('ruleset de main', () => {
-  it('exige tests y build, con la rama al día', () => {
-    expect(checks?.required_status_checks.map((c) => c.context)).toEqual(['tests', 'build']);
+  it('exige tests, build y e2e, con la rama al día', () => {
+    expect(checks?.required_status_checks.map((c) => c.context)).toEqual(['tests', 'build', 'e2e']);
     expect(checks?.strict_required_status_checks_policy).toBe(true);
   });
 
