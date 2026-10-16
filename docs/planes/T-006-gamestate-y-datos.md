@@ -81,7 +81,7 @@ export const gameState = new GameState();
 ```
 
 - `elegirDisfraz` recibe el objeto `Disfraz` completo (no solo el id), así T-009 puede preguntar `gameState.disfraz?.tipo` para decidir la ventaja.
-- `ganarCasa` recibe los dulces de la casa (1, 2 o 3), no la dificultad. La relación dificultad → dulces vive en los datos (`DULCES_POR_DIFICULTAD`), así `GameState` no depende de nada en tiempo de ejecución (ver "Verificación").
+- `ganarCasa` recibe los dulces de la casa (1, 2 o 3), no la dificultad. La relación dificultad → dulces vive en los datos (`DULCES_POR_DIFICULTAD`), así `GameState` no depende de nada en tiempo de ejecución (ver "Pruebas").
 - Operaciones inválidas (visitar dos veces la misma casa, índice fuera de rango) lanzan un error claro en vez de ignorarse: mejor que falle fuerte en desarrollo a que la calle quede inconsistente.
 - `haGanado` y `haPerdido` son solo consultas. Qué escena se abre al ganar o perder es de T-011.
 - Sin persistencia (`localStorage`): si se recarga la página, la partida empieza de cero. No lo pide el diseño.
@@ -109,7 +109,7 @@ export type TipoSusto = 'salta' | 'tiembla' | 'se-agranda';
 
 `TipoReto` y `Dificultad` los va a reutilizar el catálogo de minijuegos (T-009).
 
-Desvío al implementar: `tipos.ts` quedó **solo con tipos** (nada que exista al ejecutar). `DULCES_POR_DIFICULTAD` y las listas de valores válidos para el validador se movieron a `src/datos/index.ts`. Así, para Node, todo lo de `tipos.ts` es `import type` y se borra al ejecutar, y el script de verificación funciona sin cambiar `tsconfig.json` (ver "Verificación"). Con Vitest esa restricción ya no hace falta, pero la separación se queda: los tipos en un archivo y los valores en otro. Las listas válidas son `Record<TipoReto, true>`: si alguien agrega un tipo y olvida la lista, `tsc` falla.
+Desvío al implementar: `tipos.ts` quedó **solo con tipos** (nada que exista al ejecutar). `DULCES_POR_DIFICULTAD` y las listas de valores válidos para el validador se movieron a `src/datos/index.ts`. Así, para Node, todo lo de `tipos.ts` es `import type` y se borra al ejecutar, y el script de verificación funciona sin cambiar `tsconfig.json` (ver "Pruebas"). Con Vitest esa restricción ya no hace falta, pero la separación se queda: los tipos en un archivo y los valores en otro. Las listas válidas son `Record<TipoReto, true>`: si alguien agrega un tipo y olvida la lista, `tsc` falla.
 
 **`src/datos/disfraces.json`**: los 5 disfraces definidos en `personajes.md`. El de puntería sigue "por definir", así que no entra hasta que el diseño lo defina.
 
@@ -150,13 +150,13 @@ En backend sería la diferencia entre un archivo de configuración dentro del `.
 
 **`tsconfig.json` no cambia.** Lo comprobé: con `moduleResolution: "bundler"`, TypeScript 7 ya permite importar JSON, y tanto `tsc` como Node 24 aceptan el `with { type: 'json' }`.
 
-## Verificación
+## Pruebas
 
 **Cambio de rumbo (2026-10-16): tests con Vitest.** La primera versión de este plan usaba un script casero (`scripts/verificar-estado.ts`, con `node:assert`). Al revisarlo, Carlos notó que el CI solo compilaba y no corría ese script, y decidió dos cosas: meter tests de verdad en esta misma tarea, y que **todo lleve tests** de aquí en adelante.
 
 - **Vitest 5.0.3** como dependencia de desarrollo (versión exacta, compatible con Vite 8, con dos semanas de uso al elegirla). Es el framework de tests estándar para proyectos con Vite, el equivalente a JUnit. No llega al juego publicado.
 - `npm test` (`vitest run`) corre todos los `*.test.ts`. Los tests van al lado de su archivo: `src/estado/GameState.test.ts` y `src/datos/datos.test.ts`.
-- El CI corre `npm test` antes de `npm run build`. Si un test falla, el PR sale en rojo y `main` no se publica.
+- El CI corre `npm test` en cada PR y en cada push a `main` (ver abajo). Si un test falla, el PR sale en rojo y `main` no se publica.
 - Se descartó `node:test` (el runner que trae Node, sin dependencias) porque obliga a que los archivos de `src/` no se importen entre sí al ejecutarse, y eso choca con T-008. Vitest lee el código igual que Vite, sin esa restricción. El código de esta tarea igual quedó compatible con ella, porque se escribió antes del cambio.
 - Se quitó el script casero; sus comprobaciones pasaron a los tests. Con eso desaparece el aviso del editor sobre `node:assert`, y ya no hace falta decidir lo de `@types/node`.
 - Regla nueva en `CLAUDE.md` y en la "Definición de hecho" de `docs/README.md`: la lógica va en módulos sin Phaser y con test; las escenas y lo visual se prueban en el navegador y en el celular.
@@ -168,6 +168,10 @@ En backend sería la diferencia entre un archivo de configuración dentro del `.
 | Los sustos van de 0 a 3 | `sustos › van de 0 a 3 y con 3 se pierde`: con 4 sustos, `sustos` es `3`; con 3, `haPerdido()` es `true`. |
 | Disfraces y vecinos se cargan desde JSON | `datos desde JSON › carga los disfraces y los vecinos`: 5 y 8, con sus tipos. `validarDisfraces` y `validarVecinos`: rechazan una lista inválida, un tipo o susto desconocido, textos vacíos, ids repetidos y una cantidad de vecinos distinta de 8. |
 | El estado se reinicia al empezar otra partida | `nuevaPartida › reinicia todo`: después de jugar, todo vuelve a 0, sin disfraz ni casas visitadas. |
+
+Automáticas en el CI: los tests corren en su propio job, llamado `tests` (separado de `build`). Ese nombre no debe cambiar: T-031 lo va a marcar como check obligatorio para mergear. `deploy` espera a `tests` y a `build`, así que si un test falla, `main` no se publica.
+
+Manuales: ninguna en esta tarea. El estado y los datos todavía no se conectan a ninguna escena, así que no hay nada que ver en el navegador ni en el iPhone. La prueba manual (elegir disfraz, ganar una casa y ver que suben los dulces) corresponde a T-007. Para explorar el estado a mano, se puede importar desde `node` (`await import('./src/estado/GameState.ts')`).
 
 ## Archivos
 
