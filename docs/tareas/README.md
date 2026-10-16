@@ -6,15 +6,18 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trabajo.
 
-- **Última sesión (2026-10-16):** T-001 hecha (PR #1). Fue la primera tarea con el flujo de worktree y PR, y el flujo quedó probado.
-  - Node 24 queda fijado con `.nvmrc` y `engines`, porque Vite 8 no corre con Node anterior a 20.19. Hay que correr `nvm use` antes de npm (el Node por defecto de la máquina sigue en 20.18.1).
-  - `docs/README.md` se ajustó a lo visto en la práctica: renombrar la rama `worktree-…` que crea la herramienta nativa, correr `nvm use`, y el borrado de ramas locales lo hace el product owner (por el hook `dcg`). GitHub ya borra la rama remota sola al hacer merge.
-  - LSP verificado: usa el `tsserver` global de TypeScript 6.0.3 y marca errores de tipos de Phaser.
-  - GitHub no deja aprobar un PR propio. La aprobación es el visto bueno del product owner, y el merge sigue siendo sin squash.
-- **Fase:** H1 · Esqueleto en el iPhone. `main` todavía no se publica en Pages (eso es T-002).
-- **Siguiente paso:** T-003 (pantalla base, ruta crítica). En paralelo ya se pueden hacer T-002 (Pages) y T-006 (GameState). Siguen disponibles T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
-- **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida.
-- **Decidido al cierre:** el cambio de estado al hacer merge se automatiza con una GitHub Action (T-030, después de T-002). El "Estado actual" sigue siendo manual.
+- **Última sesión (2026-10-16, tarde):** primera sesión con tareas en paralelo: una sesión orquestadora en `main` y una trabajadora por tarea. Se cerraron T-002, T-003 y T-006, y de lo que fue saliendo, T-031 y T-033.
+  - **T-002 (PR #2):** `main` se publica sola en https://carlosuscanga.github.io/trick-r-treat/. Probado en Safari del iPhone.
+  - **T-003 (PR #6):** pantalla base con ancho variable (zona segura de 1280×720), aviso de girar, audio tras el primer toque y modo pantalla de inicio. Probada en el iPhone, en local y en Pages.
+  - **T-006 (PR #3):** `GameState` (dulces en medios, sustos, casas) y los JSON de disfraces y vecinos. Trajo Vitest y la regla **"todo lleva tests"**.
+  - **T-031 (PR #4) y T-033 (PR #7):** un ruleset en `main` exige `tests`, `build` y `e2e` en verde y la rama al día. Se probó con PRs rotos a propósito (#5 y #8), que quedaron bloqueados. Los pushes directos a `main` (tablero) van con una deploy key, y solo los hace la orquestadora.
+  - **Seguridad:** las sesiones usan un token *fine-grained* solo de este repo y sin Administration (ver "Credenciales de GitHub" en `docs/README.md`). El login global de `gh` de la Mac ya no se usa en este proyecto.
+  - **Flujo:** `docs/README.md` ya recoge lo visto: el merge lo hace solo la orquestadora, los criterios que solo se verifican en `main` se marcan al cerrar, el orden de limpieza de los worktrees, cómo retomar sesiones, la prueba manual en los PRs visuales y que todo plan lleva su sección "Pruebas".
+  - Node: `.nvmrc` fija la 24, pero `engines` en `package.json` dice `>=22.12.0`. No bloquea nada.
+- **Fase:** H1 · Esqueleto en el iPhone. Solo falta T-004 para cerrar el hito.
+- **Siguiente paso:** T-004 (prueba de controles táctiles), en la ruta crítica. Primero su plan, con el plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). En paralelo se pueden hacer T-005 (investigación de minijuegos), T-012 (pipeline de arte), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
+- **Pendiente de decidir:** el plan de T-004. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
+- **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
 ## Planeación de la v1
 
