@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { motivoSinAudio } from '../plataforma/audio';
 
 // Primera escena: pide el primer toque, que en iOS es lo que desbloquea el audio.
 // Phaser desbloquea el audio solo con ese toque; aquí solo esperamos a que termine.
@@ -59,21 +60,13 @@ export class Arranque extends Phaser.Scene {
     }
 
     if (!this.cache.audio.exists('prueba')) {
-      this.texto.setText(`Sin sonido: ${this.motivoSinAudio()}`);
+      const { m4a, aac } = this.sys.game.device.audio;
+      this.texto.setText(`Sin sonido: ${motivoSinAudio(m4a || aac, this.errorDeCarga)}`);
       return;
     }
 
     this.sound.play('prueba');
     this.texto.setText('¡Audio listo! 🎃');
-  }
-
-  // Las tres formas en que el sonido puede faltar, para diagnosticar en el teléfono.
-  private motivoSinAudio(): string {
-    const { m4a, aac } = this.sys.game.device.audio;
-    if (!m4a && !aac) {
-      return 'el navegador no soporta AAC';
-    }
-    return this.errorDeCarga ?? 'el archivo cargó pero no se pudo decodificar';
   }
 }
 
