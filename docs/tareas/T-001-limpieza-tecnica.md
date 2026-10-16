@@ -3,7 +3,7 @@ id: T-001
 titulo: Limpieza técnica del entorno
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: []
 plan: null

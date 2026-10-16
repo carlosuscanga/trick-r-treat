@@ -52,7 +52,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
-| [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | pendiente | alta | — | — |
+| [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | en-progreso | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | pendiente | alta | T-001 | — |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | pendiente | alta | T-001 | — |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
