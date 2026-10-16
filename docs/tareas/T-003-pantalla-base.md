@@ -3,7 +3,7 @@ id: T-003
 titulo: Pantalla base para iPhone
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-001]
 plan: null

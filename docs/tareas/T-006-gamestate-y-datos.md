@@ -3,7 +3,7 @@ id: T-006
 titulo: GameState y datos en JSON
 tipo: codigo
 hito: H2
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-001]
 plan: null
