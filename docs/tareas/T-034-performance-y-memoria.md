@@ -35,3 +35,4 @@ Una partida dura de 10 a 15 minutos entrando y saliendo de escenas, con arte, au
 ## Bitácora
 
 - 2026-10-16: creada antes de T-004, para que el código del juego nazca con reglas de performance. Contexto y prompt en `.local/prompts/investigacion-performance.md`.
+- 2026-10-16: investigación con 5 subagentes en paralelo (skills y fuentes, bundle y caché, memoria y audio, escenas y frames, medición). Guía redactada en `docs/planes/T-034-performance-y-memoria.md`: 46 reglas, presupuestos, checklist de PR, propuesta del skill y tareas T-035 a T-044. Pendiente: revisión del product owner y sus 8 decisiones (al final de la guía) antes de marcar los criterios. Informes completos respaldados en `.local/t034/`.
