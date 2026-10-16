@@ -44,6 +44,7 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
   | Fantasma | Plataformas | Levita brevemente al caer, lo que le da tiempo para corregir el salto |
   | Esqueleto | Ritmo | Margen de acierto más amplio |
 - **Exploración (en v1):** hay dulces escondidos en la calle que dan ½ dulce. Para alcanzarlos hay que hacer acciones: romper objetos (un auto), trepar árboles o subir a techos. Para trepar, un botón engancha los brazos y el movimiento sube o baja a Mi vo.
+- **Vista:** lateral con scroll horizontal y fondo en capas con parallax (cielo, casas lejanas, calle). Se descartó la vista desde arriba (tipo Zelda o Pokémon) porque saltar, trepar y la carrera por los techos necesitan gravedad, y porque obligaría a animar 4 direcciones por cada disfraz.
 - **Controles en la calle:** joystick a la izquierda para moverse y para subir o bajar al trepar. A la derecha, dos botones: **Saltar** y **Brazos**. Brazos depende de dónde esté Mi vo: se engancha a un árbol, golpea un objeto o toca una puerta. Dentro de los minijuegos, cada uno usa toques directos en la pantalla.
 - **Final:** al ganar, una celebración simple y la opción de jugar otra vez.
 - **Privacidad:** no hay problema con que el repo sea público.
