@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Notas y assets locales: no se suben al repo (ver CLAUDE.md)
+.local/

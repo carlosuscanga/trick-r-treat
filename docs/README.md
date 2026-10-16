@@ -12,6 +12,7 @@ Este repo es a la vez el código, el "Jira" y el "Confluence" del proyecto. Todo
 | [`tareas/`](tareas/README.md) | Una tarea por archivo y el tablero. | Jira |
 | [`planes/`](planes/README.md) | **Cómo** se implementa una tarea. | Documento técnico |
 | [`../CLAUDE.md`](../CLAUDE.md) | Stack, arquitectura y reglas para trabajar con Claude. | Guía técnica |
+| `../.local/` | Notas privadas y assets no oficiales. Ignorada por git: solo existe en la máquina local y no tiene respaldo. | Cajón personal |
 
 ## Conceptos
 

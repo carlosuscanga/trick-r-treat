@@ -29,6 +29,13 @@ No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
 - **Animación cutout**: Mi vo está hecha de piezas (cabeza, torso, brazos y piernas) dentro de un `Container`, animadas con tweens. Un disfraz solo cambia las texturas de las piezas, no la animación.
 - `src/main.ts` hoy solo tiene la escena temporal `SmokeTest`, que se reemplazará.
 
+## Carpeta local `.local/`
+
+Está ignorada por git: no se sube a GitHub y no tiene respaldo.
+
+- `.local/notas.md`: notas privadas (sorpresas para Mi vo, ideas a medio cocinar). Nunca copiar su contenido a archivos que se suben al repo sin que yo lo pida.
+- `.local/assets/`: assets no oficiales (borradores, pruebas de IA, referencias). El código del juego nunca debe depender de nada en `.local/`. Cuando un asset sea oficial, moverlo al proyecto.
+
 ## Restricciones de plataforma
 
 - Objetivo: Safari en iPhone, en horizontal. Usar el modo de escala `FIT` y mostrar un aviso de "gira tu teléfono" en vertical.
@@ -46,7 +53,7 @@ El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está
 
 Reglas:
 
-- Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md`. Sin instrucción concreta, proponer la siguiente tarea.
+- Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md` y, si existe, `.local/notas.md`. Sin instrucción concreta, proponer la siguiente tarea.
 - Al cerrar una sesión (o cuando yo lo pida), actualizar "Estado actual": qué se hizo, qué sigue y qué está pendiente de decidir.
 - Una rama por tarea (`T-005-calle-con-puertas`). `main` siempre es jugable.
 - Antes de empezar, marcar la tarea como `en-progreso`. Al terminar, marcar los criterios de aceptación y pasarla a `hecha`.
