@@ -10,6 +10,7 @@
 - `npm run build`: revisa tipos (`tsc --noEmit`) y genera `dist/`.
 - `npm run preview`: sirve el build.
 - `npm test`: corre los tests (Vitest), también en el CI de cada PR.
+- `npm run test:e2e`: corre los tests end-to-end (Playwright, WebKit con emulación de iPhone) contra el build, en `e2e/*.e2e.ts`. La primera vez: `npx playwright install webkit`.
 
 **Todo lleva tests.** La lógica (estado, reglas, sorteos, datos, catálogo) va en módulos sin Phaser, con su test `*.test.ts` al lado del archivo. Las escenas y lo visual se prueban en el navegador y en el celular. Verificar siempre con `npm test` y `npm run build`.
 
@@ -30,7 +31,7 @@
 - **Escenas**: Menú, SelectorDisfraz, Calle, Puerta, (una escena por minijuego), Resultado y FinJuego.
 - **Calle**: vista lateral con parallax y físicas Arcade (saltar, trepar, romper objetos). Controles táctiles: joystick a la izquierda, y botones Saltar y Brazos a la derecha.
 - **Animación cutout**: Mi vo está hecha de piezas (cabeza, torso, brazos y piernas) dentro de un `Container`, animadas con tweens. Un disfraz solo cambia las texturas de las piezas, no la animación.
-- `src/main.ts` hoy solo tiene la escena temporal `SmokeTest`, que se reemplazará.
+- `src/main.ts` arranca con la escena `Arranque` ("toca para empezar" y sonido de prueba). La plataforma (escala, orientación, diagnóstico de audio) vive en `src/plataforma/`.
 
 ## Carpeta local `.local/`
 
@@ -42,6 +43,8 @@ Está ignorada por git: no se sube a GitHub y no tiene respaldo.
 ## Restricciones de plataforma
 
 - Objetivo: Safari en iPhone, en horizontal. Usar el modo de escala `FIT` y mostrar un aviso de "gira tu teléfono" en vertical.
+- **Ancho variable:** la altura lógica es 720 y el ancho cambia con la pantalla (de 1280 a 1872, `src/plataforma/escala.ts`). Lo importante de cada escena va en la **zona segura central de 1280×720**; los lados solo muestran más escenario. Cada escena se reacomoda con `this.scale.on('resize')`. El juego llega hasta debajo del notch: controles y HUD dejan ≈40 px libres abajo y no se pegan a las esquinas.
+- **Rutas de assets:** en el loader de Phaser, sin `/` inicial (`'audio/prueba.m4a'`). La base (`/` en dev, `/trick-r-treat/` en Pages) la pone `loader.baseURL` en `src/main.ts`; nunca rutas absolutas ni relativas a la URL de la página.
 - El audio en iOS solo arranca después del primer toque del usuario.
 - Mantener el juego ligero: 2D, audio comprimido y spritesheets pequeños.
 - Se publica en GitHub Pages, con repo y página públicos. **Nunca subir datos personales ni nada del trabajo.**

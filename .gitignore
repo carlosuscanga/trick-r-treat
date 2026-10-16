@@ -6,6 +6,10 @@ dist/
 .vite/
 vite.config.*.timestamp-*
 
+# Resultados de los tests e2e (Playwright)
+test-results/
+playwright-report/
+
 # TypeScript
 *.tsbuildinfo
 

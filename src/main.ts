@@ -1,24 +1,28 @@
 import Phaser from 'phaser';
+import { Arranque } from './escenas/Arranque';
+import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
+import { pausarEnVertical } from './plataforma/orientacion';
 
-// Escena temporal: solo para comprobar que Phaser arranca. La borraremos en el paso 2.
-class SmokeTest extends Phaser.Scene {
-  constructor() {
-    super('SmokeTest');
-  }
+const contenedor = document.getElementById('game')!;
 
-  create() {
-    this.add.text(20, 20, `Phaser ${Phaser.VERSION} funcionando`, {
-      fontSize: '32px',
-      color: '#ffffff',
-    });
-  }
-}
-
-new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.AUTO,
-  parent: 'game',
-  width: 1280,
-  height: 720,
+  parent: contenedor,
   backgroundColor: '#1a1a2e',
-  scene: [SmokeTest],
+  // Los assets se piden desde la base de Vite ('/' en dev, '/trick-r-treat/' en Pages),
+  // no desde la URL de la página: así no se rompen si la página está en una subruta.
+  loader: {
+    baseURL: import.meta.env.BASE_URL,
+  },
+  scale: {
+    // FIT escala sin deformar; el ancho base se ajusta a la pantalla (ver plataforma/escala).
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: anchoParaPantalla(contenedor),
+    height: ALTO,
+  },
+  scene: [Arranque],
 });
+
+ajustarAnchoAlContenedor(game, contenedor);
+pausarEnVertical(game);
