@@ -21,7 +21,7 @@
     "url": "https://github.com/carlosuscanga/trick-r-treat/issues"
   },
   "homepage": "https://github.com/carlosuscanga/trick-r-treat#readme",
-  "private": "true",
+  "private": true,
   "dependencies": {
     "phaser": "3.90.0"
   },
