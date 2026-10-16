@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: alta
 depende: [T-006]
-plan: null
+plan: docs/planes/T-031-tests-obligatorios-antes-del-merge.md
 ---
 
 ## Qué
@@ -32,3 +32,5 @@ T-006 agrega Vitest, `npm test` y un paso de tests en el CI que corre en cada PR
 - 2026-10-16: creada a pedido del product owner, al notar que el proyecto no tenía tests. Depende de T-006, que trae Vitest y el paso `npm test` en el CI.
   - Riesgo: una regla que exige checks también puede bloquear los pushes directos a `main`, que hoy usan el orquestador y usará la Action de T-030. El plan decide entre tres opciones: una lista de excepciones (*bypass*), exigir los checks solo en los PR, o pasar esos cambios a PR.
   - No conviene hacerla en paralelo con T-030, porque las dos tocan `.github/` y la forma de escribir en `main`.
+- 2026-10-16: plan aprobado. Carlos eligió la opción C: la única excepción del ruleset es una *deploy key* que usa el orquestador para el tablero; el token de Carlos (el que usan todos los agentes) no tiene excepción, así que ni con `--admin` se mergea en rojo. También se exige la rama al día con `main`. Hallazgo: GitHub no tiene un modo de excepción "solo pushes directos" (`always`, `pull_request`, `exempt`), por eso no se usó la excepción por rol admin. T-030 queda para después: su Action usará otra deploy key como *secret*, decisión de su plan.
+- 2026-10-16: ruleset versionado en `.github/rulesets/main.json`. `src/ci/checks.test.ts` verifica que cada check exigido exista como job en `deploy.yml`; se comprobó renombrando el job `tests` a propósito (falló) y regresándolo. `docs/README.md` explica la regla, el remoto `directo` y qué hacer si un check falla.

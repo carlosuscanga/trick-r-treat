@@ -42,16 +42,30 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 - Al cerrar una versión del diseño: tag `diseno-vX.Y`. Para ver una versión vieja: `git show diseno-v0.1:docs/diseno/reglas.md`.
 - Al cerrar un hito: tag `hito-hN` (por ejemplo, `hito-h3` es la demo). La entrega final es `v1.0`. "v0.X" siempre se refiere al diseño, nunca al juego.
 
+### Checks obligatorios en `main`
+
+Un *ruleset* de GitHub protege `main` (definido en `.github/rulesets/main.json`). Nada entra a `main` si no cumple:
+
+- Los checks `tests` y `build` del CI están en verde.
+- La rama está **al día** con `main`: los checks corrieron con la versión más reciente de `main`. Si `main` avanzó, la rama trae `main` (`git merge origin/main`, o el botón "Update branch" del PR) y espera el CI otra vez.
+- No hay *force push* ni se borra `main`.
+
+Si un check falla en un PR: abrir el check en GitHub, leer el error, corregirlo en la rama y hacer push. El PR se desbloquea solo cuando todo vuelve a verde. **Nunca** se usa `gh pr merge --admin` ni la casilla "bypass" de la web para saltarse un check rojo. De todos modos no funcionan, porque la cuenta no tiene excepción, pero la regla queda escrita.
+
+**Pushes directos a `main`:** solo los hace la sesión que trabaja en `main` (la orquestadora), y solo para el tablero y el "Estado actual". Van por el remoto `directo`, que usa una *deploy key*, la única excepción del ruleset: `git push directo main`. Un `git push origin main` normal se rechaza. La llave vive en `~/.ssh/trick-r-treat-directo` de la Mac, nunca en el repo, y se revoca en Settings → Deploy keys. Las sesiones de tarea nunca usan `directo`.
+
+**Cambiar el ruleset** (por ejemplo, para exigir un check nuevo): se edita el JSON en el PR de la tarea y, **después del merge**, el orquestador lo aplica con el OK del product owner: `gh api -X PUT repos/carlosuscanga/trick-r-treat/rulesets/<id> --input .github/rulesets/main.json`. Un check solo se vuelve obligatorio cuando ya corre en `main`. Si se exige antes, todos los PRs quedan bloqueados esperándolo. El test `src/ci/checks.test.ts` verifica que cada check exigido exista como job en el CI.
+
 ## Trabajo en paralelo (worktrees)
 
 Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con su rama, del mismo repo. Así varias tareas avanzan a la vez sin pisarse.
 
 1. **Elegir:** solo tareas cuyas dependencias estén `hecha`. Los carriles del tablero dicen qué puede ir en paralelo. No hay límite fijo de tareas abiertas: si se acumulan PRs sin revisar o las ramas se alejan mucho de `main`, abrir menos.
-2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push. Así cualquier sesión sabe qué está tomado.
+2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push (`git push directo main`, ver "Checks obligatorios en `main`"). Así cualquier sesión sabe qué está tomado.
 3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`. El checkout principal también necesita su propio `npm install`; sin él, el editor marca errores falsos como "Cannot find module 'vite'".
 4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
 5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
-6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. Después, en `main` (con `git pull` antes):
+6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. GitHub solo deja mergear con `tests` y `build` en verde y la rama al día con `main`. Después, en `main` (con `git pull` antes, y el push con `git push directo main`):
    - La tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual".
    - Si un criterio solo se puede verificar en `main` (por ejemplo, que Pages publique), el PR se mergea con esa casilla abierta y explicada en la bitácora. Se verifica después del merge y se marca en el mismo commit que pasa la tarea a `hecha`.
    - Si el merge afecta a otras ramas abiertas, se les avisa para que traigan `main` con `git merge origin/main`.
