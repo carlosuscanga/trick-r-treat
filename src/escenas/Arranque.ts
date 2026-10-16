@@ -41,6 +41,12 @@ export class Arranque extends Phaser.Scene {
       return;
     }
 
+    // Phaser no carga el archivo si el navegador no soporta el formato (AAC).
+    if (!this.cache.audio.exists('prueba')) {
+      this.texto.setText('Este navegador no puede reproducir el sonido');
+      return;
+    }
+
     this.sound.play('prueba');
     this.texto.setText('¡Audio listo! 🎃');
   }
