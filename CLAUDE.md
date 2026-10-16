@@ -9,8 +9,9 @@
 - `npm run dev -- --host`: servidor de desarrollo (`--host` permite abrirlo desde el celular en la misma red).
 - `npm run build`: revisa tipos (`tsc --noEmit`) y genera `dist/`.
 - `npm run preview`: sirve el build.
+- `npm test`: corre los tests (Vitest), también en el CI de cada PR.
 
-No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
+**Todo lleva tests.** La lógica (estado, reglas, sorteos, datos, catálogo) va en módulos sin Phaser, con su test `*.test.ts` al lado del archivo. Las escenas y lo visual se prueban en el navegador y en el celular. Verificar siempre con `npm test` y `npm run build`.
 
 ## Stack y versiones
 
