@@ -56,6 +56,8 @@ Límite honesto: C no protege contra alguien que *quiera* saltarse la regla. Car
 
 Si (1) falla, el plan cae a A, se avisa a Carlos antes de seguir y se refuerza "nunca `--admin`".
 
+Resultado al aplicar (2026-10-16): (1) GitHub aceptó `DeployKey` como excepción. El ruleset quedó con id `25247200` y `current_user_can_bypass: never` para la cuenta de Carlos. (2) Se verifica al cerrar la tarea, con el push del orquestador.
+
 ## T-030: la Action que escribirá en `main`
 
 Fuera del alcance de esta tarea, pero el plan deja el camino: la Action empujará con una **segunda deploy key**, guardada como *secret* del repo, en vez de `GITHUB_TOKEN`. Así queda cubierta por la misma excepción. Otra opción sería poner la app "GitHub Actions" como excepción, pero eso dejaría saltarse la regla a **cualquier** workflow. T-030 lo decide en su plan; esta tarea lo anota en su bitácora.

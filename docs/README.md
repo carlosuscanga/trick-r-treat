@@ -54,7 +54,7 @@ Si un check falla en un PR: abrir el check en GitHub, leer el error, corregirlo 
 
 **Pushes directos a `main`:** solo los hace la sesión que trabaja en `main` (la orquestadora), y solo para el tablero y el "Estado actual". Van por el remoto `directo`, que usa una *deploy key*, la única excepción del ruleset: `git push directo main`. Un `git push origin main` normal se rechaza. La llave vive en `~/.ssh/trick-r-treat-directo` de la Mac, nunca en el repo, y se revoca en Settings → Deploy keys. Las sesiones de tarea nunca usan `directo`.
 
-**Cambiar el ruleset** (por ejemplo, para exigir un check nuevo): se edita el JSON en el PR de la tarea y, **después del merge**, el orquestador lo aplica con el OK del product owner: `gh api -X PUT repos/carlosuscanga/trick-r-treat/rulesets/<id> --input .github/rulesets/main.json`. Un check solo se vuelve obligatorio cuando ya corre en `main`. Si se exige antes, todos los PRs quedan bloqueados esperándolo. El test `src/ci/checks.test.ts` verifica que cada check exigido exista como job en el CI.
+**Cambiar el ruleset** (por ejemplo, para exigir un check nuevo): se edita el JSON en el PR de la tarea y, **después del merge**, el orquestador lo aplica con el OK del product owner: `gh api -X PUT repos/carlosuscanga/trick-r-treat/rulesets/25247200 --input .github/rulesets/main.json`. Un check solo se vuelve obligatorio cuando ya corre en `main`. Si se exige antes, todos los PRs quedan bloqueados esperándolo. El test `src/ci/checks.test.ts` verifica que cada check exigido exista como job en el CI.
 
 ## Trabajo en paralelo (worktrees)
 
