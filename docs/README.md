@@ -37,16 +37,27 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 ## Git
 
 - `main` siempre es jugable: lo que entra a `main` se publica en GitHub Pages.
-- Una rama por tarea: `T-007-flujo-de-escenas`.
+- Una rama por tarea, cada una en su propio worktree: `T-007-flujo-de-escenas`. Entra a `main` por pull request (ver "Trabajo en paralelo").
 - Commits pequeños, en español e imperativo, con el ID: `T-007: añade escenas placeholder conectadas`.
 - Al cerrar una versión del diseño: tag `diseno-vX.Y`. Para ver una versión vieja: `git show diseno-v0.1:docs/diseno/reglas.md`.
 - Al cerrar un hito: tag `hito-hN` (por ejemplo, `hito-h3` es la demo). La entrega final es `v1.0`. "v0.X" siempre se refiere al diseño, nunca al juego.
 
+## Trabajo en paralelo (worktrees)
+
+Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con su rama, del mismo repo. Así varias tareas avanzan a la vez sin pisarse.
+
+1. **Elegir:** solo tareas cuyas dependencias estén `hecha`. Los carriles del tablero dicen qué puede ir en paralelo. No hay límite fijo de tareas abiertas: si se acumulan PRs sin revisar o las ramas se alejan mucho de `main`, abrir menos.
+2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push. Así cualquier sesión sabe qué está tomado.
+3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git), con la rama `T-NNN-titulo` desde `main` actualizado. Adentro: `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`.
+4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
+5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
+6. **Merge y cierre (en `main`):** merge sin squash, para conservar los commits pequeños. Después, en `main`: la tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual". Se borran la rama y el worktree.
+
 ## Sesiones con Claude
 
 - **Al empezar:** preguntar "¿qué sigue?". Claude lee el "Estado actual" y el tablero (`tareas/README.md`) y propone la siguiente tarea.
-- **Durante:** una tarea `en-progreso` a la vez. Decisiones y bloqueos van a la bitácora de la tarea.
-- **Al terminar:** Claude actualiza el estado de la tarea, su bitácora, el tablero y el "Estado actual".
+- **Durante:** una tarea por worktree. Decisiones y bloqueos van a la bitácora de la tarea.
+- **Al terminar:** Claude actualiza la bitácora en la rama, y el estado, el tablero y el "Estado actual" en `main`.
 
 ## Definición de "hecho"
 
@@ -54,7 +65,7 @@ Una tarea está `hecha` cuando:
 
 1. Cumple todos sus criterios de aceptación.
 2. `npm run build` pasa y se probó en el navegador (y en el celular si toca controles o pantalla).
-3. Está en `main`.
+3. Está en `main` mediante un PR mergeado.
 4. La tarea y el tablero están actualizados.
 
 Las tareas de diseño están hechas cuando el cambio está en `diseno/` y registrado en `CAMBIOS.md`.

@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # Notas y assets locales: no se suben al repo (ver CLAUDE.md)
 .local/
+
+# Worktrees de tareas en paralelo (ver docs/README.md)
+.claude/worktrees/

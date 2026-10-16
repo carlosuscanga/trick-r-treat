@@ -140,13 +140,13 @@ Lo que queda fuera de la v1 a propósito. No tiene tareas todavía.
 ## Estados
 
 - `pendiente`: aún no empieza.
-- `en-progreso`: se está trabajando. Solo una a la vez.
+- `en-progreso`: se está trabajando, en su propio worktree. Puede haber varias a la vez.
 - `bloqueada`: no puede avanzar. Anotar el motivo en la bitácora.
 - `hecha`: cumple la definición de "hecho" de [`docs/README.md`](../README.md).
 
 ## Reglas
 
-- El estado vive en el frontmatter del archivo **y** en el tablero. Al cambiarlo, actualizar ambos.
+- El estado vive en el frontmatter del archivo **y** en el tablero. Al cambiarlo, actualizar ambos, siempre **en `main`**. Las ramas solo tocan los criterios y la bitácora de su propia tarea.
 - Los archivos no se mueven ni se borran al terminar; solo cambia el estado.
 - Una tarea grande se parte en subtareas con su propio ID.
 - Los IDs son consecutivos y no se reutilizan.
