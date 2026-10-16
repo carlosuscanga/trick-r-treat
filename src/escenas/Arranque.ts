@@ -25,7 +25,17 @@ export class Arranque extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    // El ancho del juego cambia con la pantalla: recentrar al cambiar.
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.centrar, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off(Phaser.Scale.Events.RESIZE, this.centrar, this);
+    });
+
     this.input.on('pointerup', () => this.sonarPrueba());
+  }
+
+  private centrar(gameSize: Phaser.Structs.Size) {
+    this.texto.setPosition(gameSize.width / 2, gameSize.height / 2);
   }
 
   private sonarPrueba() {
