@@ -6,7 +6,7 @@ hito: H2
 estado: en-progreso
 prioridad: alta
 depende: [T-001]
-plan: null
+plan: docs/planes/T-006-gamestate-y-datos.md
 ---
 
 ## Qué
@@ -27,3 +27,4 @@ Todas las escenas leen y escriben este estado. Ser data-driven permite agregar v
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1. Puede adelantarse a H1: solo depende de T-001.
+- 2026-10-16: plan aprobado. Decisiones: los dulces se guardan en medios (enteros de 0 a 20) solo dentro del código, y Mi vo sigue viendo `6½/10`; el vecino no lleva dificultad en su JSON porque se sortea en cada partida (T-008); el script de verificación se commitea en `scripts/`; `tsconfig.json` no cambia.
