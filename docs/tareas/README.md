@@ -58,7 +58,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
-| [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | en-progreso | alta | T-006 | requerido |
+| [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-004
@@ -103,6 +103,7 @@ Al final: el bucle con 1 minijuego, ya con arte, sonido, nombre y celebración. 
 | [T-019](T-019-menu-y-celebracion.md) | Menú, selector y celebración con arte | arte | pendiente | media | T-011, T-018 | — |
 | [T-020](T-020-entrega-demo.md) | Pulido y entrega de la demo | codigo | pendiente | alta | T-013 … T-019 | — |
 | [T-021](T-021-playtest-demo-mi-vo.md) | Playtest de la demo con Mi vo | investigacion | pendiente | alta | T-020 | — |
+| [T-032](T-032-tutorial-pantalla-de-inicio.md) | Tutorial para añadir el juego a la pantalla de inicio | codigo | pendiente | baja | T-003, T-018 | — |
 
 ```
 A (personaje)   T-013 ──────────┐
@@ -110,6 +111,7 @@ B (escenario)   T-014 ─→ T-016 ─┤
 C (minijuego)   T-015 ──────────┼─→ T-020 ─→ T-021
 D (audio)       T-017 ──────────┤      ← puede adelantarse desde H1, tras T-003
 E (identidad)   T-018 ─→ T-019 ─┘      ← T-018 puede pensarse desde ya
+F (inicio)          └──→ T-032          ← opcional: no bloquea la demo
 ```
 
 ### H4 · Minijuegos
