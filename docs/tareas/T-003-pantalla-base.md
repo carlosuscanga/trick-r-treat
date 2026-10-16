@@ -3,10 +3,10 @@ id: T-003
 titulo: Pantalla base para iPhone
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-001]
-plan: ../planes/T-003-pantalla-base.md
+plan: docs/planes/T-003-pantalla-base.md
 ---
 
 ## Qué
@@ -75,3 +75,4 @@ Son restricciones de la plataforma que todo lo demás da por hechas. Si fallan, 
   - CI: job propio `e2e` en `deploy.yml`, también en `needs` de `deploy`; no se agregó al ruleset (decisión pendiente del product owner). `test-results/` va al `.gitignore`.
   - En `playwright.config.ts` se declaró `process` a mano, porque el archivo queda fuera del `tsconfig` y no hay `@types/node`; así no hace falta otra dependencia.
   - Resultado local: Vitest 32/32, Playwright 4/4, build y `actionlint` OK. Se comprobó que los tests fallan al reintroducir los bugs de hoy (ancho fijo y rutas sin `loader.baseURL`).
+- 2026-10-16: PR #6 mergeado sin squash (`14794a4`) con el OK de Carlos, con `tests`, `e2e` y `build` en verde. Tarea `hecha`. Lo que salga de la prueba manual en Pages se registra como tarea nueva, sin reabrir esta. Hacer `e2e` obligatorio queda en T-033.

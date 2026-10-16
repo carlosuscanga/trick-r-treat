@@ -54,17 +54,18 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 |----|-------|------|--------|------|---------|------|
 | [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
-| [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | en-progreso | alta | T-001 | — |
+| [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | hecha | alta | T-001 | [plan](../planes/T-003-pantalla-base.md) |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
+| [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | en-progreso | alta | T-003, T-031 | — |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-004
 B                     └──→ T-002 ─→ T-030
 C                 T-005                       ← desde ya
-D (CI)            T-006 ─→ T-031              ← T-006 es de H2; no en paralelo con T-030
+D (CI)            T-006 ─→ T-031 ─→ T-033     ← T-006 es de H2; no en paralelo con T-030
 ```
 
 ### H2 · Bucle completo
