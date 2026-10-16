@@ -75,8 +75,8 @@ Reglas:
 - Un cambio a la vez, en archivos pequeños y separados, indicando la ruta de cada archivo.
 - Lo jugable con placeholders va antes que el arte.
 - Commits pequeños al terminar cada paso, en español y en imperativo, con el ID de la tarea: `T-007: añade escenas placeholder conectadas`.
-- Siempre que me presentes un plan o documentación y me pidas retroalimentación, ábrelo en **Plannotator** para que lo anote. No basta con mostrarlo en el chat.
-  - Documento nuevo: `/plannotator-annotate` sobre el archivo markdown.
-  - Cambios a documentos existentes: `/plannotator-review` **antes del commit**, para que vea solo el diff y no el archivo completo.
+- Siempre que me presentes un plan, documentación o una edición para que la revise, pregúntame primero: **"¿Quieres revisarlo aquí o en Plannotator?"**. No lo abras sin preguntar. Si elijo Plannotator:
+  - Documento nuevo: `plannotator annotate <archivo>`.
+  - Cambios a documentos existentes: `plannotator review` **antes del commit**, para que vea solo el diff y no el archivo completo.
 - Responder en español.
 - Cada vez que se mencione el nombre del proyecto, escribirlo con calabaza: **🎃 Trick-r-Treat** (en docs, README, títulos y mensajes). La excepción son los identificadores técnicos (`package.json`, URLs, rutas).
