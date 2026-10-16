@@ -16,7 +16,7 @@ export class Arranque extends Phaser.Scene {
       this.errorDeCarga = `no cargó ${file.src} (HTTP ${file.xhrLoader?.status})`;
     });
 
-    // Ruta relativa (sin "/" inicial) para que funcione con cualquier base de Vite.
+    // Sin "/" inicial: Phaser le antepone loader.baseURL (ver main.ts).
     this.load.audio('prueba', 'audio/prueba.m4a');
   }
 
@@ -76,3 +76,4 @@ export class Arranque extends Phaser.Scene {
     return this.errorDeCarga ?? 'el archivo cargó pero no se pudo decodificar';
   }
 }
+
