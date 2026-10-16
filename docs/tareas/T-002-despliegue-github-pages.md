@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: alta
 depende: [T-001]
-plan: null
+plan: docs/planes/T-002-despliegue-github-pages.md
 ---
 
 ## Qué
