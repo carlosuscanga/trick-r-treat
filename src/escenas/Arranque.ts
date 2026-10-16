@@ -5,12 +5,17 @@ import Phaser from 'phaser';
 export class Arranque extends Phaser.Scene {
   private texto!: Phaser.GameObjects.Text;
   private esperandoDesbloqueo = false;
+  private errorDeCarga: string | null = null;
 
   constructor() {
     super('Arranque');
   }
 
   preload() {
+    this.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: Phaser.Loader.File) => {
+      this.errorDeCarga = `no cargó ${file.src} (HTTP ${file.xhrLoader?.status})`;
+    });
+
     // Ruta relativa (sin "/" inicial) para que funcione con cualquier base de Vite.
     this.load.audio('prueba', 'audio/prueba.m4a');
   }
@@ -22,6 +27,8 @@ export class Arranque extends Phaser.Scene {
       .text(width / 2, height / 2, 'Toca para empezar', {
         fontSize: '48px',
         color: '#ff9a3c',
+        align: 'center',
+        wordWrap: { width: 1200 },
       })
       .setOrigin(0.5);
 
@@ -51,13 +58,21 @@ export class Arranque extends Phaser.Scene {
       return;
     }
 
-    // Phaser no carga el archivo si el navegador no soporta el formato (AAC).
     if (!this.cache.audio.exists('prueba')) {
-      this.texto.setText('Este navegador no puede reproducir el sonido');
+      this.texto.setText(`Sin sonido: ${this.motivoSinAudio()}`);
       return;
     }
 
     this.sound.play('prueba');
     this.texto.setText('¡Audio listo! 🎃');
+  }
+
+  // Las tres formas en que el sonido puede faltar, para diagnosticar en el teléfono.
+  private motivoSinAudio(): string {
+    const { m4a, aac } = this.sys.game.device.audio;
+    if (!m4a && !aac) {
+      return 'el navegador no soporta AAC';
+    }
+    return this.errorDeCarga ?? 'el archivo cargó pero no se pudo decodificar';
   }
 }
