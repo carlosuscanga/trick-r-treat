@@ -9,6 +9,8 @@ Versión del diseño: v0.1
 - [Concepto](concepto.md): de qué trata, cómo se ve y cómo se juega.
 - [Reglas](reglas.md): cómo se gana, cómo se pierde, casas y exploración.
 - [Personajes](personajes.md): la niña, sus disfraces, los vecinos y sus sustos.
+- [Cambios](CAMBIOS.md): versiones del diseño. **La v0.2 está en curso** y reemplaza partes de estos documentos.
+- [Ideas](ideas.md): ideas para el futuro.
 
 ## Pendiente por definir
 

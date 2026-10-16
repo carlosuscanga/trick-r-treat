@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Juego web móvil de Halloween (Phaser 3 + TypeScript + Vite). Una niña disfrazada toca puertas: cada vecino le pone un minijuego; si gana, recibe un dulce, y si pierde, un susto. El diseño completo está en `docs/diseno/`.
+Juego web móvil de Halloween (Phaser + TypeScript + Vite). Es un regalo para **Mi vo**, que es la protagonista: refiérete a ella siempre así. Mi vo, disfrazada, toca puertas: cada vecino le pone un minijuego; si gana, recibe dulces, y si pierde, un susto. El diseño completo está en `docs/diseno/`. La v0.2 está en curso en `docs/diseno/CAMBIOS.md`, y donde contradiga a los demás docs, manda ella.
 
 ## Comandos
 
@@ -35,17 +35,19 @@ No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
 
 ## Flujo de trabajo
 
-Toda la documentación está en `docs/`, en español:
+El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está en **`docs/README.md`**. Seguirlo. Toda la documentación está en `docs/`, en español:
 
-- `docs/diseno/`: qué es el juego, para cualquier lector. Sin detalles técnicos.
+- `docs/diseno/`: qué es el juego, para cualquier lector. Sin detalles técnicos. Los cambios se registran en `CAMBIOS.md` y las ideas a futuro en `ideas.md`.
 - `docs/tareas/`: tablero estilo Jira. Un archivo por tarea (`T-NNN-titulo.md`) con su estado en el frontmatter, más el tablero en `docs/tareas/README.md`. Al cambiar un estado, actualizar **ambos**.
-- `docs/planes/`: planes de implementación con el mismo ID que su tarea. **Los planes se guardan aquí**, no en `docs/superpowers/plans/` ni en otra ruta por defecto.
+- `docs/planes/`: planes de implementación con el mismo ID que su tarea. **Los planes y specs se guardan aquí**, no en `docs/superpowers/` ni en otra ruta por defecto.
 
-Ciclo: diseño → tarea → plan (si la tarea no es trivial) → código → commit → tarea `hecha`.
+Reglas:
 
+- Al empezar una sesión sin instrucción concreta, leer el tablero y proponer la siguiente tarea.
+- Una rama por tarea (`T-005-calle-con-puertas`). `main` siempre es jugable.
 - Antes de empezar, marcar la tarea como `en-progreso`. Al terminar, marcar los criterios de aceptación y pasarla a `hecha`.
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
-- Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/`.
+- Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/` y `CAMBIOS.md`.
 
 ## Cómo trabajar conmigo
 
