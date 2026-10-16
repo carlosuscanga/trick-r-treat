@@ -7,7 +7,7 @@ Es un regalo para Mi vo y, a la vez, un proyecto para aprender el ciclo completo
 ## Estado
 
 - **Diseño:** v0.2 cerrado ([cambios](docs/diseno/CAMBIOS.md)).
-- **Fase actual:** planeación de hitos y tareas.
+- **Fase actual:** H1 · Esqueleto en el iPhone. La v1 está planeada en 5 hitos y 29 tareas ([tablero](docs/tareas/README.md)).
 - **Juego:** todavía no es jugable; solo existe una escena de prueba.
 
 ## Documentación

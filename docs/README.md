@@ -16,7 +16,8 @@ Este repo es a la vez el código, el "Jira" y el "Confluence" del proyecto. Todo
 
 ## Conceptos
 
-- **Hito**: un objetivo con algo jugable al final (como un *release* de Jira). Cada tarea pertenece a un hito.
+- **Hito**: un objetivo con algo jugable al final (como un *release* de Jira). Cada tarea pertenece a un hito. Se nombran `H1` … `H5`; los hitos y su planeación están en [`tareas/README.md`](tareas/README.md).
+- **Revisión con Mi vo**: Mi vo actúa como cliente y juega los entregables para dar retroalimentación. El product owner decide cuándo; cada revisión se registra como tarea y lo que salga se convierte en tareas nuevas o en cambios de diseño.
 - **Tarea**: unidad de trabajo con tipo, estado, dependencias y criterios de aceptación. Detalles en [`tareas/README.md`](tareas/README.md).
 - **Tipos de tarea**: `diseno`, `codigo`, `arte`, `bug`, `investigacion`. El diseño también se trabaja con tareas, así su refinamiento queda registrado igual que el código.
 - **Plan**: el paso a paso técnico de una tarea no trivial. Comparte el ID con su tarea.
@@ -36,9 +37,10 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 ## Git
 
 - `main` siempre es jugable: lo que entra a `main` se publica en GitHub Pages.
-- Una rama por tarea: `T-005-calle-con-puertas`.
-- Commits pequeños, en español e imperativo, con el ID: `T-005: añade escena Calle con puertas placeholder`.
+- Una rama por tarea: `T-007-flujo-de-escenas`.
+- Commits pequeños, en español e imperativo, con el ID: `T-007: añade escenas placeholder conectadas`.
 - Al cerrar una versión del diseño: tag `diseno-vX.Y`. Para ver una versión vieja: `git show diseno-v0.1:docs/diseno/reglas.md`.
+- Al cerrar un hito: tag `hito-hN` (por ejemplo, `hito-h3` es la demo). La entrega final es `v1.0`. "v0.X" siempre se refiere al diseño, nunca al juego.
 
 ## Sesiones con Claude
 

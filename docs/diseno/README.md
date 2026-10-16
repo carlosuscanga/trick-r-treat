@@ -25,4 +25,4 @@ Qué es el juego y cómo se juega, explicado para cualquier persona. Aquí no va
 - **Minijuegos:** investigar los minijuegos más populares y divertidos (WarioWare, Mario Party) para adaptarlos y tropicalizarlos. Definir cada candidato a detalle y elegir cuáles entran en la v1.
 - **Disfraces:** confirmar sus ventajas y definir el disfraz del tipo Puntería.
 - **Exploración:** cuántos dulces escondidos hay por calle y dónde.
-- Nombre del juego.
+- Nombre del juego. 🎃 Trick-r-Treat es el nombre del proyecto, no el del juego.

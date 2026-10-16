@@ -55,7 +55,7 @@ Reglas:
 
 - Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md` y, si existe, `.local/notas.md`. Sin instrucción concreta, proponer la siguiente tarea.
 - Al cerrar una sesión (o cuando yo lo pida), actualizar "Estado actual": qué se hizo, qué sigue y qué está pendiente de decidir.
-- Una rama por tarea (`T-005-calle-con-puertas`). `main` siempre es jugable.
+- Una rama por tarea (`T-007-flujo-de-escenas`). `main` siempre es jugable.
 - Antes de empezar, marcar la tarea como `en-progreso`. Al terminar, marcar los criterios de aceptación y pasarla a `hecha`.
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
 - Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/` y `CAMBIOS.md`.
@@ -66,6 +66,7 @@ Reglas:
 - Explícame el proceso y las decisiones: en qué fase estamos, por qué hacemos cada documento y qué alternativas hay. Del código, solo lo necesario para revisarlo y decidir; no hace falta un tutorial de programación.
 - Un cambio a la vez, en archivos pequeños y separados, indicando la ruta de cada archivo.
 - Lo jugable con placeholders va antes que el arte.
-- Commits pequeños al terminar cada paso, en español y en imperativo, con el ID de la tarea: `T-005: añade escena Calle con puertas placeholder`.
+- Commits pequeños al terminar cada paso, en español y en imperativo, con el ID de la tarea: `T-007: añade escenas placeholder conectadas`.
+- Siempre que me presentes un plan o documentación y me pidas retroalimentación, ábrelo en **Plannotator** (`/plannotator-annotate` sobre el archivo markdown) para que lo anote. No basta con mostrarlo en el chat.
 - Responder en español.
 - Cada vez que se mencione el nombre del proyecto, escribirlo con calabaza: **🎃 Trick-r-Treat** (en docs, README, títulos y mensajes). La excepción son los identificadores técnicos (`package.json`, URLs, rutas).
