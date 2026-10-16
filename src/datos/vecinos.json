@@ -1,0 +1,10 @@
+[
+  { "id": "vecino-1", "nombre": "Don Calabaza", "disfraz": "Calabaza gigante", "susto": "se-agranda" },
+  { "id": "vecino-2", "nombre": "Doña Telaraña", "disfraz": "Araña", "susto": "tiembla" },
+  { "id": "vecino-3", "nombre": "Señor Vendas", "disfraz": "Momia", "susto": "salta" },
+  { "id": "vecino-4", "nombre": "La Murciélago", "disfraz": "Murciélago", "susto": "salta" },
+  { "id": "vecino-5", "nombre": "Don Aullido", "disfraz": "Hombre lobo", "susto": "se-agranda" },
+  { "id": "vecino-6", "nombre": "Doña Caldera", "disfraz": "Hechicera", "susto": "tiembla" },
+  { "id": "vecino-7", "nombre": "Señor Tornillos", "disfraz": "Monstruo de laboratorio", "susto": "se-agranda" },
+  { "id": "vecino-8", "nombre": "El Espantapájaros", "disfraz": "Espantapájaros", "susto": "tiembla" }
+]
