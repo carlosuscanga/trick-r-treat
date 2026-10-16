@@ -48,10 +48,14 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 
 1. **Elegir:** solo tareas cuyas dependencias estén `hecha`. Los carriles del tablero dicen qué puede ir en paralelo. No hay límite fijo de tareas abiertas: si se acumulan PRs sin revisar o las ramas se alejan mucho de `main`, abrir menos.
 2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push. Así cualquier sesión sabe qué está tomado.
-3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`.
+3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`. El checkout principal también necesita su propio `npm install`; sin él, el editor marca errores falsos como "Cannot find module 'vite'".
 4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
 5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
-6. **Merge y cierre (en `main`):** merge sin squash, para conservar los commits pequeños. Después, en `main`: la tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual". Se borran el worktree y las ramas. GitHub borra sola la rama remota al hacer merge. El hook de seguridad `dcg` no deja que el agente borre ramas, así que la rama local la borra el product owner (`git branch -d T-NNN-titulo`).
+6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. Después, en `main` (con `git pull` antes):
+   - La tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual".
+   - Si un criterio solo se puede verificar en `main` (por ejemplo, que Pages publique), el PR se mergea con esa casilla abierta y explicada en la bitácora. Se verifica después del merge y se marca en el mismo commit que pasa la tarea a `hecha`.
+   - Si el merge afecta a otras ramas abiertas, se les avisa para que traigan `main` con `git merge origin/main`.
+   - **Limpieza**, en este orden: (1) en el worktree, confirmar que `git rev-list --count origin/main..HEAD` da 0, es decir, que todo está en `main`; (2) quitar el worktree con `ExitWorktree remove` y `discard_changes: true`. Como la rama ya se renombró, la herramienta busca el nombre viejo `worktree-…`, avisa de commits "descartados" que en realidad ya están en `main`, y no borra la rama; (3) el product owner borra la rama local con `git branch -d T-NNN-titulo`. Mientras el worktree exista, ese comando falla con "used by worktree", y el hook de seguridad `dcg` no deja que el agente borre ramas.
 
 ## Sesiones con Claude
 
@@ -64,7 +68,7 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 Una tarea está `hecha` cuando:
 
 1. Cumple todos sus criterios de aceptación.
-2. `npm run build` pasa y se probó en el navegador (y en el celular si toca controles o pantalla).
+2. Lo nuevo tiene tests, `npm test` y `npm run build` pasan, y se probó en el navegador (y en el celular si toca controles o pantalla).
 3. Está en `main` mediante un PR mergeado.
 4. La tarea y el tablero están actualizados.
 

@@ -3,7 +3,7 @@ id: T-002
 titulo: Despliegue automático a GitHub Pages
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-001]
 plan: docs/planes/T-002-despliegue-github-pages.md
@@ -19,8 +19,8 @@ Publicar `main` en GitHub Pages de forma automática al hacer push (GitHub Actio
 
 ## Criterios de aceptación
 
-- [ ] Un push a `main` publica el build en la URL de GitHub Pages.
-- [ ] El juego carga desde esa URL en Safari del iPhone (rutas de assets correctas).
+- [x] Un push a `main` publica el build en la URL de GitHub Pages.
+- [x] El juego carga desde esa URL en Safari del iPhone (rutas de assets correctas).
 - [x] La URL queda anotada en el `README.md`.
 - [x] No se publica nada de `.local/` ni datos personales.
 
@@ -32,3 +32,5 @@ Publicar `main` en GitHub Pages de forma automática al hacer push (GitHub Actio
 - 2026-10-16: verificado en la rama. `npm run dev` sigue en `/`. `npm run build && npm run preview -- --port 5174 --strictPort` sirve en `/trick-r-treat/`: el JS carga (200) y Phaser arranca en el navegador. `dist/` solo tiene `index.html` y `assets/index-*.js`, sin nada de `.local/` ni datos personales; las coincidencias de `.local` en el bundle son código interno de Phaser (`this.localWorld`). Además, el workflow compila desde un checkout de git, donde `.local/` no existe. El único 404 en la consola es `/favicon.ico`: el proyecto no tiene favicon, y no tiene que ver con `base`.
 - 2026-10-16: los dos primeros criterios quedan sin marcar a propósito. Pages solo publica desde `main`, y antes del merge hay que activarlo con "Source: GitHub Actions" (hace pública la página, con OK de Carlos). Los verifica y marca el orquestador en `main` después del merge.
 - Aviso para T-003, T-006 y siguientes: las rutas de assets en Phaser no deben empezar con `/` (funcionan en dev y se rompen en Pages). Usar rutas relativas o `import.meta.env.BASE_URL`.
+- 2026-10-16: PR #2 mergeado (`03c1e68`). Verificado en `main` por el orquestador: el run 38871567493 (build y deploy) pasó en verde, Pages está en modo `workflow` y https://carlosuscanga.github.io/trick-r-treat/ responde 200. Falta la prueba en el iPhone para el segundo criterio.
+- 2026-10-16: Carlos probó la URL en Safari del iPhone: carga y se ve `SmokeTest`. Los 4 criterios están cumplidos y la tarea queda `hecha`.

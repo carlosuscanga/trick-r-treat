@@ -1,0 +1,7 @@
+[
+  { "id": "gata", "nombre": "Gata negra", "tipo": "reflejos", "ventaja": "Todo cae un 20% más lento" },
+  { "id": "bruja", "nombre": "Bruja", "tipo": "memoria", "ventaja": "La bola de cristal repite la secuencia una vez por minijuego" },
+  { "id": "vampira", "nombre": "Vampira", "tipo": "puzzle", "ventaja": "Visión nocturna: muestra piezas bien puestas o una jugada posible" },
+  { "id": "fantasma", "nombre": "Fantasma", "tipo": "plataformas", "ventaja": "Levita brevemente al caer para corregir el salto" },
+  { "id": "esqueleto", "nombre": "Esqueleto", "tipo": "ritmo", "ventaja": "Margen de acierto más amplio" }
+]

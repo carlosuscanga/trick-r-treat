@@ -53,16 +53,18 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
 | [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
-| [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | en-progreso | alta | T-001 | — |
+| [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | en-progreso | alta | T-001 | — |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
+| [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | en-progreso | alta | T-006 | requerido |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-004
 B                     └──→ T-002 ─→ T-030
 C                 T-005                       ← desde ya
+D (CI)            T-006 ─→ T-031              ← T-006 es de H2; no en paralelo con T-030
 ```
 
 ### H2 · Bucle completo
@@ -71,7 +73,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
-| [T-006](T-006-gamestate-y-datos.md) | GameState y datos en JSON | codigo | en-progreso | alta | T-001 | — |
+| [T-006](T-006-gamestate-y-datos.md) | GameState y datos en JSON | codigo | hecha | alta | T-001 | [plan](../planes/T-006-gamestate-y-datos.md) |
 | [T-007](T-007-flujo-de-escenas.md) | Flujo de escenas placeholder | codigo | pendiente | alta | T-004, T-006 | — |
 | [T-008](T-008-calle-de-8-casas.md) | Calle de 8 casas con sorteo | codigo | pendiente | alta | T-007 | — |
 | [T-009](T-009-catalogo-de-minijuegos.md) | Catálogo de minijuegos y contrato | codigo | pendiente | alta | T-007 | requerido |
