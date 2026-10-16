@@ -3,7 +3,7 @@ id: T-006
 titulo: GameState y datos en JSON
 tipo: codigo
 hito: H2
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-001]
 plan: docs/planes/T-006-gamestate-y-datos.md
@@ -33,3 +33,4 @@ Todas las escenas leen y escriben este estado. Ser data-driven permite agregar v
 - 2026-10-16: pendiente de decidir: el editor marca `node:assert/strict` en el script porque falta `@types/node`. Es solo visual; quitarlo requiere esa dependencia.
 - 2026-10-16: cambio de alcance (decisión de Carlos, con el OK del orquestador). El CI solo compilaba y no corría el script, así que entraron tests de verdad: Vitest 5.0.3, `npm test`, `src/estado/GameState.test.ts` y `src/datos/datos.test.ts` (13 tests). El CI corre `npm test` antes del build. Se quitó `scripts/verificar-estado.ts`, y con eso se resuelve lo de `@types/node`. Regla nueva: **todo lleva tests**, escrita en `CLAUDE.md` y en la "Definición de hecho" de `docs/README.md`. El orquestador asignó a T-006 `package.json`, `package-lock.json`, el workflow y esas líneas de los docs. Los tests detectan errores: con la regla rota a propósito (9½ ganaba) falló el test correspondiente.
 - 2026-10-16: se trajo `main` con la regla nueva de "Pruebas" (T-031). La sección "Verificación" del plan pasó a llamarse "Pruebas". En el CI, los tests quedaron en un job propio llamado `tests`, con un nombre estable para que T-031 lo marque como check requerido, y `deploy` espera a `tests` y a `build`.
+- 2026-10-16: PR #3 mergeado sin squash (`9a0000f`) con el OK de Carlos. Tarea `hecha`.
