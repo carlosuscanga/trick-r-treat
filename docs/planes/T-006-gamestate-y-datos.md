@@ -105,10 +105,11 @@ Si más adelante el HUD necesita enterarse de los cambios sin preguntar en cada 
 export type TipoReto = 'reflejos' | 'memoria' | 'puzzle' | 'plataformas' | 'ritmo' | 'punteria';
 export type Dificultad = 'facil' | 'media' | 'dificil';
 export type TipoSusto = 'salta' | 'tiembla' | 'se-agranda';
-export const DULCES_POR_DIFICULTAD = { facil: 1, media: 2, dificil: 3 } as const;
 ```
 
 `TipoReto` y `Dificultad` los va a reutilizar el catálogo de minijuegos (T-009).
+
+Desvío al implementar: `tipos.ts` quedó **solo con tipos** (nada que exista al ejecutar). `DULCES_POR_DIFICULTAD` y las listas de valores válidos para el validador se movieron a `src/datos/index.ts`. Así, para Node, todo lo de `tipos.ts` es `import type` y se borra al ejecutar, y el script de verificación funciona sin cambiar `tsconfig.json` (ver "Verificación"). Las listas válidas son `Record<TipoReto, true>`: si alguien agrega un tipo y olvida la lista, `tsc` falla.
 
 **`src/datos/disfraces.json`**: los 5 disfraces definidos en `personajes.md`. El de puntería sigue "por definir", así que no entra hasta que el diseño lo defina.
 
@@ -155,6 +156,7 @@ No hay tests en el proyecto. Propuesta sin dependencias nuevas:
 
 - Un script `scripts/verificar-estado.ts` que usa `node:assert` (incluido en Node) y se corre con `node scripts/verificar-estado.ts`. Node 24 ejecuta TypeScript directo.
 - Para que funcione, el código de `src/` evita lo que Node no sabe leer: `enum`, y los imports entre archivos de `src/` en tiempo de ejecución (los `import type` sí se permiten, porque se borran al ejecutar). Por eso `GameState` no importa nada en tiempo de ejecución.
+- El editor marca `Cannot find name 'node:assert/strict'` en el script porque `scripts/` está fuera de `tsconfig.json` y no está instalado `@types/node`. Es solo visual: no afecta al build ni a la ejecución. Quitarlo requiere esa dependencia, así que queda a decisión de Carlos.
 - No es un framework de pruebas: es un script que falla con un error si algo no cumple.
 
 Decidido (2026-10-16): el script se commitea en `scripts/`, como base de pruebas a futuro (T-007 y T-011 lo pueden volver a correr). No pesa en el juego porque no está en `src/` y Vite no lo incluye. No se toca `package.json`, así que no habrá `npm test`.
@@ -187,7 +189,7 @@ Cada paso es un commit `T-006: …`.
 4. Script de verificación en `scripts/`.
 5. Cierre: marcar criterios, llenar la bitácora, push y PR `T-006: GameState y datos en JSON`.
 
-Nota: como nada de esto se conecta todavía a `main.ts`, Vite lo descarta del build (no lo usa nadie). `npm run build` sí revisa sus tipos con `tsc`, pero el empaquetado real de los JSON se confirma en T-007, cuando una escena los importe. Por eso el script es la verificación principal de esta tarea.
+Nota: como nada de esto se conecta todavía a `main.ts`, Vite lo descarta del build (no lo usa nadie). `npm run build` sí revisa sus tipos con `tsc`. Para no esperar a T-007, se hizo un build aparte con Vite de solo `src/datos/index.ts` (salida fuera del repo): empaqueta los JSON y carga 5 disfraces y 8 vecinos.
 
 ## Riesgos y dudas
 
