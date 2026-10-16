@@ -6,10 +6,15 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trabajo.
 
-- **Última sesión (2026-10-16):** planeación de la v1 terminada. Se cortaron 5 hitos (H1 a H5) y se crearon 29 tareas (T-001 a T-029). Las decisiones están abajo, en "Planeación de la v1".
-- **Fase:** H1 · Esqueleto en el iPhone. Todavía no hay código nuevo.
-- **Siguiente paso:** T-001 (limpieza técnica), que abre la ruta crítica. En paralelo se pueden arrancar T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
+- **Última sesión (2026-10-16):** planeación de la v1 terminada.
+  - Hay 5 hitos (H1 a H5) y 29 tareas (T-001 a T-029). Las decisiones y su porqué están abajo, en "Planeación de la v1".
+  - Se definió el trabajo en paralelo: un worktree por tarea en `.claude/worktrees/`, entrada a `main` por PR y estados del tablero solo en `main` (`docs/README.md`, "Trabajo en paralelo"). No hay límite fijo de tareas abiertas.
+  - Se instaló el plugin `typescript-lsp` a nivel proyecto (`.claude/settings.json`), con `typescript-language-server` 5.3.0 y `typescript@6.0.3` globales, porque TypeScript 7 no trae `tsserver`. Se activa al reiniciar Claude Code.
+  - `CLAUDE.md` ahora pide abrir Plannotator para pedir retroalimentación: `annotate` para documentos nuevos y `review` (el diff, antes del commit) para cambios.
+- **Fase:** H1 · Esqueleto en el iPhone. Todavía no hay código nuevo y `main` aún no se publica en Pages (eso es T-002).
+- **Siguiente paso:** T-001 (limpieza técnica), que abre la ruta crítica. Es la **primera tarea con el flujo de worktree y PR**: seguir los 6 pasos de `docs/README.md` y, si algo del flujo no funciona en la práctica, ajustar la documentación. En paralelo se pueden arrancar T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
 - **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida.
+- **Pendiente técnico:** en T-001, verificar que el LSP funciona con el TypeScript 7 de `node_modules` (es un criterio de aceptación).
 
 ## Planeación de la v1
 
