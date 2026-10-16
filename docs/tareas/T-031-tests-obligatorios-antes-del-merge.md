@@ -3,7 +3,7 @@ id: T-031
 titulo: Tests obligatorios antes del merge
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-006]
 plan: null
