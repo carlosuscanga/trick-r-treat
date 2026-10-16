@@ -14,7 +14,8 @@ No hay tests todavía. Verificar con `npm run build` y probando en el navegador.
 ## Stack y versiones
 
 - Phaser **3.90.0**, TypeScript 7.0.2 y Vite 8.3.4, con versiones exactas (`.npmrc` tiene `save-exact=true`).
-- Usar siempre APIs de Phaser 3.x. Nunca código de Phaser 4, de versiones antiguas ni de otros motores.
+- Decisión del 2026-10-16: quedarse en Phaser 3.90 y no pasar a Phaser 4. Phaser 4 (estable desde abril de 2026) tiene poco material, y los agentes de IA mezclarían sus APIs con las de Phaser 3. La 3.90 ya tiene iluminación 2D y postFX, suficiente para el estilo del juego. Migrar a 4 más adelante sigue siendo posible.
+- Usar siempre APIs de Phaser 3.x. Nunca código de Phaser 4 ni de otros motores.
 - Para agregar dependencias, preguntar antes y fijar la versión exacta.
 
 ## Arquitectura
@@ -51,7 +52,8 @@ Reglas:
 
 ## Cómo trabajar conmigo
 
-- Soy programador backend y nuevo en videojuegos. Explícame paso a paso qué haces y por qué (escenas, objetos, configuración de Phaser), no solo el código.
+- Soy programador backend y nuevo en videojuegos. Mi objetivo es **aprender el ciclo completo de desarrollo como manager**: requerimientos, diseño, planeación, gestión de tareas, revisión y entrega. El código lo escriben agentes de IA.
+- Explícame el proceso y las decisiones: en qué fase estamos, por qué hacemos cada documento y qué alternativas hay. Del código, solo lo necesario para revisarlo y decidir; no hace falta un tutorial de programación.
 - Un cambio a la vez, en archivos pequeños y separados, indicando la ruta de cada archivo.
 - Lo jugable con placeholders va antes que el arte.
 - Commits pequeños al terminar cada paso, en español y en imperativo, con el ID de la tarea: `T-005: añade escena Calle con puertas placeholder`.

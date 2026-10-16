@@ -9,6 +9,7 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 ### Propósito
 
 - El juego es un proyecto para aprender a hacer videojuegos y, a la vez, un regalo para **Mi vo**.
+- El objetivo de aprendizaje es el ciclo completo de desarrollo, desde el punto de vista de un manager. El código lo escriben agentes de IA.
 - La v1 no tiene fecha: se entrega cuando esté lista.
 - Mi vo juega de forma casual: puede haber reto, pero las reglas deben entenderse rápido.
 
@@ -16,7 +17,7 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 
 - **Protagonista:** Mi vo en versión caricatura. Su diseño lo genera una IA por fuera del proyecto.
 - **Vecinos:** personas cualquiera con disfraces, no gente real.
-- **Partida:** dura de 5 a 10 minutos.
+- **Partida:** dura de 10 a 15 minutos. Cada minijuego dura de 45 a 90 segundos.
 - **Variedad:** cada partida es distinta, porque los minijuegos y la dificultad se sortean en cada casa.
 - **Calle:** tiene 8 casas y cada una se visita una sola vez.
 - **Dificultad y recompensa:** cada casa muestra cuántos dulces da, y eso indica su dificultad: fácil da 1, media 2 y difícil 3. Mi vo elige a qué casa ir.
@@ -30,7 +31,6 @@ Entrevista de requerimientos, iniciada el 2026-10-15. Todavía no se aplica a lo
 
 ### Por definir
 
-- Cuánto dura cada minijuego. 20 a 40 segundos se siente poco.
 - Los 4 minijuegos concretos y la ventaja de cada disfraz.
 - Los controles completos: moverse, trepar, romper.
 - El nombre del juego.
