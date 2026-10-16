@@ -52,20 +52,26 @@ Un *ruleset* de GitHub protege `main` (definido en `.github/rulesets/main.json`)
 
 Si un check falla en un PR: abrir el check en GitHub, leer el error, corregirlo en la rama y hacer push. El PR se desbloquea solo cuando todo vuelve a verde. **Nunca** se usa `gh pr merge --admin` ni la casilla "bypass" de la web para saltarse un check rojo. De todos modos no funcionan, porque la cuenta no tiene excepción, pero la regla queda escrita.
 
-**Pushes directos a `main`:** solo los hace la sesión que trabaja en `main` (la orquestadora), y solo para el tablero y el "Estado actual". Van por el remoto `directo`, que usa una *deploy key*, la única excepción del ruleset: `git push directo main`. Un `git push origin main` normal se rechaza. La llave vive en `~/.ssh/trick-r-treat-directo` de la Mac, nunca en el repo, y se revoca en Settings → Deploy keys. Las sesiones de tarea nunca usan `directo`.
+**Pushes directos a `main`:** solo los hace la sesión que trabaja en `main` (la orquestadora), y solo para el tablero y el "Estado actual". Usan una *deploy key*, la única excepción del ruleset, indicada en el propio comando (no hay nada configurado en el repo):
 
-**Cambiar el ruleset** (por ejemplo, para exigir un check nuevo): se edita el JSON en el PR de la tarea y, **después del merge**, el orquestador lo aplica con el OK del product owner: `gh api -X PUT repos/carlosuscanga/trick-r-treat/rulesets/25247200 --input .github/rulesets/main.json`. Un check solo se vuelve obligatorio cuando ya corre en `main`. Si se exige antes, todos los PRs quedan bloqueados esperándolo. El test `src/ci/checks.test.ts` verifica que cada check exigido exista como job en el CI.
+```bash
+GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' git push git@github.com:carlosuscanga/trick-r-treat.git main
+```
+
+Un `git push origin main` normal se rechaza. Las sesiones de tarea **nunca** usan este comando. Límite honesto: la llave vive en `~/.ssh/trick-r-treat-directo` de la Mac (nunca en el repo) y cualquier sesión podría leerla. Lo que protege `main` de las sesiones de tarea es esta regla escrita, más que su token de `gh` no tiene permiso de administración (no puede tocar el ruleset ni las deploy keys). La llave se revoca en Settings → Deploy keys.
+
+**Cambiar el ruleset** (por ejemplo, para exigir un check nuevo): se edita el JSON en el PR de la tarea y, **después del merge**, el product owner lo aplica con su cuenta (el token de las sesiones no tiene permiso para hacerlo): `gh api -X PUT repos/carlosuscanga/trick-r-treat/rulesets/25247200 --input .github/rulesets/main.json`. Un check solo se vuelve obligatorio cuando ya corre en `main`. Si se exige antes, todos los PRs quedan bloqueados esperándolo. El test `src/ci/checks.test.ts` verifica que cada check exigido exista como job en el CI.
 
 ## Trabajo en paralelo (worktrees)
 
 Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con su rama, del mismo repo. Así varias tareas avanzan a la vez sin pisarse.
 
 1. **Elegir:** solo tareas cuyas dependencias estén `hecha`. Los carriles del tablero dicen qué puede ir en paralelo. No hay límite fijo de tareas abiertas: si se acumulan PRs sin revisar o las ramas se alejan mucho de `main`, abrir menos.
-2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push (`git push directo main`, ver "Checks obligatorios en `main`"). Así cualquier sesión sabe qué está tomado.
+2. **Arrancar (en `main`):** marcar la tarea `en-progreso` en su archivo y en el tablero, hacer commit y push con la deploy key (comando en "Checks obligatorios en `main`"). Así cualquier sesión sabe qué está tomado.
 3. **Crear el worktree:** con la herramienta nativa de Claude Code, en `.claude/worktrees/` (ignorada por git). La herramienta parte de `origin/main`, y por eso el paso 2 hace push antes. Nombra la rama `worktree-T-NNN-titulo`, así que hay que renombrarla enseguida con `git branch -m T-NNN-titulo`. Adentro: `nvm use`, `npm install` y `npm run build` para confirmar que se parte de una base limpia. Cada worktree usa su propio puerto de `vite`. El checkout principal también necesita su propio `npm install`; sin él, el editor marca errores falsos como "Cannot find module 'vite'".
 4. **Trabajar:** en la rama se editan el código, el plan y **solo el archivo de su propia tarea** (criterios y bitácora). El tablero y el "Estado actual" **no se tocan en las ramas**, para evitar conflictos.
 5. **Pull request:** push de la rama y PR a `main`, con el ID en el título (`T-007: flujo de escenas placeholder`). El product owner lo revisa en GitHub (diff, comentarios, `/code-review`).
-6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. GitHub solo deja mergear con `tests` y `build` en verde y la rama al día con `main`. Después, en `main` (con `git pull` antes, y el push con `git push directo main`):
+6. **Merge y cierre (en `main`):** con el OK del product owner, el merge lo hace la sesión que trabaja en `main` (la orquestadora, cuando hay varias tareas en paralelo), nunca la sesión de la rama. Así el cierre y los avisos quedan en un solo lugar. Es sin squash, para conservar los commits pequeños, y GitHub borra sola la rama remota. GitHub solo deja mergear con `tests` y `build` en verde y la rama al día con `main`. Después, en `main` (con `git pull` antes, y el push con la deploy key):
    - La tarea pasa a `hecha` en su archivo y en el tablero, y se actualiza el "Estado actual".
    - Si un criterio solo se puede verificar en `main` (por ejemplo, que Pages publique), el PR se mergea con esa casilla abierta y explicada en la bitácora. Se verifica después del merge y se marca en el mismo commit que pasa la tarea a `hecha`.
    - Si el merge afecta a otras ramas abiertas, se les avisa para que traigan `main` con `git merge origin/main`.

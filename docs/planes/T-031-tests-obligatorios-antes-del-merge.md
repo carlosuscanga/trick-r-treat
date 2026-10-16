@@ -47,6 +47,9 @@ Límite honesto: C no protege contra alguien que *quiera* saltarse la regla. Car
   - `git remote add directo git@github.com:carlosuscanga/trick-r-treat.git`
   - `git config core.sshCommand "ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes"` (solo afecta a remotos SSH; `origin` sigue por HTTPS).
 - El orquestador sigue con `git pull` desde `origin` y empuja el tablero con `git push directo main`.
+- **Endurecimiento (2026-10-16, aprobado por Carlos antes del merge):** se quitaron el remoto `directo` y `core.sshCommand`. `.git/config` lo comparten todos los worktrees, así que cualquier sesión de tarea tenía el atajo a mano, y `core.sshCommand` afectaba a cualquier operación SSH del repo. Ahora la llave va en el propio comando, sin nada configurado en el repo:
+  `GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' git push git@github.com:carlosuscanga/trick-r-treat.git main`
+  Lleva valores literales y ninguna variable `$`, porque `dcg` bloquea las variables. La llave sigue legible en la Mac. La protección contra las sesiones de tarea es la regla escrita más el token de `gh` del proyecto: fine-grained, solo de este repo y **sin permiso de administración**, así que no puede tocar el ruleset ni las deploy keys. Por lo mismo, aplicar cambios al ruleset ahora lo hace Carlos con su cuenta.
 - En el ruleset: `bypass_actors: [{ actor_type: "DeployKey", bypass_mode: "always" }]`. Esto aplica a todas las deploy keys del repo, y hoy solo existe esta.
 
 **Por verificar al aplicar** (la documentación de GitHub no lo deja claro):
@@ -98,7 +101,7 @@ Manuales (en GitHub, con el ruleset ya aplicado):
 |---|---|
 | Un PR con un test roto queda bloqueado | PR de prueba `prueba-T-031-rojo` con un test que falla a propósito. Se espera el check `tests` en rojo y que `gh pr merge` se niegue. Para la vía `--admin` no se intenta el merge: si el ruleset estuviera mal, metería el test roto a `main`. En su lugar se consulta a GitHub si la cuenta puede saltarse la regla (campo `current_user_can_bypass` del ruleset); debe decir `never`. Se revisa también en la web que el botón de merge esté deshabilitado. Después se cierra el PR y se borra su rama. |
 | Un PR en verde se mergea normal | El PR de esta misma tarea: el orquestador lo mergea sin squash con el OK de Carlos. |
-| Los pushes directos siguen funcionando | El orquestador, al cerrar T-031: primero `git push origin main` (debe rechazarse) y luego `git push directo main` (debe entrar). Ninguno de los dos deja `main` a medias: el commit es el cierre real de la tarea. |
+| Los pushes directos siguen funcionando | El orquestador, al cerrar T-031: primero `git push origin main` (debe rechazarse) y luego el push con la deploy key en el comando (debe entrar). Ninguno de los dos deja `main` a medias: el commit es el cierre real de la tarea. |
 | `docs/README.md` explica la regla | Revisión de Carlos en Plannotator. |
 | El cambio de configuración tiene el OK de Carlos | Se pide explícitamente antes de crear la llave y el ruleset. |
 
