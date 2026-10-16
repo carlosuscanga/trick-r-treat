@@ -13,7 +13,8 @@ Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trab
   - GitHub no deja aprobar un PR propio. La aprobación es el visto bueno del product owner, y el merge sigue siendo sin squash.
 - **Fase:** H1 · Esqueleto en el iPhone. `main` todavía no se publica en Pages (eso es T-002).
 - **Siguiente paso:** T-003 (pantalla base, ruta crítica). En paralelo ya se pueden hacer T-002 (Pages) y T-006 (GameState). Siguen disponibles T-005 (investigación de minijuegos; el product owner propone títulos), T-012 (pipeline de arte) y T-018 (nombre del juego).
-- **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. Si se automatiza el cierre de tareas después del merge (hook o GitHub Action).
+- **Pendiente de decidir:** el plan de T-004 (controles) antes de programarla. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida.
+- **Decidido al cierre:** el cambio de estado al hacer merge se automatiza con una GitHub Action (T-030, después de T-002). El "Estado actual" sigue siendo manual.
 
 ## Planeación de la v1
 
@@ -56,10 +57,11 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | pendiente | alta | T-001 | — |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
+| [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-004
-B                     └──→ T-002
+B                     └──→ T-002 ─→ T-030
 C                 T-005                       ← desde ya
 ```
 
