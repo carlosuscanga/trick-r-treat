@@ -25,3 +25,6 @@ vite.config.*.timestamp-*
 
 # Worktrees de tareas en paralelo (ver docs/README.md)
 .claude/worktrees/
+
+# Permisos locales de Claude Code: son de cada máquina, no del repo
+.claude/settings.local.json
