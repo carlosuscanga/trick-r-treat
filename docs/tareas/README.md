@@ -103,6 +103,7 @@ Al final: el bucle con 1 minijuego, ya con arte, sonido, nombre y celebración. 
 | [T-019](T-019-menu-y-celebracion.md) | Menú, selector y celebración con arte | arte | pendiente | media | T-011, T-018 | — |
 | [T-020](T-020-entrega-demo.md) | Pulido y entrega de la demo | codigo | pendiente | alta | T-013 … T-019 | — |
 | [T-021](T-021-playtest-demo-mi-vo.md) | Playtest de la demo con Mi vo | investigacion | pendiente | alta | T-020 | — |
+| [T-032](T-032-tutorial-pantalla-de-inicio.md) | Tutorial para añadir el juego a la pantalla de inicio | codigo | pendiente | baja | T-003, T-018 | — |
 
 ```
 A (personaje)   T-013 ──────────┐
@@ -110,6 +111,7 @@ B (escenario)   T-014 ─→ T-016 ─┤
 C (minijuego)   T-015 ──────────┼─→ T-020 ─→ T-021
 D (audio)       T-017 ──────────┤      ← puede adelantarse desde H1, tras T-003
 E (identidad)   T-018 ─→ T-019 ─┘      ← T-018 puede pensarse desde ya
+F (inicio)          └──→ T-032          ← opcional: no bloquea la demo
 ```
 
 ### H4 · Minijuegos
