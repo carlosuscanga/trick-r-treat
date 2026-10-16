@@ -46,7 +46,8 @@ jobs:
       - run: npm test
 
   # Corre los tests end-to-end (Playwright, WebKit) contra el build. El nombre
-  # "e2e" es estable: T-031 lo marca como check requerido para mergear.
+  # "e2e" es estable: desde T-033 es check requerido para mergear
+  # (.github/rulesets/main.json), así que no hay que renombrarlo.
   e2e:
     name: e2e
     runs-on: ubuntu-latest
