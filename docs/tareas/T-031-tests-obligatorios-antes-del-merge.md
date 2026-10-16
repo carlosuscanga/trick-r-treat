@@ -3,7 +3,7 @@ id: T-031
 titulo: Tests obligatorios antes del merge
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-006]
 plan: docs/planes/T-031-tests-obligatorios-antes-del-merge.md
@@ -22,8 +22,8 @@ T-006 agrega Vitest, `npm test` y un paso de tests en el CI que corre en cada PR
 ## Criterios de aceptación
 
 - [x] Un PR con un test roto muestra el check en rojo, y GitHub no deja mergearlo. Se prueba con un PR de prueba que después se cierra.
-- [ ] Un PR con tests y build en verde se mergea normal, sin squash.
-- [ ] El flujo sigue funcionando: los commits directos a `main` (tablero, "Estado actual") y los de la Action de T-030 no quedan bloqueados, o el plan define otra forma de hacerlos.
+- [x] Un PR con tests y build en verde se mergea normal, sin squash.
+- [x] El flujo sigue funcionando: los commits directos a `main` (tablero, "Estado actual") y los de la Action de T-030 no quedan bloqueados, o el plan define otra forma de hacerlos.
 - [x] `docs/README.md` explica la regla y qué hacer cuando un check falla.
 - [x] El cambio de configuración del repo se hace con el OK del product owner.
 
@@ -38,3 +38,4 @@ T-006 agrega Vitest, `npm test` y un paso de tests en el CI que corre en cada PR
 - 2026-10-16: prueba en rojo con el PR #5 (rama `prueba-T-031-rojo`, un test que falla a propósito). `tests` en rojo, PR en `BLOCKED`, y `gh pr merge 5 --merge` se negó con "the base branch policy prohibits the merge". `gh` sugirió `--admin`, como se había previsto; no se intentó, porque si el ruleset estuviera mal metería el test roto a `main`, y `current_user_can_bypass: never` ya muestra que no aplica. El PR se cerró sin mergear y la rama se borró.
 - 2026-10-16: dos criterios quedan para el cierre en `main`, porque solo se pueden verificar ahí: (1) que este PR, en verde, se mergee normal sin squash; (2) que `git push origin main` se rechace y `git push directo main` entre (prueba del orquestador con el commit de cierre). Lo de T-030 queda definido en el plan: otra deploy key como *secret*.
 - 2026-10-16: endurecimiento antes del merge, aprobado por Carlos. Se quitaron de `.git/config` el remoto `directo` y `core.sshCommand`, porque esa configuración la comparten todos los worktrees y dejaba el atajo a mano de cualquier sesión. Las entradas `credential.*` no se tocaron. El orquestador empuja con la llave en el comando: `GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' git push git@github.com:carlosuscanga/trick-r-treat.git main`. Desde esta sesión no se pudo probar con `--dry-run`, porque el aislamiento del worktree bloquea git contra otro destino; sí se probó que la llave autentica (`ssh -T` responde "Hi carlosuscanga/trick-r-treat!"). El orquestador prueba el comando completo. Además: las sesiones ahora usan un token fine-grained solo de este repo, sin permiso de administración, así que cambiar el ruleset lo hace Carlos con su cuenta. `docs/README.md` y el plan quedaron actualizados. Se agregó `.claude/settings.local.json` al `.gitignore`.
+- 2026-10-16: PR #4 mergeado sin squash (`c5cf901`) con el OK de Carlos: estaba CLEAN, con `tests` y `build` en verde. Verificado en `main` con este mismo commit de cierre: `git push origin main` se rechazó con "GH013: Repository rule violations found for refs/heads/main … 2 of 2 required status checks are expected" (`push declined due to repository rule violations`) y el push con la deploy key entró. Tarea `hecha`.
