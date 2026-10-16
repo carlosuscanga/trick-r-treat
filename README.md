@@ -4,6 +4,8 @@ Juego web de Halloween para jugar en el celular. **Mi vo** elige un disfraz y re
 
 Es un regalo para Mi vo y, a la vez, un proyecto para aprender el ciclo completo de desarrollo de un videojuego.
 
+**Jugar:** https://carlosuscanga.github.io/trick-r-treat/ (en el celular, en horizontal).
+
 ## Estado
 
 - **Diseño:** v0.2 cerrado ([cambios](docs/diseno/CAMBIOS.md)).
@@ -24,3 +26,8 @@ Hecho con Phaser 3.90, TypeScript y Vite. Las versiones exactas de las dependenc
 - `npm install`: instala dependencias.
 - `npm run dev -- --host`: servidor de desarrollo (con `--host` se puede abrir desde el celular en la misma red).
 - `npm run build`: revisa tipos y genera `dist/`.
+- `npm run preview`: sirve el build en `/trick-r-treat/`, igual que en GitHub Pages.
+
+## Publicación
+
+Cada push a `main` publica 🎃 Trick-r-Treat en GitHub Pages de forma automática con GitHub Actions ([workflow](.github/workflows/deploy.yml)). En los pull requests, el mismo workflow solo compila, para avisar si algo se rompió antes del merge. Detalles y decisiones en el [plan de T-002](docs/planes/T-002-despliegue-github-pages.md).

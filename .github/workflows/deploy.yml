@@ -1,0 +1,66 @@
+# Compila el juego y lo publica en GitHub Pages.
+# - Push a main (o botón "Run workflow"): compila y publica.
+# - Pull request a main: solo compila, para ver ✅/❌ antes del merge.
+# Decisiones y alternativas: docs/planes/T-002-despliegue-github-pages.md
+
+name: Build y despliegue
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Sin permisos por defecto: cada job pide solo lo que usa.
+permissions: {}
+
+# En un PR, un push nuevo cancela el build anterior.
+# En main, los despliegues terminan en orden y nunca se cortan a la mitad.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          # Sin caché de npm: ver decisión 7 del plan.
+          package-manager-cache: false
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Sube dist/ como artifact de Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
