@@ -1,0 +1,22 @@
+[
+  {"query": "La Calle va lenta en el iPhone de Mi vo, se traba cuando camina. ¿Qué puede ser y cómo lo arreglo?", "should_trigger": true},
+  {"query": "Agrega partículas de chispas cuando a Mi vo le dan un susto", "should_trigger": true},
+  {"query": "Escribe el plan de T-004 siguiendo docs/planes/README.md", "should_trigger": true},
+  {"query": "Revisa el PR de la escena Puerta antes de que lo mergee", "should_trigger": true},
+  {"query": "Después de jugar varios minijuegos seguidos, Safari recarga la página solo. Investiga por qué", "should_trigger": true},
+  {"query": "Carga el atlas nuevo de la Gata negra en la escena SelectorDisfraz", "should_trigger": true},
+  {"query": "Pon música de fondo en la Calle que suene en bucle", "should_trigger": true},
+  {"query": "Cuando vuelvo a jugar el minijuego, el contador de dulces empieza donde se quedó. Arréglalo", "should_trigger": true},
+  {"query": "Agrega un parallax de tres capas a la Calle con casas al fondo", "should_trigger": true},
+  {"query": "¿Cuánto pesa el bundle ahora y cabe en el presupuesto?", "should_trigger": true},
+  {"query": "Actualiza el tablero: marca T-036 como en-progreso", "should_trigger": false},
+  {"query": "Escribe el diseño del vecino de la casa 3 en docs/diseno/", "should_trigger": false},
+  {"query": "Renombra el título de T-018 en el tablero a 'Nombre definitivo del juego'", "should_trigger": false},
+  {"query": "¿Qué sigue según el Estado actual?", "should_trigger": false},
+  {"query": "Agrega una idea a ideas.md: disfraces que se encuentran escondidos en la calle", "should_trigger": false},
+  {"query": "Corrige la ortografía de docs/diseno/reglas.md", "should_trigger": false},
+  {"query": "Agrega un disfraz nuevo de Vampiro en disfraces.json con su tipo de reto", "should_trigger": false},
+  {"query": "Agrega una prueba unitaria a GameState para cuando los dulces llegan a 10", "should_trigger": false},
+  {"query": "Explícame qué es un ruleset de GitHub y por qué bloquea mi PR", "should_trigger": false},
+  {"query": "Renueva el token de gh del proyecto: ¿qué permisos le pongo?", "should_trigger": false}
+]

@@ -1,0 +1,69 @@
+diff --git a/src/escenas/Prueba.ts b/src/escenas/Prueba.ts
+new file mode 100644
+--- /dev/null
++++ b/src/escenas/Prueba.ts
+@@ -0,0 +1,37 @@
++import Phaser from 'phaser';
++
++// Escena de prueba: un cuadro que avanza y suma puntos al tocarlo.
++export class Prueba extends Phaser.Scene {
++  private puntos = 0;
++  private terminado = false;
++  private cuadro!: Phaser.GameObjects.Rectangle;
++
++  constructor() {
++    super('Prueba');
++  }
++
++  create() {
++    this.cuadro = this.add.rectangle(100, 360, 80, 80, 0xff9a3c).setInteractive();
++    this.cuadro.on('pointerdown', () => {
++      this.puntos += 1;
++    });
++
++    this.scale.on('resize', (tam: Phaser.Structs.Size) => {
++      this.cuadro.setY(tam.height / 2);
++    });
++
++    this.events.on('shutdown', () => {
++      this.cuadro.removeAllListeners();
++    });
++  }
++
++  update() {
++    if (this.terminado) return;
++    const destino = new Phaser.Math.Vector2(this.scale.width - 100, this.cuadro.y);
++    this.cuadro.x += 5;
++    if (this.cuadro.x >= destino.x) {
++      this.terminado = true;
++      this.scene.restart();
++    }
++  }
++}
+diff --git a/src/main.ts b/src/main.ts
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -1,5 +1,6 @@
+ import Phaser from 'phaser';
+ import { Arranque } from './escenas/Arranque';
++import { Prueba } from './escenas/Prueba';
+ import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
+ import { pausarEnVertical } from './plataforma/orientacion';
+ 
+@@ -9,6 +10,7 @@
+   type: Phaser.AUTO,
+   parent: contenedor,
+   backgroundColor: '#1a1a2e',
++  fps: { limit: 60 },
+   // Los assets se piden desde la base de Vite ('/' en dev, '/trick-r-treat/' en Pages),
+   // no desde la URL de la página: así no se rompen si la página está en una subruta.
+   loader: {
+@@ -21,7 +23,7 @@
+     width: anchoParaPantalla(contenedor),
+     height: ALTO,
+   },
+-  scene: [Arranque],
++  scene: [Arranque, Prueba],
+ });
+ 
+ ajustarAnchoAlContenedor(game, contenedor);
