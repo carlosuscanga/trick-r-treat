@@ -525,16 +525,18 @@ description: Reglas de rendimiento, memoria y caché de 🎃 Trick-r-Treat para 
 
 T-037 y T-038 podrían ir juntas, pero separadas siguen la regla de "un cambio a la vez".
 
-## 13. Decisiones pendientes para el product owner
+## 13. Decisiones del product owner (2026-10-16)
 
-1. **`disablePreFX: true`** (renunciar a `preFX` por objeto a cambio de −61 MiB). **Recomiendo sí**: postFX y Light2D se quedan.
-2. **Guardar y reanudar la partida** (ROB-03, T-042). No está en el diseño v0.2. **Recomiendo sí** en H3, por el riesgo de jetsam en una partida de 15 min. Habría que actualizar `docs/diseno/` y `CAMBIOS.md`.
-3. **Nitidez: 720 a 1x o "retina".** Retina multiplica ×2.6 los píxeles por frame y la memoria del arte, y cambia el contrato de 720. **Recomiendo 720 y 1x** con estilo caricatura.
-4. **Interruptor de silencio:** respetarlo (lo normal en iOS) o forzar el sonido con `navigator.audioSession.type = 'playback'`. **Recomiendo respetarlo** y que el diagnóstico de audio diga "¿tu iPhone está en silencio?".
-5. **Modo oficial de juego: pantalla de inicio.** El almacenamiento está separado de Safari (RED-06). **Recomiendo** declararlo y decírselo a Mi vo (encaja con T-032).
-6. **Assets en `src/assets/` con hash** en lugar de `public/`. Cambia la convención de rutas de `CLAUDE.md`. **Recomiendo sí**, antes del primer arte.
-7. **`?depurar` disponible en producción** (sin datos personales, apagado por defecto). **Recomiendo sí**: permite medir el build real en el iPhone y lo necesitan los e2e.
-8. **Convención de física:** por escena (`physics: { arcade }`) o global (`default: 'arcade'` en el juego). **Recomiendo por escena**.
+Revisadas en Plannotator. Se aceptaron las 8 recomendaciones, con un ajuste en la 4.
+
+1. **`disablePreFX: true`:** sí. Se renuncia a `preFX` por objeto a cambio de −61 MiB; postFX y Light2D se quedan.
+2. **Guardar y reanudar la partida** (ROB-03, T-042): sí, en H3, por el riesgo de jetsam en una partida de 15 min. Es más ligero de lo que suena: el `GameState` es un JSON chico (disfraz, dulces, sustos y casas visitadas) que se guarda en `localStorage` en puntos seguros, como al salir de cada casa, y al abrir se ofrece "Continuar". Cambia el diseño v0.2: actualizar `docs/diseno/` y `CAMBIOS.md` en esa tarea.
+3. **Nitidez:** 720 y 1x, con estilo caricatura.
+4. **Interruptor de silencio:** se respeta (lo normal en iOS). **Ajuste:** en lugar de texto, un **ícono de bocina silenciada**. Ojo: no hay una API web conocida que le diga al juego si el interruptor está activado (🔬), así que el ícono no puede aparecer solo cuando hay silencio. Propuesta: mostrarlo como recordatorio breve en "toca para empezar" (bocina con una nota de "sube el volumen"). El diseño final del ícono va en T-017 (música y sonidos).
+5. **Modo oficial de juego: pantalla de inicio.** Se declara y se le dice a Mi vo (encaja con T-032).
+6. **Assets en `src/assets/` con hash** en lugar de `public/`: sí, antes del primer arte. Cambia la convención de rutas de `CLAUDE.md` (en la tarea que lo implemente).
+7. **`?depurar` disponible en producción** (sin datos personales, apagado por defecto): sí.
+8. **Convención de física:** por escena (`physics: { arcade }`).
 
 ## 14. Pruebas
 
