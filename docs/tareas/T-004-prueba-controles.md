@@ -3,7 +3,7 @@ id: T-004
 titulo: Prueba de controles táctiles
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-003, T-034, T-035, T-045]
 plan: null
