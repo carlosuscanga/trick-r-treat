@@ -11,7 +11,7 @@ Reglas TEX-01 a TEX-09 (texturas y arte) y FRA-05 a FRA-08 (postFX, Light2D, cut
 
 ### TEX-01 · Un atlas por escena o familia, y objetos ordenados por textura
 - **Hacer:** un atlas por disfraz de Mi vo, uno de escenografía de la Calle, uno de HUD y controles y uno por minijuego. Usa `this.add.image(x, y, 'calle', 'farol')`, no un PNG suelto. No intercales en profundidad objetos de atlas distintos.
-- **Si todavía no existe:** si el e2e necesita `?depurar` (contador de `drawArrays`), crea la base mínima con el comentario "mínima; T-037 la completa"; si ya existe, úsala.
+- **Si todavía no existe:** el contador de `drawArrays` de `?depurar` es de T-037: no lo construyas; si el e2e necesita llegar al juego, usa la mínima de `?depurar` (solo `window.__juego`) y calcula a mano en el test o mide en el iPhone.
 - **Verifica:** e2e que cuenta `drawArrays` por frame con `?depurar` (WebKit con emulación de iPhone usa el mismo pipeline móvil); más revisión de código.
 - **Por qué:** en móvil cada cambio de textura es otro draw call (11 sprites alternando 2 texturas: 10 draw calls; agrupados: 2). [Guía, TEX](../../../../docs/planes/T-034-performance-y-memoria.md#42-texturas-y-arte-tex).
 
@@ -47,6 +47,8 @@ Reglas TEX-01 a TEX-09 (texturas y arte) y FRA-05 a FRA-08 (postFX, Light2D, cut
 - **Hacer:** al apagarse la escena, un tick después de `SHUTDOWN`, quita solo las claves propias del minijuego:
   ```ts
   this.alLimpiar(() => this.game.events.once(Phaser.Core.Events.POST_STEP, () => {
+    // Con scene.restart() la escena ya volvió a arrancar en este mismo step y usa la textura: no borrar.
+    if (this.sys.getStatus() !== Phaser.Scenes.SHUTDOWN) return;
     for (const k of ['lluvia']) if (this.textures.exists(k)) this.textures.remove(k);
   }));
   ```

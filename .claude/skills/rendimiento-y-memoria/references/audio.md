@@ -9,7 +9,7 @@ Reglas de audio para Phaser 3.90 y el presupuesto de PCM vivo. Fuente: [sección
 
 ### AUD-02 · Música: mono, bucle corto (≤ 90 s), una sola pista viva
 - **Hacer:** pistas mono de 90 s o menos; solo una música cargada a la vez (liberar la anterior, ver AUD-05).
-- **Si todavía no existe:** el manifest de audio sale de `src/assets` + `paraLoader` (T-039). Si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-039 la completa"; no la refines; si ya existe, úsala.
+- **Si todavía no existe:** el manifest de assets (con la duración y los canales del audio) es de T-040; los assets salen de `src/assets` + `paraLoader` (T-039). Si la tarea lo necesita, crea la base mínima del manifest con el comentario "mínima; T-040 la completa"; no la refines; si ya existe, úsala.
 - **Verifica:** unitaria (manifest: segundos × canales × 48 000 × 4 ≤ presupuesto); e2e (suma de `cache.audio`).
 - **Por qué:** el `AudioBuffer` es float32 por canal a 48 kHz: 90 s mono = 17.3 MB y 3 min estéreo = 69.1 MB ([guía](../../../../docs/planes/T-034-performance-y-memoria.md#43-audio-aud)).
 

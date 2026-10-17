@@ -10,6 +10,6 @@ paths: ["src/**/*.ts"]
 - TEX-07 / AUD-05: el minijuego libera al salir sus texturas y su audio (`removeByKey` + `cache.audio.remove`).
 - POO-03: nada de `new`, `{}`, `[]` ni *closures* dentro de `update()`.
 - FRA-04: todo movimiento con `delta` (px/s), nunca px por frame.
-- RED-03: assets en `src/assets/`, importados y con `paraLoader()`; nada nuevo en `public/`.
+- RED-03: assets en `src/assets/`, importados y con `paraLoader()`; en `public/` solo nombres fijos (manifest, íconos, `sw.js`).
 - ROB-01: pausar en `LOSE_WEBGL`, redibujar y reanudar en `RESTORE_WEBGL`.
 - Carga el skill `rendimiento-y-memoria` antes de escribir o revisar escenas.

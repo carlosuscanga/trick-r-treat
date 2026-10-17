@@ -29,7 +29,7 @@ Reglas de pooling y de framerate para Phaser 3.90. Guía completa: [T-034](../..
 
 ### FRA-01 · `Phaser.AUTO`; efectos solo con WebGL
 - **Hacer:** `type: Phaser.AUTO`. Aplica postFX solo si `this.renderer.type === Phaser.WEBGL`; Canvas es el respaldo y no tiene postFX ni Light2D.
-- **Si todavía no existe:** el overlay que imprime el tipo de renderer es `?depurar` (T-037). Si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-037 la completa"; no la refines; si ya existe, úsala.
+- **Si todavía no existe:** el overlay de `?depurar` que imprime el tipo de renderer es de T-037: no lo construyas; si el e2e necesita llegar al juego, usa la mínima de `?depurar` (solo `window.__juego`) y calcula a mano en el test o mide en el iPhone.
 - **Verifica:** revisión de código; el overlay imprime el tipo de renderer.
 - **Por qué:** 3.90 pide WebGL 1 y Safari lo corre sobre ANGLE + Metal. [Guía 4.6](../../../../docs/planes/T-034-performance-y-memoria.md#46-frames-y-framerate-fra).
 
@@ -65,5 +65,5 @@ Se miden en el iPhone 13; son SLOs que se calibran ahí. [Guía 5](../../../../d
 | Trabajo por frame en la Calle | ≤ 8 ms | Timelines › Frames |
 | Modo de bajo consumo | jugable a 30 fps, a la misma velocidad en segundos | manual |
 
-- **Si todavía no existe:** el overlay `?depurar` que mide `rawDelta` es de T-037. Si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-037 la completa"; no la refines; si ya existe, úsalo.
+- **Si todavía no existe:** el overlay de `?depurar` que mide `rawDelta` es de T-037: no lo construyas; si el e2e necesita llegar al juego, usa la mínima de `?depurar` (solo `window.__juego`) y calcula a mano en el test o mide en el iPhone.
 - `performance.now()` tiene resolución de 1 ms en WebKit, así que los umbrales van en ms enteros.

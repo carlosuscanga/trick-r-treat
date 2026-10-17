@@ -31,7 +31,7 @@ Reglas CAR-01 a CAR-04 y RED-01 a RED-06, más los presupuestos de bytes. Solo P
 
 ### CAR-04 · Medir el presupuesto de JS en gzip
 - **Hacer:** medir el JS como lo sirve Pages (gzip, no brotli); `zlib.gzipSync` nivel 6 da casi lo mismo.
-- **Si todavía no existe:** si falta `presupuestos/bundle.test.ts` (o `test:presupuestos`) y la tarea toca el JS, crea la base mínima con el comentario "mínima; T-036 la completa"; si existe, úsala.
+- **Si todavía no existe:** `presupuestos/bundle.test.ts` y `test:presupuestos` son de T-036: no los construyas; mientras, revisa el tamaño en la salida de `npm run build`. Si existen, úsalos.
 - **Verifica:** unitaria `presupuestos/bundle.test.ts` en el job `build`.
 - **Por qué:** Pages manda gzip y la medición local coincide con la real. [Guía 4.1](../../../../docs/planes/T-034-performance-y-memoria.md#41-carga-y-bundle-car)
 

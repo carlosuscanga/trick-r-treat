@@ -114,6 +114,7 @@ export class LluviaDeDulces extends EscenaBase {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {                                       // TEX-07, AUD-05
       this.sound.removeByKey('lluvia-sfx'); this.cache.audio.remove('lluvia-sfx');
       this.game.events.once(Phaser.Core.Events.POST_STEP, () => {
+        if (this.sys.getStatus() !== Phaser.Scenes.SHUTDOWN) return;                              // restart(): ya volvió a arrancar
         if (this.textures.exists('lluvia')) this.textures.remove('lluvia');
       });
     });
