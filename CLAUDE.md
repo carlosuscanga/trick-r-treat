@@ -66,6 +66,7 @@ Reglas:
 - Antes de crear el worktree, marcar la tarea como `en-progreso` **en `main`** (commit y push). En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
 - El tablero y el "Estado actual" solo se editan en `main`, nunca en las ramas de tarea.
 - Todo plan de código incluye su sección "Pruebas" con las tres capas (unitarias, e2e y manual). Las pruebas se definen en el plan, antes de programar, y entran en el mismo PR que el código, nunca después. Detalle en `docs/planes/README.md`.
+- Todo plan incluye su sección "Modelo y esfuerzo": qué modelo y qué esfuerzo usa cada paso o subagente, y por qué. Aprobar el plan aprueba también esa elección. Referencia por rol en `docs/planes/README.md`, "Modelo y esfuerzo".
 - Decisiones, bloqueos y desvíos se anotan en la bitácora de la tarea.
 - Si un cambio contradice el diseño, avisar antes de continuar. Si el diseño cambia, actualizar `docs/diseno/` y `CAMBIOS.md`.
 

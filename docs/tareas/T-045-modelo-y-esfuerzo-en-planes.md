@@ -29,11 +29,12 @@ Las tareas no pesan igual. Quien escribe el plan ya analizó la tarea a fondo, a
 
 ## Criterios de aceptación
 
-- [ ] La plantilla de `docs/planes/README.md` tiene la sección "Modelo y esfuerzo", con la tabla de referencia por rol.
-- [ ] Fable aparece solo como sugerencia para lo muy complejo (por ejemplo, un bug atorado tras dos intentos de Opus o un plan de riesgo técnico alto como T-022), siempre con su porqué.
-- [ ] Una línea en `CLAUDE.md` apunta a la sección, sin copiar la tabla.
+- [x] La plantilla de `docs/planes/README.md` tiene la sección "Modelo y esfuerzo", con la tabla de referencia por rol.
+- [x] Fable aparece solo como sugerencia para lo muy complejo (por ejemplo, un bug atorado tras dos intentos de Opus o un plan de riesgo técnico alto como T-022), siempre con su porqué.
+- [x] Una línea en `CLAUDE.md` apunta a la sección, sin copiar la tabla.
 - [ ] Pruebas: no aplican unitarias, e2e ni prueba manual en el iPhone, porque solo cambia documentación del proceso. Se verifica en el plan de T-004, que debe ser el primero en usar la sección.
 
 ## Bitácora
 
 - 2026-10-16: creada en el brainstorming de T-035. Va antes del plan de T-004. Se usa T-045 y no T-044 porque la guía de T-034 ya nombró T-044 (Phaser sin Matter, en el cajón v1.1).
+- 2026-10-17: implementada. La sección "Modelo y esfuerzo" va en `docs/planes/README.md` (convención, explicación del esfuerzo, tabla de referencia por rol, cuándo sugerir Fable y qué hacer si un paso resulta más difícil o más fácil de lo previsto) y como tabla por paso en la plantilla. `CLAUDE.md` tiene una línea que apunta a ella. El product owner la revisó en la terminal. El último criterio (pruebas) queda abierto: se verifica cuando el plan de T-004 use la sección, y se marca al cerrar la tarea.
