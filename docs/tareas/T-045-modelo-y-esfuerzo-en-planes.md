@@ -3,7 +3,7 @@ id: T-045
 titulo: Modelo y esfuerzo por paso en los planes
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: []
 plan: null

@@ -76,7 +76,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
 | [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | — |
 | [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | pendiente | alta | T-034 | — |
-| [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | pendiente | alta | — | — |
+| [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | en-progreso | alta | — | — |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-034 ─→ T-035 ─→ T-004   ← el skill va antes de programar T-004
