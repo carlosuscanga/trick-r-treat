@@ -32,3 +32,4 @@ Phaser limpia lo de la escena en `SHUTDOWN`, pero no lo global (listeners en `sc
 ## Bitácora
 
 - 2026-10-16: creada a partir de la guía de T-034. Debe estar antes de T-007 o hacerse dentro de ella.
+- 2026-10-16: en el brainstorming de T-035 se decidió que T-004 crea una `EscenaBase` mínima (`escuchar()`, `once(SHUTDOWN)` e `init()`). Esta tarea parte de ella y la completa (`alLimpiar()`, `this.data.reset()`, `?depurar` y e2e de fugas).

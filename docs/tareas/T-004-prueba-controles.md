@@ -5,13 +5,15 @@ tipo: codigo
 hito: H1
 estado: pendiente
 prioridad: alta
-depende: [T-003, T-034, T-035]
+depende: [T-003, T-034, T-035, T-045]
 plan: null
 ---
 
 ## Qué
 
 Una calle placeholder con físicas Arcade, donde un rectángulo (Mi vo) camina con el joystick y salta con el botón Saltar. El botón Brazos responde, aunque todavía no haga nada útil. Necesita plan antes de programar.
+
+La escena hereda de una **`EscenaBase` mínima** que crea esta tarea (`escuchar()`, limpieza con `once(SHUTDOWN)` y estado en `init()`), con la plantilla del skill `rendimiento-y-memoria`. T-037 la completa después.
 
 **Plan de contingencia** (punto de decisión: al cerrar esta tarea):
 
@@ -33,3 +35,4 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1. Su resultado también es el gate de los minijuegos de Plataformas (T-023).
+- 2026-10-16: en el brainstorming de T-035 se decidió que esta tarea crea la `EscenaBase` mínima (T-037 la completa) y que su plan lleva la sección "Modelo y esfuerzo" de T-045.

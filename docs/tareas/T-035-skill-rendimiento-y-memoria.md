@@ -3,7 +3,7 @@ id: T-035
 titulo: Crear el skill rendimiento-y-memoria y su regla por ruta
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-034]
 plan: null

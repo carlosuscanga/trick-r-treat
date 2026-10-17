@@ -63,14 +63,15 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | hecha | alta | T-001 | [plan](../planes/T-003-pantalla-base.md) |
-| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003, T-034, T-035 | requerido |
+| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | pendiente | alta | T-003, T-034, T-035, T-045 | requerido |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
 | [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
-| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | pendiente | alta | T-034 | — |
+| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | en-progreso | alta | T-034 | — |
 | [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | pendiente | alta | T-034 | — |
+| [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | pendiente | alta | — | — |
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-034 ─→ T-035 ─→ T-004   ← el skill va antes de programar T-004
@@ -78,6 +79,7 @@ B                     └──→ T-002 ─→ T-030
 C                 T-005                       ← desde ya
 D (CI)            T-006 ─→ T-031 ─→ T-033     ← T-006 es de H2; no en paralelo con T-030
 E (presupuestos)                        └──→ T-036            ← en paralelo con T-035 y T-004
+F (proceso)       T-045                       ← antes del plan de T-004; en paralelo con T-035
 ```
 
 ### H2 · Bucle completo
