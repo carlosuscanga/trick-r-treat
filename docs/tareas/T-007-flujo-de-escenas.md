@@ -5,7 +5,7 @@ tipo: codigo
 hito: H2
 estado: pendiente
 prioridad: alta
-depende: [T-004, T-006]
+depende: [T-004, T-006, T-037, T-038]
 plan: null
 ---
 

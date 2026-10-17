@@ -3,7 +3,7 @@ id: T-034
 titulo: Investigar performance, memoria y caché
 tipo: investigacion
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-003]
 plan: ../planes/T-034-performance-y-memoria.md
@@ -37,3 +37,4 @@ Una partida dura de 10 a 15 minutos entrando y saliendo de escenas, con arte, au
 - 2026-10-16: creada antes de T-004, para que el código del juego nazca con reglas de performance. Contexto y prompt en `.local/prompts/investigacion-performance.md`.
 - 2026-10-16: investigación con 5 subagentes en paralelo (skills y fuentes, bundle y caché, memoria y audio, escenas y frames, medición). Guía redactada en `docs/planes/T-034-performance-y-memoria.md`: 46 reglas, presupuestos, checklist de PR, propuesta del skill y tareas T-035 a T-044.  Informes completos respaldados en `.local/t034/`.
 - 2026-10-16: revisada en Plannotator. El product owner aceptó las 8 recomendaciones; ajuste: el aviso de silencio será un ícono de bocina silenciada (sección 13 de la guía). Criterios marcados.
+- 2026-10-16: guía mergeada en el PR #9. Tarea `hecha`. De las tareas propuestas se crearon T-035 a T-043; la T-044 (Phaser sin Matter) no se creó: el product owner la descartó por ahora y quedó en el cajón v1.1.

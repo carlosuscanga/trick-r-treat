@@ -5,7 +5,7 @@ tipo: arte
 hito: H3
 estado: pendiente
 prioridad: alta
-depende: [T-010]
+depende: [T-010, T-039]
 plan: null
 ---
 
