@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: alta
 depende: [T-034]
-plan: null
+plan: docs/planes/T-035-skill-rendimiento-y-memoria.md
 ---
 
 ## Qué
@@ -32,3 +32,4 @@ Las sesiones que programen T-004 en adelante tienen que cargar las reglas de mem
 ## Bitácora
 
 - 2026-10-16: creada a partir de la guía de T-034 (secciones 11 y 12). Debe estar hecha antes de programar T-004.
+- 2026-10-16: brainstorming y plan aprobados (revisados en Plannotator). Decisiones: T-004 crea una `EscenaBase` mínima que T-037 completa; en general, si falta infraestructura de otra tarea, se crea su base mínima ("mínima; T-0NN la completa") y no se refina; sección "Trampas conocidas → cómo probarlas"; evaluación 0 nueva (el plan de T-004); evaluaciones en Sonnet 5.5 y Opus 5.5, una corrida por celda (Haiku solo en activación); corridas `claude -p` con ediciones y npm, sin git, gh ni ssh; `paths` se decide en la evaluación de activación. Ejecución: nativa con subagentes puntuales. La tabla de modelos y esfuerzo se formaliza en T-045.
