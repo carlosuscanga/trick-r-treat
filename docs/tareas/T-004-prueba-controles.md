@@ -31,8 +31,12 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 - [ ] Mi vo camina, salta y cae con gravedad; la cámara la sigue.
 - [ ] Se usan dos dedos a la vez (moverse y saltar) sin que se trabe.
 - [ ] Probado en el iPhone, con la decisión anotada en la bitácora: plan A, A′ o B.
+- [ ] Retro anotada en la bitácora: qué errores repitieron los agentes, cuánto costó corregirlos y si alguno justifica una skill nueva.
 
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1. Su resultado también es el gate de los minijuegos de Plataformas (T-023).
 - 2026-10-16: en el brainstorming de T-035 se decidió que esta tarea crea la `EscenaBase` mínima (T-037 la completa) y que su plan lleva la sección "Modelo y esfuerzo" de T-045.
+- 2026-10-17: arranca. Worktree creado; `npm install` y `npm run build` limpios. Se cargaron los skills de brainstorming y `rendimiento-y-memoria`.
+- 2026-10-17: **decisión del product owner:** no se crea otra skill antes de esta tarea. El plan incluye una investigación corta de los dos puntos de riesgo: (1) varios dedos a la vez en Phaser 3.90 (`activePointers`, joystick y botones simultáneos) y (2) la sensación del salto (salto variable, *coyote time*, búfer de salto). Al cerrar la tarea se hace una retro. Si un error de los agentes se repite, ese es el candidato a skill, con su propia tarea y evaluaciones, como en T-035. Candidatas vistas: sensación de plataformas, input táctil en Phaser 3, e2e con toques en WebKit.
+- 2026-10-17: brainstorming del plan pendiente. Primera pregunta abierta: ¿qué tiene que sentir o ver el product owner en el iPhone para decir "el plan A funciona"?
