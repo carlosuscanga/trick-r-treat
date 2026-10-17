@@ -88,7 +88,7 @@ export abstract class EscenaBase extends Phaser.Scene {
 
 Es la capa de prueba de ESC-01 a ESC-05 ([guía §6.2](../../../../docs/planes/T-034-performance-y-memoria.md#62-e2e-playwright-webkit-con-emulación-de-iphone)).
 
-- **Si todavía no existe:** `?depurar` (`window.__depurar`, con `instantanea()`) y `crecimientos(antes, despues)` los crea T-037. Mientras tanto, cuenta a mano en el test: `game.scale.listenerCount('resize')`, `sys.events.listenerCount('shutdown')` y `game.anims.anims.size`.
+- **Si todavía no existe:** `?depurar` (`window.__depurar`, con `instantanea()`) y `crecimientos(antes, despues)` los crea T-037. Mientras tanto, si el e2e necesita llegar al juego, la mínima es solo `?depurar` → `window.__juego`, y cuentas a mano en el test: `game.scale.listenerCount('resize')`, `sys.events.listenerCount('shutdown')` y `game.anims.anims.size`.
 - **Receta:** abrir `./?depurar`; 1 ciclo de calentamiento; `antes = __depurar.instantanea()`; ciclar N veces (hoy reiniciar `Arranque` 30 veces; después Calle → Puerta → minijuego con `finished(true)` simulado → Calle, 8 casas × 3 vueltas); `despues = ...`; exigir `crecimientos(antes, despues)` igual a `[]`.
 - **Esperas:** 2 frames entre pasos, porque `stop` y `start` se encolan.
 - **Sin errores:** `page.on('pageerror')` y los `console` de tipo error, vacíos durante los ciclos.

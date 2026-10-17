@@ -38,7 +38,7 @@ Varias reglas dependen de piezas que llegan en tareas posteriores. **Criterio:**
 |---|---|---|
 | `src/escenas/EscenaBase.ts` | la plantilla de abajo | T-037 (`alLimpiar()`, `this.data.reset()`) |
 | `paraLoader` en `src/plataforma/assets.ts` | la función de una línea de RED-03 | T-039 (aviso de versión nueva, lista blanca de `public/`) |
-| `?depurar` y el e2e de fugas | un e2e que cuente `listenerCount` tras N reinicios | T-037 |
+| `?depurar` y el e2e de fugas | si el e2e necesita llegar al juego: solo `?depurar` → `window.__juego` (sin overlay ni contadores); las fugas se cuentan a mano (`listenerCount`) tras N reinicios | T-037 (overlay, `instantanea()`, `crecimientos`) |
 | `test:presupuestos` | nada: no lo construyas | T-036 |
 | config del juego (`disablePreFX`, `panicMax`, LOSE/RESTORE) | solo la línea que tu tarea necesite | T-038 |
 

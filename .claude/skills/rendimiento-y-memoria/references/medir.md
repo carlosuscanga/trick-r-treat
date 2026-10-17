@@ -25,7 +25,7 @@ Referencia para medir rendimiento y memoria en Phaser 3.90 sobre Safari de iPhon
 
 **Si todavía no existe**
 Criterio del product owner: si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-0NN la completa"; no la refines; si ya existe, úsala.
-- `?depurar` y el e2e de fugas: los completa T-037.
+- `?depurar` y el e2e de fugas: los completa T-037. La mínima es solo `?depurar` → `window.__juego` para que el e2e llegue al juego; sin overlay ni contadores.
 - `presupuestos/bundle.test.ts`: lo completa T-036.
 - Manifest de assets (`src/datos/assets.json`): lo completa T-040.
 

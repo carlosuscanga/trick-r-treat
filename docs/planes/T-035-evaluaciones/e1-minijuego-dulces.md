@@ -8,7 +8,7 @@ Agrega un minijuego placeholder de atrapar dulces que caen: una escena nueva de 
 
 | # | Punto | Regla | Crítico |
 |---|---|---|---|
-| 1 | La escena hereda de `EscenaBase` (y la crea mínima, con `escuchar()`, `once(SHUTDOWN)` e `init()`, si no existe), sin construir `?depurar` ni lo demás de T-037 | ESC-01, ESC-02 | sí |
+| 1 | La escena hereda de `EscenaBase` (y la crea mínima, con `escuchar()`, `once(SHUTDOWN)` e `init()`, si no existe), sin construir lo demás de T-037 (`alLimpiar()`, overlay de `?depurar`, `instantanea()`); una `?depurar` mínima que solo exponga el juego para el e2e es válida | ESC-01, ESC-02 | sí |
 | 2 | Los dulces salen de un grupo con `maxSize`; se reciclan con `get()`, se maneja el `null` y se usan `setActive`/`setVisible` (no `destroy()` + `add.*` por dulce) | POO-01 | sí |
 | 3 | La caída y el movimiento usan `delta` o velocidades de la física, no px por frame | FRA-04 | sí |
 | 4 | El estado (puntos, tiempo, terminado) se inicializa en `init()`, no en campos de clase | ESC-03 | sí |
