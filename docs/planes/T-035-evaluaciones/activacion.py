@@ -45,6 +45,11 @@ def preparar_base(destino: Path, variante: str) -> Path:
         texto = skill_md.read_text()
         assert "\npaths:" not in texto, "el SKILL.md ya trae paths"
         skill_md.write_text(texto.replace(f"name: {SKILL}\n", f"name: {SKILL}\n{PATHS}\n", 1))
+    if variante == "con-config":
+        # Lo que entrega el PR: además del skill, la regla por ruta y la línea en CLAUDE.md.
+        (base / ".claude/rules").mkdir(parents=True, exist_ok=True)
+        subprocess.run(["cp", f"{RAMA}/.claude/rules/rendimiento.md", str(base / ".claude/rules/")], check=True)
+        subprocess.run(["cp", f"{RAMA}/CLAUDE.md", str(base / "CLAUDE.md")], check=True)
     return base
 
 
@@ -91,7 +96,7 @@ def correr_consulta(consulta: str, base: Path, modelo: str, limite: int) -> bool
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--variante", choices=["sin-paths", "con-paths"], required=True)
+    p.add_argument("--variante", choices=["sin-paths", "con-paths", "con-config"], required=True)
     p.add_argument("--modelo", required=True)
     p.add_argument("--destino", required=True, type=Path)
     p.add_argument("--consultas", type=Path, default=AQUI / "activacion.json")
