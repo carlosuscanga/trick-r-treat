@@ -8,7 +8,7 @@ Acordado en el brainstorming del 2026-10-16. La especificación base es la **sec
 
 ### Intención
 
-Que toda sesión que programe, planee o revise escenas desde T-004 aplique las reglas de memoria, frames y caché de la guía **sin que nadie se lo pida**. El objetivo del product owner para el juego es que Mi vo responda al joystick y a los botones, que se mueva suave, que no se bugee y que se cubran los edge cases. El skill aporta a eso: hace que el agente escriba el código que no se rompe al reiniciar escenas, que va a la misma velocidad a 60 y a 120 Hz, y que libera lo que carga.
+Que toda sesión que programe, planee o revise escenas desde T-004 aplique las reglas de memoria, frames y caché de la guía **sin que nadie se lo pida**. Entre los objetivos del product owner para el juego están que Mi vo responda al joystick y a los botones, que se mueva suave, que no se bugee y que se cubran los edge cases, y todos dependen del rendimiento. El skill aporta a eso: hace que el agente escriba el código que no se rompe al reiniciar escenas, que va a la misma velocidad a 60 y a 120 Hz, y que libera lo que carga.
 
 **Criterio de éxito:** el plan de T-004 incluye, por sí solo, las pruebas de las trampas conocidas que le aplican (por ejemplo, "reiniciar la escena 10 veces y que no se dupliquen los listeners"). Las evaluaciones miden justo eso: la diferencia entre trabajar con el skill y sin él.
 
@@ -25,9 +25,9 @@ Que toda sesión que programe, planee o revise escenas desde T-004 aplique las r
 
 ### Anti-metas (sería un fracaso aunque funcione)
 
-- Que el skill le diga al agente que use algo que todavía no existe (`EscenaBase`, `paraLoader`, `?depurar`, `test:presupuestos`) sin decirle qué hacer mientras tanto.
+- Que el skill le diga al agente que use algo que todavía no existe (`EscenaBase`, `paraLoader`, `?depurar`, `test:presupuestos`) sin decirle qué hacer mientras tanto, o que el agente termine construyendo completa la infraestructura de otra tarea.
 - Que copie la guía entera. El skill es la versión accionable: receta de una línea más enlace al porqué.
-- Que se active en tareas que no tocan escenas (el tablero, el diseño de un vecino) y gaste contexto.
+- Que se active cuando no hace falta. Cuando un skill se activa, todo su `SKILL.md` entra en la memoria de trabajo (el contexto) del agente. Si se carga al actualizar el tablero o al escribir el diseño de un vecino, gasta límite de uso y le mete al agente reglas de Phaser que no vienen al caso. Por eso la evaluación 5 incluye casi aciertos que **no** deben activarlo.
 - Que use cualquier API de Phaser 4.
 
 ### Cambios a la sección 11 (decisiones del product owner)
@@ -65,7 +65,7 @@ Que toda sesión que programe, planee o revise escenas desde T-004 aplique las r
 
 ### Decisiones mías (las puede revisar el product owner)
 
-- **Reglas que dependen de infraestructura futura.** Cada regla que necesita algo que aún no existe (`paraLoader` de T-039, `?depurar` y el e2e de fugas de T-037, `test:presupuestos` de T-036, la config de T-038) lleva una línea "si todavía no existe:" con qué hacer mientras tanto. El criterio general: **seguir con la convención actual, con un placeholder, y dejar la nota "esto lo resuelve T-0NN"**, sin detenerse y sin construir la infraestructura de otra tarea. Por ejemplo: "si no existe `src/assets/` + `paraLoader`, carga el audio como hoy (`public/audio/`, ruta sin `/` inicial) y deja la nota 'migrar con T-039'". Va con la regla de "lo jugable con placeholders va antes que el arte". La única excepción es `EscenaBase`, que sí se crea (cambio 1). Así se cumple la primera anti-meta. Las rúbricas califican así: aplicar las reglas y dejar la nota suma puntos; detenerse sin programar no.
+- **Reglas que dependen de infraestructura futura.** Cada regla que necesita algo que aún no existe (`paraLoader` de T-039, `?depurar` y el e2e de fugas de T-037, `test:presupuestos` de T-036, la config de T-038) lleva una línea "si todavía no existe:" con qué hacer mientras tanto. El criterio general (corregido por el product owner): **si la tarea lo necesita, se crea la base mínima de eso que falta, con un comentario "mínima; T-0NN la completa", y no se refina hasta que llegue su tarea.** Es el mismo trato que `EscenaBase` (cambio 1). Por ejemplo: "si no existe `paraLoader`, crea la función mínima en `src/assets/` con un comentario 'T-039 la completa' y úsala; el aviso de versión nueva y lo demás de T-039 no se hacen aquí". Si la tarea no lo necesita, no se crea nada. Y si la base ya existe, se usa y no se reescribe. Así se cumple la primera anti-meta. Las rúbricas califican así: aplicar las reglas con la base mínima suma puntos; detenerse sin programar no suma, y refinar la base de otra tarea resta.
 - **Las evaluaciones parten de `main` tal cual**, sin un repo sembrado. Los prompts se ajustan a lo que existe hoy. Por ejemplo, la evaluación 2 queda como "crea una escena Calle placeholder que se reacomode al cambiar el tamaño", porque la Calle todavía no existe.
 - **Cómo se decide `paths`:** en la evaluación 5, la de activación, se comparan dos variantes del skill: sin `paths` y con `paths: ["src/**", "docs/planes/**"]`. Si `paths` le quita activaciones a consultas legítimas, sobre todo al escribir un plan, no se pone. Solo se pone si sin él hay muchas activaciones falsas y con él bajan sin perder las legítimas.
 - **Idioma:** el skill va en español, como la guía. Los identificadores de código quedan en inglés.
