@@ -6,7 +6,12 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trabajo.
 
-- **Última sesión (2026-10-16, noche):** se cerró T-034 (investigación de performance, memoria y caché). Se investigó con 5 subagentes en paralelo y un redactor, y la guía se mergeó en el PR #9 (`docs/planes/T-034-performance-y-memoria.md`): 46 reglas con ID, presupuestos para el iPhone 13 (iOS 26.6) y checklist de PR.
+- **Última sesión (2026-10-17):** se cerró T-035 (PR #10). El repo ya tiene el skill `rendimiento-y-memoria` (`.claude/skills/`), la regla por ruta `.claude/rules/rendimiento.md` y una línea en `CLAUDE.md`: las sesiones que toquen escenas cargan las reglas de la guía de T-034 sin que se pida.
+  - **Evaluaciones (con y sin skill, calificación a ciegas):** con skill, Sonnet cumple 33/34 puntos y 23/23 críticos; sin skill, 23/34 y 15/23. La diferencia está al escribir código; en planear y revisar casi no la hay. Opus solo se corrió en e0 y Haiku no, por el límite de uso.
+  - **Activación:** 7/10 con lo que se entrega y 0 falsos positivos. Sin `paths` en el frontmatter.
+  - **Bases mínimas:** si falta infraestructura de otra tarea, se crea lo mínimo con `// mínima; T-0NN la completa`. La `?depurar` mínima es solo `window.__juego` para los e2e.
+  - **Lección de uso:** las corridas `claude -p` en paralelo agotaron la ventana de 5 horas; se corren de una en una. Detalle y resultados en la bitácora de T-035 y en `.local/t035/`.
+- **Sesión (2026-10-16, noche):** se cerró T-034 (investigación de performance, memoria y caché). Se investigó con 5 subagentes en paralelo y un redactor, y la guía se mergeó en el PR #9 (`docs/planes/T-034-performance-y-memoria.md`): 46 reglas con ID, presupuestos para el iPhone 13 (iOS 26.6) y checklist de PR.
   - **Decisiones del product owner (aceptó las 8):** `disablePreFX`; guardar y reanudar la partida en H3; arte a 720 y 1x; se respeta el interruptor de silencio, con un ícono de bocina silenciada como recordatorio; la pantalla de inicio es el modo oficial; assets en `src/assets/` con hash; `?depurar` en producción; física declarada por escena.
   - **Tareas nuevas:** T-035 a T-043 (skill, presupuesto de bundle, `EscenaBase` y `?depurar`, config WebGL, assets versionados, manifest de assets, medición en el iPhone, guardar partida y service worker). Phaser sin Matter quedó en el cajón v1.1.
   - Los informes completos de los subagentes están en `.local/t034/` (local, sin respaldo). Además, la revisión en Plannotator pasó a ser opcional: Claude pregunta "¿aquí o en Plannotator?" (`CLAUDE.md`).
@@ -18,9 +23,9 @@ Se actualiza al cerrar cada sesión. Es lo primero que se lee al retomar el trab
   - **Seguridad:** las sesiones usan un token *fine-grained* solo de este repo y sin Administration (ver "Credenciales de GitHub" en `docs/README.md`). El login global de `gh` de la Mac ya no se usa en este proyecto.
   - **Flujo:** `docs/README.md` ya recoge lo visto: el merge lo hace solo la orquestadora, los criterios que solo se verifican en `main` se marcan al cerrar, el orden de limpieza de los worktrees, cómo retomar sesiones, la prueba manual en los PRs visuales y que todo plan lleva su sección "Pruebas".
   - Node: `.nvmrc` fija la 24, pero `engines` en `package.json` dice `>=22.12.0`. No bloquea nada.
-- **Fase:** H1 · Esqueleto en el iPhone. Faltan T-035 y T-004 para cerrar el hito (T-036 va en paralelo).
-- **Siguiente paso:** T-035 (crear el skill `rendimiento-y-memoria`) y luego el plan de T-004, ya con el skill cargado, con su plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
-- **Pendiente de decidir:** el plan de T-004 (después de T-035). Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
+- **Fase:** H1 · Esqueleto en el iPhone. Falta T-004 para cerrar el hito (T-036 va en paralelo).
+- **Siguiente paso:** T-045 (modelo y esfuerzo en la plantilla de planes) y luego el plan de T-004, ya con el skill cargado, con su plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
+- **Pendiente de decidir:** el plan de T-004 (después de T-045). Después de T-004, volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
 ## Planeación de la v1
@@ -69,7 +74,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
 | [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
-| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | en-progreso | alta | T-034 | — |
+| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | — |
 | [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | pendiente | alta | T-034 | — |
 | [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | pendiente | alta | — | — |
 

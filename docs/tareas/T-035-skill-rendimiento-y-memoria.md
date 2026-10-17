@@ -3,7 +3,7 @@ id: T-035
 titulo: Crear el skill rendimiento-y-memoria y su regla por ruta
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-034]
 plan: docs/planes/T-035-skill-rendimiento-y-memoria.md
@@ -58,3 +58,4 @@ Las sesiones que programen T-004 en adelante tienen que cargar las reglas de mem
   - CAR-04 mandaba crear `test:presupuestos`. Ahora dice que es de T-036, igual que el `SKILL.md`.
   - Para T-037: `window.__juego`, la `?depurar` mínima, no está en la guía (que define `window.__depurar`). T-037 decide si lo absorbe o lo reemplaza.
 - 2026-10-17: `verificar.py`, `claude plugin validate .claude/skills --strict` (sin advertencias), `npm test` (32/32), `npm run build` y `npm run test:e2e` (4/4) pasan.
+- 2026-10-17: mergeada en el PR #10. Pendientes que siguen abiertos: volver a medir la activación después de T-004; T-037 corrige el `POST_STEP` de TEX-07 en la guía y decide sobre `window.__juego`.
