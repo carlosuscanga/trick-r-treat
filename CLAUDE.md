@@ -31,6 +31,7 @@
 - **Escenas**: Menú, SelectorDisfraz, Calle, Puerta, (una escena por minijuego), Resultado y FinJuego.
 - **Calle**: vista lateral con parallax y físicas Arcade (saltar, trepar, romper objetos). Controles táctiles: joystick a la izquierda, y botones Saltar y Brazos a la derecha.
 - **Animación cutout**: Mi vo está hecha de piezas (cabeza, torso, brazos y piernas) dentro de un `Container`, animadas con tweens. Un disfraz solo cambia las texturas de las piezas, no la animación.
+- **Rendimiento y memoria:** antes de escribir, planear o revisar escenas, carga el skill `rendimiento-y-memoria`.
 - `src/main.ts` arranca con la escena `Arranque` ("toca para empezar" y sonido de prueba). La plataforma (escala, orientación, diagnóstico de audio) vive en `src/plataforma/`.
 
 ## Carpeta local `.local/`
