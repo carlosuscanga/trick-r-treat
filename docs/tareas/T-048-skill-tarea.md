@@ -3,12 +3,12 @@ id: T-048
 titulo: Skill `tarea` (tomar, retomar y cerrar) con revisión de "lista"
 tipo: codigo
 hito: H2
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: []
 plan: requerido
-rama: null
-worktree: null
+rama: T-048-skill-tarea
+worktree: .claude/worktrees/T-048-skill-tarea
 ---
 
 ## Qué

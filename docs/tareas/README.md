@@ -97,7 +97,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
 | [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | hecha | alta | — | — |
-| [T-048](T-048-skill-tarea.md) | Skill `tarea` (tomar, retomar y cerrar) con revisión de "lista" | codigo | pendiente | alta | — | requerido |
+| [T-048](T-048-skill-tarea.md) | Skill `tarea` (tomar, retomar y cerrar) con revisión de "lista" | codigo | en-progreso | alta | — | requerido |
 
 <!-- /tablero:H2 -->
 
