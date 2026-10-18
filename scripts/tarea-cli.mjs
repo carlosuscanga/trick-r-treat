@@ -4,7 +4,7 @@
 // Nunca hace push: imprime el comando para que la sesión lo corra a la vista.
 // Plan: docs/planes/T-048-skill-tarea.md
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 // Misma guarda de versión que tablero-cli.mjs (Node corre `.ts` desde la 22.18).
@@ -19,9 +19,6 @@ if (mayor < 22 || (mayor === 22 && menor < 18)) {
 const { leerTareas, generarTablero } = await import('./tablero.ts');
 const { nombreDeRama, rutaDeWorktree, revisarLista, marcarEnProgreso, marcarHecha } = await import('./tarea.ts');
 
-const ATRIBUCION =
-  'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n' +
-  'Claude-Session: https://claude.ai/code/session_01QTta9DuwVt6pZ2xV7Ptmqg';
 const COMANDO_PUSH =
   "GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' " +
   'git push git@github.com:carlosuscanga/trick-r-treat.git main && git fetch origin';
@@ -55,6 +52,15 @@ function exigirCheckoutPrincipal() {
   correr('actualizar main', 'git', ['pull', '--ff-only']);
 }
 
+function existeRama(rama) {
+  try {
+    execFileSync('git', ['rev-parse', '--verify', '--quiet', `refs/heads/${rama}`], { cwd: raiz, stdio: 'ignore' });
+    return true;
+  } catch {
+    return false; // --quiet sale con 1 si no existe
+  }
+}
+
 function leer() {
   const carpeta = new URL('../docs/tareas/', import.meta.url);
   const planes = new URL('../docs/planes/', import.meta.url);
@@ -78,38 +84,69 @@ function tableroCon(datos, tarea, textoNuevo) {
   return generarTablero(readFileSync(datos.readme, 'utf8'), archivos, datos.rutasDePlanes);
 }
 
-function tomar(datos, tarea) {
-  exigirCheckoutPrincipal();
+function tomar(datos, tarea, trailers) {
+  // La precondición (con el pull) ya corrió antes de leer los archivos.
   const faltantes = revisarLista(tarea, textoDe(datos, tarea), datos.tareas);
   if (faltantes.length > 0) {
     throw new Fallo(`${tarea.id} no está lista:\n${faltantes.map((f) => `- ${f}`).join('\n')}`);
   }
   const rama = nombreDeRama(tarea.nombre);
   const ruta = rutaDeWorktree(rama);
+  const cwd = `${raiz}/${ruta}`;
+  // Nada a medias: la rama y la ruta no deben existir ya.
+  if (existeRama(rama)) throw new Fallo(`La rama ${rama} ya existe. Revisa si la tarea ya se tomó (\`git branch --list ${rama}\`).`);
+  if (existsSync(cwd)) throw new Fallo(`La ruta ${ruta} ya existe. Revisa si la tarea ya se tomó o bórrala a mano.`);
+
   // Todo en memoria primero: un estado inválido falla antes de tocar nada.
   const textoNuevo = marcarEnProgreso(textoDe(datos, tarea), rama);
   const tablero = tableroCon(datos, tarea, textoNuevo);
+  const archivoTarea = `docs/tareas/${tarea.nombre}`;
+  const mensaje = [`${tarea.id}: pasa la tarea a en-progreso`, ...(trailers.length ? ['', ...trailers] : [])].join('\n');
 
   writeFileSync(new URL(tarea.nombre, datos.carpeta), textoNuevo);
   writeFileSync(datos.readme, tablero);
-  correr('agregar los archivos', 'git', ['add', `docs/tareas/${tarea.nombre}`, 'docs/tareas/README.md']);
-  correr('hacer el commit', 'git', ['commit', '-m', `${tarea.id}: pasa la tarea a en-progreso\n\n${ATRIBUCION}`]);
-  correr('crear el worktree', 'git', ['worktree', 'add', ruta, '-b', rama, '--no-track', 'HEAD']);
-  const cwd = `${raiz}/${ruta}`;
+  try {
+    correr('agregar los archivos', 'git', ['add', archivoTarea, 'docs/tareas/README.md']);
+    correr('hacer el commit', 'git', ['commit', '-m', mensaje]);
+  } catch (error) {
+    const restaurar = ['restore', '--staged', '--worktree', '--', archivoTarea, 'docs/tareas/README.md'];
+    let nota;
+    try {
+      correr('restaurar los archivos', 'git', restaurar);
+      nota = 'Se restauraron la tarea y el README: no quedó nada a medias.';
+    } catch {
+      nota = `No se pudieron restaurar los archivos: corre \`git ${restaurar.join(' ')}\`.`;
+    }
+    throw new Fallo(`${error.message}\n\n${nota}`);
+  }
+  try {
+    correr('crear el worktree', 'git', ['worktree', 'add', ruta, '-b', rama, '--no-track', 'HEAD']);
+  } catch (error) {
+    throw new Fallo(
+      `${error.message}\n\nQuedó: commit hecho, worktree sin crear. Termina con:\n   git worktree add ${ruta} -b ${rama} --no-track HEAD\n(luego npm install y npm run build dentro del worktree) y sube el commit:\n   ${COMANDO_PUSH}`,
+    );
+  }
   console.log('Worktree creado. Instalando dependencias y construyendo...');
-  correr('npm install en el worktree', 'npm', ['install'], cwd);
-  correr('npm run build en el worktree', 'npm', ['run', 'build'], cwd);
+  let falloDeNpm = null;
+  try {
+    correr('npm install en el worktree', 'npm', ['install'], cwd);
+    correr('npm run build en el worktree', 'npm', ['run', 'build'], cwd);
+  } catch (error) {
+    falloDeNpm = error.message;
+  }
 
   console.log(`\n${tarea.id} pasó a en-progreso (rama ${rama}).\n`);
+  if (falloDeNpm) console.log(`ATENCIÓN: ${falloDeNpm}\nArréglalo dentro del worktree antes de programar.\n`);
   console.log(`1. Sube el commit a main, a la vista:\n   ${COMANDO_PUSH}\n`);
   console.log(`2. Entra al worktree con EnterWorktree, ruta absoluta:\n   ${cwd}\n`);
+  if (falloDeNpm) process.exitCode = 1;
   if (tarea.plan === 'requerido') {
     console.log('3. Esta tarea pide plan: el primer paso en la rama es escribirlo, y no se programa hasta que esté aprobado.');
   }
 }
 
 function cerrar(datos, tarea) {
-  exigirCheckoutPrincipal();
+  // La precondición (con el pull) ya corrió antes de leer los archivos.
   const rama = nombreDeRama(tarea.nombre);
   const ruta = rutaDeWorktree(rama);
 
@@ -124,23 +161,30 @@ function cerrar(datos, tarea) {
   const textoNuevo = marcarHecha(textoDe(datos, tarea));
   const tablero = tableroCon(datos, tarea, textoNuevo);
 
-  try {
+  // Si ya no está registrado, una corrida anterior lo quitó: se sigue.
+  const registrados = correr('listar worktrees', 'git', ['worktree', 'list', '--porcelain']);
+  if (registrados.split('\n').some((linea) => linea === `worktree ${raiz}/${ruta}`)) {
     correr('quitar el worktree', 'git', ['worktree', 'remove', ruta]);
-  } catch (error) {
-    throw new Fallo(`No se pudo quitar el worktree ${ruta} (¿tiene cambios sin guardar?). Revisa y vuelve a intentar.\n${error.message}`);
+  } else {
+    console.log(`El worktree ${ruta} ya no estaba registrado: se da por quitado.`);
   }
   writeFileSync(new URL(tarea.nombre, datos.carpeta), textoNuevo);
   writeFileSync(datos.readme, tablero);
 
   console.log(`${tarea.id} quedó hecha (sin commit todavía). Siguen:\n`);
   console.log('1. Escribe el "Estado actual" en docs/tareas/README.md y anota lo hecho arriba de docs/tareas/historial.md.');
-  console.log(`2. Un solo commit: ${tarea.id}: cierra la tarea`);
+  console.log(`2. Un solo commit: ${tarea.id}: cierra la tarea (con las líneas de atribución de la sesión)`);
   console.log(`3. Sube a main, a la vista:\n   ${COMANDO_PUSH}`);
   console.log(`4. El product owner borra la rama: git branch -d ${rama}`);
 }
 
 try {
-  const [subcomando, id] = process.argv.slice(2);
+  const [subcomando, id, ...extras] = process.argv.slice(2);
+  const trailers = [];
+  for (const extra of extras) {
+    if (extra.startsWith('--trailer=') && extra.length > '--trailer='.length) trailers.push(extra.slice('--trailer='.length));
+    else throw new Fallo(`Argumento desconocido: "${extra}". Solo se acepta --trailer=<línea> (repetible).`);
+  }
   const comandos = { revisar: null, tomar, cerrar };
   if (!subcomando || !Object.hasOwn(comandos, subcomando)) {
     throw new Fallo(`El subcomando "${subcomando ?? ''}" no existe. Usa: npm run tarea -- <revisar|tomar|cerrar> T-NNN`);
@@ -148,6 +192,8 @@ try {
   if (!id || !/^T-\d{3}$/.test(id)) {
     throw new Fallo(`El ID "${id ?? ''}" está mal escrito: debe verse como T-048 (T mayúscula y tres dígitos).`);
   }
+  // Precondición y pull ANTES de leer cualquier archivo, para no trabajar con texto viejo.
+  if (subcomando !== 'revisar') exigirCheckoutPrincipal();
   const datos = leer();
   const tarea = datos.tareas.find((t) => t.id === id);
   if (!tarea) throw new Fallo(`La tarea ${id} no existe en docs/tareas/.`);
@@ -161,7 +207,7 @@ try {
       process.exitCode = 1;
     }
   } else {
-    comandos[subcomando](datos, tarea);
+    comandos[subcomando](datos, tarea, trailers);
   }
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
