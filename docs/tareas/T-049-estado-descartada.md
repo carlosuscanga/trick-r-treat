@@ -3,12 +3,12 @@ id: T-049
 titulo: Estado `descartada` en el tablero
 tipo: codigo
 hito: H2
-estado: pendiente
+estado: en-progreso
 prioridad: media
 depende: []
 plan: null
-rama: null
-worktree: null
+rama: T-049-estado-descartada
+worktree: .claude/worktrees/T-049-estado-descartada
 ---
 
 ## Qué

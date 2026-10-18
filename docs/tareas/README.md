@@ -98,7 +98,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
 | [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | hecha | alta | — | — |
 | [T-048](T-048-skill-tarea.md) | Skill `tarea` (tomar, retomar y cerrar) con revisión de "lista" | codigo | hecha | alta | — | [plan](../planes/T-048-skill-tarea.md) |
-| [T-049](T-049-estado-descartada.md) | Estado `descartada` en el tablero | codigo | pendiente | media | — | — |
+| [T-049](T-049-estado-descartada.md) | Estado `descartada` en el tablero | codigo | en-progreso | media | — | — |
 
 <!-- /tablero:H2 -->
 
