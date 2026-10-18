@@ -61,6 +61,7 @@ El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está
 Reglas:
 
 - Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md` y, si existe, `.local/notas.md`. Sin instrucción concreta, proponer la siguiente tarea.
+- Si la sesión empieza con **"retoma T-NNN"**, no se hace lo anterior: seguir el protocolo "Retomar T-NNN" de `docs/README.md` ("Sesiones con Claude"), que solo lee el frontmatter de la tarea, su bitácora y su plan.
 - Al cerrar una sesión (o cuando yo lo pida), actualizar "Estado actual": qué se hizo, qué sigue y qué está pendiente de decidir.
 - Una rama y un worktree por tarea (`T-007-flujo-de-escenas`), creados con la herramienta nativa de worktrees en `.claude/worktrees/`. Entra a `main` por pull request. `main` siempre es jugable. Proceso completo en `docs/README.md`, "Trabajo en paralelo".
 - Antes de crear el worktree, marcar la tarea como `en-progreso` **en `main`** (commit y push). En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
