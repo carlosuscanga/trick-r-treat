@@ -10,6 +10,7 @@
 - `npm run build`: revisa tipos (`tsc --noEmit`) y genera `dist/`.
 - `npm run test:presupuestos`: después de `npm run build`, revisa que el build quepa en su presupuesto de bytes (JS inicial ≤ 340 KiB en gzip, archivos ≤ 1 MB y `dist/` ≤ 12 MB), en `presupuestos/`. Corre en el job `build` del CI.
 - `npm run preview`: sirve el build.
+- `npm run tablero`: regenera las tablas del tablero desde el frontmatter de las tareas. Correrlo después de cambiar cualquier frontmatter; `npm test` falla si el tablero quedó desfasado.
 - `npm test`: corre los tests (Vitest), también en el CI de cada PR.
 - `npm run test:e2e`: corre los tests end-to-end (Playwright, WebKit con emulación de iPhone) contra el build, en `e2e/*.e2e.ts`. La primera vez: `npx playwright install webkit`.
 
@@ -56,7 +57,7 @@ Está ignorada por git: no se sube a GitHub y no tiene respaldo.
 El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está en **`docs/README.md`**. Seguirlo. Toda la documentación está en `docs/`, en español:
 
 - `docs/diseno/`: qué es el juego, para cualquier lector. Sin detalles técnicos. Los cambios se registran en `CAMBIOS.md` y las ideas a futuro en `ideas.md`.
-- `docs/tareas/`: tablero estilo Jira. Un archivo por tarea (`T-NNN-titulo.md`) con su estado en el frontmatter, más el tablero en `docs/tareas/README.md`. Al cambiar un estado, actualizar **ambos**.
+- `docs/tareas/`: tablero estilo Jira. Un archivo por tarea (`T-NNN-titulo.md`); su frontmatter es la única fuente de sus datos (estado, prioridad, dependencias, plan). Las tablas del tablero (`docs/tareas/README.md`) se generan con `npm run tablero`: nunca editarlas a mano.
 - `docs/planes/`: planes de implementación con el mismo ID que su tarea. **Los planes y specs se guardan aquí**, no en `docs/superpowers/` ni en otra ruta por defecto.
 
 Reglas:

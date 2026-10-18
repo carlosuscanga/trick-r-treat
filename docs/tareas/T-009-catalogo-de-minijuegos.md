@@ -6,7 +6,7 @@ hito: H2
 estado: pendiente
 prioridad: alta
 depende: [T-007]
-plan: null
+plan: requerido
 ---
 
 ## Qué

@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest run --dir src",
+    "test": "vitest run --dir src && vitest run --dir scripts",
+    "tablero": "node scripts/tablero-cli.mjs",
     "test:presupuestos": "vitest run --dir presupuestos --silent=false",
     "test:e2e": "playwright test"
   },
@@ -19,7 +20,7 @@
   "license": "ISC",
   "type": "module",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.18.0"
   },
   "bugs": {
     "url": "https://github.com/carlosuscanga/trick-r-treat/issues"

@@ -1,6 +1,6 @@
 ---
 id: T-043
-titulo: Service worker, manifest y chunk vendor
+titulo: Service worker, manifest y chunk *vendor*
 tipo: codigo
 hito: H5
 estado: pendiente

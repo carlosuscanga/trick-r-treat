@@ -6,7 +6,7 @@ hito: H1
 estado: hecha
 prioridad: alta
 depende: [T-003]
-plan: ../planes/T-034-performance-y-memoria.md
+plan: docs/planes/T-034-performance-y-memoria.md
 ---
 
 ## Qué
