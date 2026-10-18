@@ -34,6 +34,12 @@ El proyecto es iterativo: cada vuelta del ciclo puede refinar el diseño.
 5. Probar     → jugar en el celular; lo que salga → tareas nuevas o de vuelta a 1
 ```
 
+**Revisión de diseño al cerrar cada hito.** Antes del tag `hito-hN`, el product owner juega el entregable y lo compara con `diseno/`: qué se siente bien, qué sobra y qué falta. Lo que cambie sube la versión del diseño (`CAMBIOS.md` y tag `diseno-vX.Y`); si nada cambia, `CAMBIOS.md` lo dice en una línea. Mi vo participa cuando el product owner lo decida ("Revisión con Mi vo"). Reglas para que el juego crezca sin perder el rumbo:
+
+- Las ideas entran libres a `diseno/ideas.md`, en cualquier momento.
+- Solo pasan al diseño en esta revisión, nunca a medio hito.
+- Si algo entra a la v1, otra cosa sale o pasa al cajón v1.1. Así el alcance no crece en silencio.
+
 ## Git
 
 - `main` siempre es jugable: lo que entra a `main` se publica en GitHub Pages.
