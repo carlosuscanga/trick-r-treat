@@ -10,7 +10,7 @@ El *cómo* de una tarea: qué archivos se tocan, en qué orden y cómo se verifi
 ## Convenciones
 
 - Nombre: mismo ID que la tarea, `T-NNN-titulo-corto.md`.
-- Al crear el plan, enlazarlo en el campo `plan:` de la tarea y en el tablero (`docs/tareas/README.md`).
+- Al crear el plan, ponerlo en el campo `plan:` de la tarea (`docs/planes/T-NNN-titulo.md`) y correr `npm run tablero`. En `main` se ve hasta el merge.
 - Si la implementación se desvía del plan, actualizar el plan. No debe quedar desfasado.
 - **Todo plan de código incluye su sección "Pruebas", con tres capas.** Se definen en el plan, antes de programar, y entran en el mismo PR que el código:
   - **Unitarias** (`npm test`, Vitest): la lógica (estado, reglas, datos, catálogo, sorteos), en módulos sin Phaser.
