@@ -49,6 +49,7 @@ En `main`, después del merge:
    - Verificar: los dos pasos los mencionan con un ejemplo de valor.
 3. **`git fetch` tras el push directo.** Añadir `&& git fetch origin` al comando de la deploy key, con una frase del porqué (el push va por URL y no actualiza `origin/main`).
 4. **`CLAUDE.md`.** La regla de inicio queda así: con "retoma T-NNN", usar el protocolo de `docs/README.md`; sin eso, leer "Estado actual" como hasta ahora.
+   - **Agregado al implementar:** la regla de cierre de sesión (`CLAUDE.md` y "Al terminar" en `docs/README.md`) decía que "qué se hizo" va en "Estado actual". Ahora va arriba de `docs/tareas/historial.md`; si no, el "Estado actual" volvería a crecer.
 5. **Archivo de T-046.** `plan:` apunta a este plan, más la bitácora. Commit por paso.
 6. **PR** con la sección de prueba manual (abajo). El merge lo hace el product owner.
 7. **En `main`, tras el merge** (`git pull` antes, push con la deploy key):

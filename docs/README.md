@@ -101,7 +101,7 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 
   No se leen el tablero ni el "Estado actual" completos. Si la tarea no tiene plan, la bitácora basta.
 - **Durante:** una tarea por worktree. Decisiones y bloqueos van a la bitácora de la tarea.
-- **Al terminar:** Claude actualiza la bitácora en la rama, y el estado, el tablero y el "Estado actual" en `main`.
+- **Al terminar:** Claude actualiza la bitácora en la rama, y el estado, el tablero y el "Estado actual" en `main`. El "Estado actual" solo dice lo vigente (fase, en curso, siguiente paso y pendientes); lo que se hizo en la sesión va arriba de `tareas/historial.md`, también en `main`.
 - **Varias tareas a la vez:** una sesión **orquestadora** trabaja en `main`. Es la única que edita el tablero y el "Estado actual", hace los merges con el OK del product owner, y avisa a las demás. Cada tarea tiene su sesión **trabajadora** en su worktree. Las sesiones se hablan con `ListAgents` y `SendMessage`. Si una sesión *retiene* un mensaje (pasa cuando tienen distinto modo de permisos), el product owner lo aprueba en la terminal de esa sesión. No se reenvía mientras esté retenido.
 - **Abrir y retomar sesiones:** siempre desde la carpeta principal del proyecto, porque ahí se carga `.claude/settings.local.json` (el token del proyecto). Una conversación se guarda bajo la carpeta donde **arrancó**, no donde terminó: una sesión de tarea que arrancó en la carpeta principal y entró a su worktree se retoma desde la carpeta principal, con `claude --resume <id>`, y lo primero que hace es volver a su worktree. Al retomarla, cambia su nombre en `ListAgents`.
 
