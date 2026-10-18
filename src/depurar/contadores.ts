@@ -14,11 +14,20 @@ function listeners(em: EmisorConConteo): number {
   return total;
 }
 
+// El renderer solo es emisor en algunas versiones/modos: si no tiene eventNames, cuenta 0.
+function listenersRenderer(game: Phaser.Game): number {
+  const renderer = game.renderer as unknown as Partial<EmisorConConteo>;
+  return typeof renderer.eventNames === 'function' ? listeners(renderer as EmisorConConteo) : 0;
+}
+
 /** Contadores de fuga: enteros que deben volver a su base al ciclar escenas. */
 export function instantanea(game: Phaser.Game): Instantanea {
+  // Systems.shutdown no quita los listeners de usuario de sys.events (es también data.events): se cuentan todos.
   let listenersShutdown = 0;
+  let listenersEscenas = 0;
   for (const escena of game.scene.scenes) {
     listenersShutdown += escena.sys.events.listenerCount(Phaser.Scenes.Events.SHUTDOWN);
+    listenersEscenas += listeners(escena.sys.events);
   }
   const activas = game.scene.getScenes(true);
   let objetos = 0;
@@ -28,11 +37,13 @@ export function instantanea(game: Phaser.Game): Instantanea {
     tweens += escena.tweens.getTweens().length;
   }
   return {
-    listenersResize: game.scale.listenerCount(Phaser.Scale.Events.RESIZE),
+    listenersEscala: listeners(game.scale),
     listenersJuego: listeners(game.events),
     listenersRegistro: listeners(game.registry.events),
     listenersSonido: listeners(game.sound),
     listenersTexturas: listeners(game.textures),
+    listenersRenderer: listenersRenderer(game),
+    listenersEscenas,
     listenersShutdown,
     texturas: game.textures.getTextureKeys().length,
     // El tipo de NoAudio pide `key`, pero en ejecución es opcional (BaseSoundManager.getAll).

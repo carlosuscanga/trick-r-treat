@@ -29,7 +29,7 @@ Reglas para que el juego sobreviva a la pérdida de contexto WebGL, a que iOS ma
 
 ### ROB-04 · Contar las "recargas inesperadas"
 - **Hacer:** marcar `trt:en-partida` en `sessionStorage` al arrancar y borrarlo en `pagehide`. Si al arrancar ya existe, la sesión anterior murió; el overlay de `?depurar` lo muestra.
-- **Si todavía no existe:** el contador va en el overlay de `?depurar`, que es de T-037: no lo construyas; si el e2e necesita llegar al juego, usa la mínima de `?depurar` (solo `window.__juego`) y calcula a mano en el test o mide en el iPhone.
+- **Ya existe:** `?depurar` ya cuenta las recargas inesperadas (T-037): `__depurar.metricas().recargas` y el overlay.
 - **Verifica:** manual en el iPhone (M14 de la guía).
 - **Por qué:** es la única forma de saber cuántas veces mató iOS la pestaña. [Guía, 4.8](../../../../docs/planes/T-034-performance-y-memoria.md#48-robustez-rob).
 

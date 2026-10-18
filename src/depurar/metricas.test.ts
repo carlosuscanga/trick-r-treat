@@ -10,11 +10,13 @@ import {
 } from './metricas';
 
 const instantanea: Instantanea = {
-  listenersResize: 11,
+  listenersEscala: 11,
   listenersJuego: 12,
   listenersRegistro: 13,
   listenersSonido: 14,
   listenersTexturas: 15,
+  listenersRenderer: 25,
+  listenersEscenas: 26,
   listenersShutdown: 16,
   texturas: 17,
   sonidos: 18,

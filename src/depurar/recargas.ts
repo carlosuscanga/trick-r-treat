@@ -40,7 +40,7 @@ export function marcarSalida(s: Almacen | null): void {
   }
 }
 
-/** En pageshow con persisted (vuelve del bfcache): vuelve a poner la marca sin contar. */
+/** En pageshow con persisted (bfcache) o al volver a visible: vuelve a poner la marca sin contar. */
 export function marcarEntrada(s: Almacen | null): void {
   try {
     s?.setItem(CLAVE_EN_PARTIDA, '1');

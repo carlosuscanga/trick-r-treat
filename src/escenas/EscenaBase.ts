@@ -8,7 +8,24 @@ export abstract class EscenaBase extends Phaser.Scene {
     // Las subclases que redefinen init llaman super.init(data).
     this.limpiezas = [];
     this.data.reset(); // this.data no se vacía solo (ESC-03)
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.limpiezas.splice(0).forEach((f) => f()));
+    // SHUTDOWN cubre stop/start/restart; DESTROY cubre scene.remove y game.destroy (no emiten SHUTDOWN).
+    // off antes de once: idempotente, no acumula listeners entre reinicios.
+    const { SHUTDOWN, DESTROY } = Phaser.Scenes.Events;
+    this.events.off(SHUTDOWN, this.limpiar, this);
+    this.events.off(DESTROY, this.limpiar, this);
+    this.events.once(SHUTDOWN, this.limpiar, this);
+    this.events.once(DESTROY, this.limpiar, this);
+  }
+
+  // Vacía las limpiezas y corre cada una; si una lanza, las demás corren igual.
+  private limpiar() {
+    for (const f of this.limpiezas.splice(0)) {
+      try {
+        f();
+      } catch (e) {
+        console.error('EscenaBase: falló una limpieza', e);
+      }
+    }
   }
 
   /** Listener a un emisor que vive más que la escena (scale, game.events, sound...): se quita al apagarla. */

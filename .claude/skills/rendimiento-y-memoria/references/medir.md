@@ -22,7 +22,9 @@ Referencia para medir rendimiento y memoria en Phaser 3.90 sobre Safari de iPhon
   - `src/depurar/fugas.ts`: `crecimientos(antes, despues)`.
 - Lo que lee Phaser va aparte: `src/depurar/contadores.ts` y `src/depurar/overlay.ts`.
 - `window.__juego` (el `Phaser.Game`) también existe solo con `?depurar`: los e2e lo usan para manejar escenas; `__depurar` trae `instantanea()` (contadores de fuga) y `metricas()` (fps, p95, tirones, GPU, recargas).
-- Contadores (APIs de 3.90): `game.scale.listenerCount('resize')`; suma de `eventNames()`/`listenerCount` de `game.events`, `registry.events`, `sound` y `textures`; `textures.getTextureKeys().length`; `sound.getAll().length`; `cache.audio.getKeys().length`; `anims.anims.size`; `CanvasPool.total()`; `scene.getScenes(true)`; `children.length`; `tweens.getTweens().length`; MiB de `renderer.glTextureWrappers` (×4/3 si es POT); `game.loop.actualFps` y `rawDelta`; *draw calls* envolviendo `gl.drawArrays`.
+- Contadores de `instantanea()` (APIs de 3.90): suma de los listeners de todos los eventos de `game.scale`, `game.events`, `registry.events`, `sound`, `textures` y `game.renderer`; suma de todos los listeners de `sys.events` de cada escena (Phaser no quita los de usuario al apagarla; incluye `data.events`) y, aparte, los de `shutdown`; `textures.getTextureKeys().length`; `sound.getAll().length`; `cache.audio.getKeys().length`; `anims.anims.size`; `CanvasPool.total()`; escenas activas (`scene.getScenes(true)`); `children.length`; `tweens.getTweens().length`.
+- Métricas de `metricas()`: `game.loop.actualFps`; p95, máximo y tirones (> `UMBRAL_TIRON_MS`) de `rawDelta`; MiB de GPU de `renderer.glTextureWrappers` (×4/3 si es POT); tipo de renderer; recargas inesperadas.
+- *Draw calls* (envolver `gl.drawArrays`): T-040, no T-037.
 
 **Si todavía no existe**
 Criterio del product owner: si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-0NN la completa"; no la refines; si ya existe, úsala.
@@ -95,6 +97,6 @@ Tabla para la descripción del PR o del hito. [Guía 6.3](../../../../docs/plane
    - Mientras se graba, el JIT se degrada: los fps grabados no son los reales (se leen en el overlay).
    - `console.profile()`/`profileEnd()` y `console.takeHeapSnapshot()` graban exactamente "entrar y salir de un minijuego".
    - 🔬 Que Memory incluya las texturas WebGL (proceso GPU): probablemente no, por eso existe el estimador propio.
-3. **Overlay `?depurar`:** fps (`actualFps`, un promedio que esconde tirones), p95, máximo y tirones de `rawDelta`, texturas, MiB de GPU, sonidos, escenas, *draw calls* y recargas inesperadas. Se usa en el build real de Pages.
+3. **Overlay `?depurar`:** fps (`actualFps`, un promedio que esconde tirones), p95, máximo y tirones de `rawDelta`, texturas, MiB de GPU, sonidos, escenas y recargas inesperadas (*draw calls*: T-040). Se usa en el build real de Pages.
 4. **`xctrace`** 🔬: `/Applications/Xcode.app/Contents/Developer/usr/bin/xctrace record --template 'Activity Monitor' --device '<iPhone>' --all-processes --time-limit 15m --output partida.trace`. Mediría WebContent + GPU (la huella que decide el jetsam). Requiere Modo desarrollador en el iPhone. `xcrun xctrace` falla porque `xcode-select` apunta a Command Line Tools.
 5. **Lo que no existe en Safari:** `performance.memory`, `measureUserAgentSpecificMemory` (además exige COOP/COEP, que Pages no da), `navigator.deviceMemory`, `longtask` y `long-animation-frame`. Sí existen `mark`/`measure`, `resource`, `navigation` y `paint`.

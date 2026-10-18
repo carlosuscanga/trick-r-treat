@@ -54,7 +54,7 @@ Histórica: ya no hace falta, la completa existe desde T-037.
 Si la tarea la necesita y no existe, créala así en `src/escenas/EscenaBase.ts`:
 
 ```ts
-// mínima; T-037 la completa
+// Histórica: la versión completa ya existe (T-037), no la copies
 export abstract class EscenaBase extends Phaser.Scene {
   private limpiezas: Array<() => void> = [];
   init(_data?: unknown) {                       // las subclases llaman super.init(data)

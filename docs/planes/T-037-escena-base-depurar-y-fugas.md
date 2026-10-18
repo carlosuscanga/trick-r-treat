@@ -29,12 +29,14 @@ Después se corrigen la guía y el skill para que apunten a lo que de verdad exi
 
 ```ts
 interface Instantanea {            // contadores de fuga: deben volver a la base
-  listenersResize: number;         // game.scale.listenerCount('resize')
-  listenersJuego: number;          // suma de listenerCount de game.events
+  listenersEscala: number;         // todos los eventos de game.scale
+  listenersJuego: number;          // game.events
   listenersRegistro: number;       // registry.events
   listenersSonido: number;         // sound
   listenersTexturas: number;       // textures
-  listenersShutdown: number;       // suma de sys.events.listenerCount('shutdown') de todas las escenas (ESC-02)
+  listenersRenderer: number;       // game.renderer (0 si no es emisor)
+  listenersEscenas: number;        // todos los de sys.events de cada escena: Phaser no quita los de usuario
+  listenersShutdown: number;       // los de 'shutdown' de cada escena (ESC-02)
   texturas: number;                // textures.getTextureKeys().length
   sonidos: number;                 // sound.getAll().length
   audioCache: number;              // cache.audio.getKeys().length
@@ -140,6 +142,8 @@ Todos registran `pageerror` y `console` de tipo error, y terminan exigiendo que 
 
 M3 y M5 a M15 son de T-041 (la medición de 15 minutos).
 
+Ojo al leer `recargas`: si se cierra Safari a la fuerza y Safari restaura la pestaña con su `sessionStorage`, eso cuenta como recarga inesperada aunque no lo sea. Para M2 se recarga con el botón de Safari, que no cuenta.
+
 ### Capas que no aplican
 
 Ninguna: aplican las tres.
@@ -155,6 +159,13 @@ Ninguna: aplican las tres.
 | Paso 6: documentación de la guía y el skill | Haiku | `low` | Reemplazos de texto puntuales y ya definidos aquí. |
 | Revisión del PR | Opus (`code-reviewer-opus55`) | `high` | Referencia por rol. |
 | Orquestación y paso 7 | Opus (sesión principal) | `high` | Referencia por rol. |
+
+## Cambios tras la revisión de código
+
+- La instantánea pasó de 14 a 16 contadores: todos los eventos de `scale` (no solo `resize`), los del renderer y **todos** los de `sys.events` de cada escena. Sin este último, una fuga con `this.events.on(...)` (el patrón de `finished` en T-007) daba falso verde.
+- `EscenaBase` limpia también en `DESTROY`: `scene.remove` y `game.destroy` no emiten `SHUTDOWN`. Cada limpieza corre en `try/catch` con `console.error`.
+- Recargas: además de `pageshow`, se vuelve a marcar en `visibilitychange` visible. Hay e2e del caso positivo.
+- e2e nuevo: `scene.remove` de `CallePrueba` no deja listeners globales.
 
 ## Riesgos y dudas
 

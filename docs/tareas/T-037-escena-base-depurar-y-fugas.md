@@ -25,15 +25,15 @@ Phaser limpia lo de la escena en `SHUTDOWN`, pero no lo global (listeners en `sc
 
 ## Criterios de aceptación
 
-- [ ] `EscenaBase` registra la limpieza con `once(SHUTDOWN)`, y los listeners a emisores globales con `escuchar()` o `alLimpiar()` (ESC-01, ESC-02).
-- [ ] `init()` de `EscenaBase` reinicia sus limpiezas y hace `this.data.reset()`; las subclases llaman `super.init(data)` (ESC-03).
-- [ ] `?depurar` expone `window.__depurar` y un overlay DOM (`<pre>`, cada 500 ms), no un `Text` de Phaser. La lógica pura vive en `src/depurar/metricas.ts` y `src/depurar/fugas.ts`, sin Phaser (DEP-01). `window.__juego` sigue existiendo, solo con `?depurar`.
-- [ ] Contadores de DEP-01: listeners globales, texturas, sonidos, caché de audio, animaciones, escenas activas, tweens, MiB de GPU, `actualFps`, p95 y tirones de `rawDelta`, y recargas inesperadas (ROB-04).
-- [ ] `?depurar` sirve en producción, apagado por defecto y sin datos personales (decisión 7). Ningún código del juego usa `__depurar`.
-- [ ] e2e de fugas: calentamiento, `antes`, N ciclos (hoy, 30 reinicios de `Arranque`), `despues` y `crecimientos(antes, despues) == []`, esperando 2 frames entre pasos (sección 6.2). Queda listo para que T-007 cicle Calle → Puerta → minijuego → Calle.
-- [ ] Probado que el detector funciona: con un `off` quitado a propósito, el e2e falla (anotado en la bitácora).
-- [ ] e2e sin errores (`pageerror` y `console` de tipo error vacíos) y que imprime el tipo de renderer en el log, para saber si el WebKit del CI tiene WebGL.
-- [ ] La guía de T-034 y el skill `rendimiento-y-memoria` dicen `src/depurar/` (no `src/depuracion/`), documentan `window.__juego` junto a `window.__depurar`, y el ejemplo de TEX-07 de la guía solo borra texturas si la escena sigue apagada (`getStatus() === SHUTDOWN`), igual que el skill.
+- [x] `EscenaBase` registra la limpieza con `once(SHUTDOWN)`, y los listeners a emisores globales con `escuchar()` o `alLimpiar()` (ESC-01, ESC-02).
+- [x] `init()` de `EscenaBase` reinicia sus limpiezas y hace `this.data.reset()`; las subclases llaman `super.init(data)` (ESC-03).
+- [x] `?depurar` expone `window.__depurar` y un overlay DOM (`<pre>`, cada 500 ms), no un `Text` de Phaser. La lógica pura vive en `src/depurar/metricas.ts` y `src/depurar/fugas.ts`, sin Phaser (DEP-01). `window.__juego` sigue existiendo, solo con `?depurar`.
+- [x] Contadores de DEP-01: listeners globales, texturas, sonidos, caché de audio, animaciones, escenas activas, tweens, MiB de GPU, `actualFps`, p95 y tirones de `rawDelta`, y recargas inesperadas (ROB-04).
+- [x] `?depurar` sirve en producción, apagado por defecto y sin datos personales (decisión 7). Ningún código del juego usa `__depurar`.
+- [x] e2e de fugas: calentamiento, `antes`, N ciclos (hoy, 30 reinicios de `Arranque`), `despues` y `crecimientos(antes, despues) == []`, esperando 2 frames entre pasos (sección 6.2). Queda listo para que T-007 cicle Calle → Puerta → minijuego → Calle.
+- [x] Probado que el detector funciona: con un `off` quitado a propósito, el e2e falla (anotado en la bitácora).
+- [x] e2e sin errores (`pageerror` y `console` de tipo error vacíos) y que imprime el tipo de renderer en el log, para saber si el WebKit del CI tiene WebGL.
+- [x] La guía de T-034 y el skill `rendimiento-y-memoria` dicen `src/depurar/` (no `src/depuracion/`), documentan `window.__juego` junto a `window.__depurar`, y el ejemplo de TEX-07 de la guía solo borra texturas si la escena sigue apagada (`getStatus() === SHUTDOWN`), igual que el skill.
 - [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de `metricas.ts` y `fugas.ts`; e2e de fugas y sin errores; manual en el iPhone con M1, M2 y M4 de la guía (overlay visible en Pages, también desde la pantalla de inicio, sin quedar tapado por el notch).
 
 ## Bitácora
@@ -46,3 +46,5 @@ Phaser limpia lo de la escena en `SHUTDOWN`, pero no lo global (listeners en `sc
 - 2026-10-18: plan escrito y aprobado por el product owner (`docs/planes/T-037-escena-base-depurar-y-fugas.md`). Se agregó un segundo ciclo al e2e de fugas (`Arranque` ↔ `CallePrueba`).
 - 2026-10-18: probado que el detector funciona (paso 5). Con el `em.off` de `escuchar()` quitado a propósito, los dos e2e de fugas fallaron: reiniciar `Arranque` dio `listenersResize` 6 → 36, y el ciclo con `CallePrueba` dio `listenersResize` 7 → 67 y `listenersJuego` 23 → 113 (los 3 listeners de `game.events` × 30 vueltas). Revertido; no entró al commit.
 - 2026-10-18: desvíos al programar: `montarDepurar` vive en `src/depurar/montar.ts` y no en `depurar.ts`, porque importa Phaser y `depurar.test.ts` no puede (plan actualizado). `Instantanea` es un `type` y no una `interface`, para pasarla a `crecimientos()` como `Record<string, number>`. La GPU marca ≈93 MiB con una sola textura del juego porque `disablePreFX` aún no está en la config (T-038); cuadra con los 91 MiB de la guía.
+- 2026-10-18: revisión de código (Opus). Se corrigieron dos huecos verificados: (1) el detector no veía listeners acumulados en `this.events` de la escena (el patrón de `finished` en T-007): la instantánea pasó a 16 contadores, con `listenersEscenas`, todos los eventos de `scale` y los del renderer. Con `this.events.on('update', …)` puesto a propósito en `Arranque`, el e2e falló con `listenersEscenas` 77 → 107; revertido. (2) `EscenaBase` no limpiaba con `scene.remove` ni `game.destroy`, que emiten `DESTROY` y no `SHUTDOWN`: ahora limpia en los dos. Además: caso positivo de recargas en el e2e, `visibilitychange` para iOS y el skill al día (ya no dice "es de T-037"). Queda abierto: el CI es el primer e2e que falla con cualquier `console.error`; si el WebKit de Linux no decodifica el audio, se verá en el PR.
+- 2026-10-18: verificación final de la rama: `npm test` (161 + 39), `npm run build`, `npm run test:presupuestos` (JS inicial 319.2 de 340 KiB) y `npm run test:e2e` (41 de 41). Falta la prueba manual en el iPhone (casilla de tres capas).

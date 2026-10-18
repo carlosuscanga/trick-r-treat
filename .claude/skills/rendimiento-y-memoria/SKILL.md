@@ -42,27 +42,7 @@ Varias reglas dependen de piezas que llegan en tareas posteriores. **Criterio:**
 | `test:presupuestos` | ya existe (T-036): úsalo, no lo dupliques | — |
 | config del juego (`disablePreFX`, `panicMax`, LOSE/RESTORE) | solo la línea que tu tarea necesite | T-038 |
 
-`EscenaBase` mínima:
-
-```ts
-import Phaser from 'phaser';
-
-// mínima; T-037 la completa (alLimpiar, this.data.reset, ?depurar)
-export abstract class EscenaBase extends Phaser.Scene {
-  private limpiezas: Array<() => void> = [];
-
-  init(_data?: unknown) {
-    // Las subclases que redefinen init llaman super.init(data).
-    this.limpiezas = [];
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.limpiezas.splice(0).forEach((f) => f()));
-  }
-
-  protected escuchar(em: Phaser.Events.EventEmitter, ev: string | symbol, fn: (...a: any[]) => void) {
-    em.on(ev, fn, this);
-    this.limpiezas.push(() => em.off(ev, fn, this));
-  }
-}
-```
+`EscenaBase` completa está en `src/escenas/EscenaBase.ts`: hereda de ella (plantilla en [`references/escenas-y-fugas.md`](references/escenas-y-fugas.md#plantilla-completa-de-escenabase-t-037)).
 
 ## Trampas conocidas → cómo probarlas
 

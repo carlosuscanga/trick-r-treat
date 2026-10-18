@@ -17,6 +17,10 @@ export function montarDepurar(game: Phaser.Game): void {
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) marcarEntrada(sesion);
   });
+  // iOS puede disparar pagehide al ir a segundo plano sin pageshow al volver: al ser visible otra vez, se vuelve a marcar.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') marcarEntrada(sesion);
+  });
 
   const muestreador = new MuestreadorFrames(game);
   const leerInstantanea = () => instantanea(game);

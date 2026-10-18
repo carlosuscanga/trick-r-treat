@@ -2,11 +2,13 @@
 
 /** Contadores de fuga: deben volver a su base al reiniciar escenas. */
 export type Instantanea = {
-  listenersResize: number;
+  listenersEscala: number;
   listenersJuego: number;
   listenersRegistro: number;
   listenersSonido: number;
   listenersTexturas: number;
+  listenersRenderer: number;
+  listenersEscenas: number;
   listenersShutdown: number;
   texturas: number;
   sonidos: number;
@@ -79,8 +81,9 @@ export function textoOverlay(i: Instantanea, m: Metricas): string {
     `fps ${m.fps.toFixed(0)}  p95 ${m.p95.toFixed(1)} ms  max ${m.max.toFixed(1)} ms`,
     `tirones ${m.tirones}  ${gpu}`,
     `${m.renderer}  recargas ${m.recargas}`,
-    `resize ${i.listenersResize}  juego ${i.listenersJuego}  registro ${i.listenersRegistro}`,
-    `sonido ${i.listenersSonido}  tex-ev ${i.listenersTexturas}  shutdown ${i.listenersShutdown}`,
+    `escala ${i.listenersEscala}  juego ${i.listenersJuego}  registro ${i.listenersRegistro}`,
+    `sonido ${i.listenersSonido}  tex-ev ${i.listenersTexturas}  render ${i.listenersRenderer}`,
+    `escenas-ev ${i.listenersEscenas}  shutdown ${i.listenersShutdown}`,
     `texturas ${i.texturas}  sonidos ${i.sonidos}  audio ${i.audioCache}`,
     `anims ${i.animaciones}  canvas ${i.canvas}  escenas ${i.escenasActivas}`,
     `objetos ${i.objetos}  tweens ${i.tweens}`,
