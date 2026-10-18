@@ -3,7 +3,7 @@ id: T-046
 titulo: Retomar una tarea en una sesión nueva
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: media
 depende: []
 plan: null
