@@ -3,7 +3,7 @@ import { ControlTactil } from '../controles/controlTactil';
 import type { Disposicion } from '../controles/disposicion';
 import { crearIntenciones, limpiarFlancos, type Intenciones } from '../controles/intenciones';
 import { ANCHO_CALLE, BLOQUES_CALLE_PRUEBA, alturaSuperior } from '../datos/plataformas';
-import { AJUSTES_CAMBIADOS, derivarFisica, type Ajustes, type Fisica } from '../movimiento/ajustes';
+import { AJUSTES_CAMBIADOS, derivarFisica, topeVertical, type Ajustes, type Fisica } from '../movimiento/ajustes';
 import { crearEstadoSalto, pasoSalto, type EstadoSalto, type SalidaSalto } from '../movimiento/salto';
 import { ALTO } from '../plataforma/escala';
 import { VigiaFps } from '../plataforma/vigiaFps';
@@ -123,6 +123,8 @@ export class CallePrueba extends EscenaBase {
     const s = pasoSalto(this.estadoSalto, enSuelo, body.velocity.y, i.saltarPresionado, i.saltarSostenido, delta, this.fisica, this.salida);
     if (s.vy !== null) body.setVelocityY(s.vy);
     body.setGravityY(s.gravedad);
+    // El tope de Arcade es max(caidaMax, v0) para no recortar la subida: la caída se limita aquí.
+    if (body.velocity.y > this.fisica.caidaMax) body.velocity.y = this.fisica.caidaMax;
     if (s.evento !== null) this.evento = s.evento;
 
     if (i.brazosPresionado) this.destelloBrazos();
@@ -155,7 +157,7 @@ export class CallePrueba extends EscenaBase {
     this.cuerpo.body
       .setCollideWorldBounds(true)
       .setBounce(0, 0)
-      .setMaxVelocity(this.ajustes.caminar.velocidad, this.ajustes.salto.caidaMax);
+      .setMaxVelocity(this.ajustes.caminar.velocidad, topeVertical(this.fisica));
     this.physics.add.collider(this.cuerpo, solidos);
   }
 
@@ -224,7 +226,7 @@ export class CallePrueba extends EscenaBase {
 
   private alCambiarAjustes(): void {
     this.fisica = derivarFisica(this.ajustes.salto);
-    this.cuerpo.body.setMaxVelocity(this.ajustes.caminar.velocidad, this.ajustes.salto.caidaMax);
+    this.cuerpo.body.setMaxVelocity(this.ajustes.caminar.velocidad, topeVertical(this.fisica));
     this.reacomodar();
   }
 }

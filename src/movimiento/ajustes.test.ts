@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ajustesJson from './ajustes.json' with { type: 'json' };
-import { AJUSTES_POR_DEFECTO, derivarFisica, validarAjustes } from './ajustes';
+import { AJUSTES_POR_DEFECTO, derivarFisica, topeVertical, validarAjustes } from './ajustes';
 
 /** Copia profunda del JSON para romperla en cada prueba sin tocar el original (`any` a propósito). */
 function copia(): any {
@@ -66,5 +66,17 @@ describe('derivarFisica', () => {
     expect(f.coyoteMs).toBe(100);
     expect(f.bufferMs).toBe(130);
     expect(f.apiceColgado).toBe(false);
+  });
+});
+
+describe('topeVertical', () => {
+  it('con los valores por defecto manda la caída máxima', () => {
+    expect(topeVertical(derivarFisica(AJUSTES_POR_DEFECTO.salto))).toBe(1500);
+  });
+
+  it('si el salto despega más rápido que la caída máxima, manda v0', () => {
+    const f = derivarFisica({ ...AJUSTES_POR_DEFECTO.salto, alturaMax: 400, tiempoSubida: 0.2 });
+    expect(f.v0).toBeCloseTo(4000, 0);
+    expect(topeVertical(f)).toBe(f.v0);
   });
 });
