@@ -749,4 +749,4 @@ Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cam
 - [x] Tarea 9 con sus pruebas, commit.
 - [x] `npm test`, `npm run test:e2e` y `npm run build` en verde.
 - [x] Revisión con `code-reviewer-opus55`.
-- [ ] Push al PR #12 y filas 19 y 20 en su descripción.
+- [x] Push al PR #12 y filas 19 y 20 en su descripción.
