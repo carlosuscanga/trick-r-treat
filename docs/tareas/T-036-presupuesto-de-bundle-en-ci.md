@@ -3,10 +3,12 @@ id: T-036
 titulo: Presupuesto de bundle en CI
 tipo: codigo
 hito: H1
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-034]
 plan: null
+rama: T-036-presupuesto-de-bundle-en-ci
+worktree: .claude/worktrees/T-036-presupuesto-de-bundle-en-ci
 ---
 
 ## Qué

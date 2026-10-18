@@ -7,7 +7,7 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 Solo lo vigente. Se actualiza al cerrar cada sesión, y lo que se hizo en cada una va arriba de [`historial.md`](historial.md). Para seguir una sola tarea basta con "retoma T-NNN" ([`docs/README.md`](../README.md), "Sesiones con Claude").
 
 - **Fase:** H1 · Esqueleto en el iPhone, con su objetivo cumplido: el rectángulo camina y salta en el iPhone desde Pages (T-004, **plan A**). Quedan T-036, T-005 y T-030, que no bloquean; la ruta crítica sigue con T-037.
-- **En curso:** ninguna tarea.
+- **En curso:** T-036 (presupuesto de bundle en CI), para cerrar H1. T-005 y T-030 pasarán a H2 y después se pone el tag `hito-h1`.
 - **Siguiente paso:** T-037 (`EscenaBase`, `?depurar` y e2e de fugas), que sigue en la ruta crítica. En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
 - **Pendiente de decidir:** volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
@@ -59,7 +59,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
 | [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
 | [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | — |
-| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | pendiente | alta | T-034 | — |
+| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | en-progreso | alta | T-034 | — |
 | [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | hecha | alta | — | — |
 | [T-046](T-046-retomar-tareas-en-sesion-nueva.md) | Retomar una tarea en una sesión nueva | codigo | hecha | media | — | [plan](../planes/T-046-retomar-tareas-en-sesion-nueva.md) |
 
