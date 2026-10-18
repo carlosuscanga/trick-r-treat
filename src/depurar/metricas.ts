@@ -1,7 +1,7 @@
 // Estadísticas y texto del overlay de depuración. Sin Phaser.
 
 /** Contadores de fuga: deben volver a su base al reiniciar escenas. */
-export interface Instantanea {
+export type Instantanea = {
   listenersResize: number;
   listenersJuego: number;
   listenersRegistro: number;
@@ -16,7 +16,7 @@ export interface Instantanea {
   escenasActivas: number;
   objetos: number;
   tweens: number;
-}
+};
 
 /** Se miden, no se comparan. */
 export interface Metricas {
