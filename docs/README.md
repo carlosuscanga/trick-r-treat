@@ -55,8 +55,10 @@ Si un check falla en un PR: abrir el check en GitHub, leer el error, corregirlo 
 **Pushes directos a `main`:** solo los hace la sesión que trabaja en `main` (la orquestadora), y solo para el tablero y el "Estado actual". Usan una *deploy key*, la única excepción del ruleset, indicada en el propio comando (no hay nada configurado en el repo):
 
 ```bash
-GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' git push git@github.com:carlosuscanga/trick-r-treat.git main
+GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' git push git@github.com:carlosuscanga/trick-r-treat.git main && git fetch origin
 ```
+
+El `git fetch` del final va porque el push sale por la URL y no por `origin`, así que no actualiza `origin/main` local. Sin él, el editor muestra "1 adelante" aunque el push sí se hizo, y una sesión que lea `origin/main` ve una versión vieja.
 
 Un `git push origin main` normal se rechaza. Las sesiones de tarea **nunca** usan este comando. Límite honesto: la llave vive en `~/.ssh/trick-r-treat-directo` de la Mac (nunca en el repo) y cualquier sesión podría leerla. Lo que protege `main` de las sesiones de tarea es esta regla escrita, más que su token de `gh` no tiene permiso de administración (no puede tocar el ruleset ni las deploy keys). La llave se revoca en Settings → Deploy keys.
 
