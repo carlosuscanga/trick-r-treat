@@ -31,9 +31,9 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 
 - [x] Joystick a la izquierda; Saltar y Brazos a la derecha, como en el diseño.
 - [x] Mi vo camina, salta y cae con gravedad; la cámara la sigue.
-- [ ] Se usan dos dedos a la vez (moverse y saltar) sin que se trabe.
-- [ ] Probado en el iPhone, con la decisión anotada en la bitácora: plan A, A′ o B.
-- [ ] Retro anotada en la bitácora: qué errores repitieron los agentes, cuánto costó corregirlos y si alguno justifica una skill nueva.
+- [x] Se usan dos dedos a la vez (moverse y saltar) sin que se trabe.
+- [x] Probado en el iPhone, con la decisión anotada en la bitácora: plan A, A′ o B.
+- [x] Retro anotada en la bitácora: qué errores repitieron los agentes, cuánto costó corregirlos y si alguno justifica una skill nueva.
 
 ## Bitácora
 
@@ -70,3 +70,19 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 - 2026-10-17: **para retomar:** push al PR #12 hecho (ver el PR). Falta la segunda ronda en el iPhone: filas 3, 11, 12, 15 y 17, y las nuevas 19 (regresar por el barril) y 20 (velocidad proporcional contra la fija). Después: veredicto A, A′ o B, la elección entre velocidad fija o proporcional, el merge y la retro. Las escaleras verticales ya están en la bitácora de T-027 (en `main`).
 - 2026-10-17: **segunda ronda en el iPhone (en curso):** pasan la fila 19 (se regresa por el barril) y la 20 (la velocidad proporcional funciona; se siente más lenta con el pulgar cerca del centro). **Bug encontrado:** "Copiar valores" sin portapapeles (http en la red local) enfoca la caja del JSON, y como su letra era de 12 px, Safari hizo zoom. El juego bloquea el pellizco, así que el zoom no se pudo quitar, ni al recargar. Se corrigió con letra de 16 px (Safari no hace zoom desde ese tamaño) y un e2e que lo vigila.
 - 2026-10-17: **valores afinados en el iPhone:** el product owner subió la velocidad a 561 y aceleró el salto (subida 0.25 s, caída 0.19 s), y se queda con la **velocidad proporcional** (decisión tomada). Esos valores ya son los nuevos por defecto. Pidió más recorrido para las velocidades bajas, y se agregó `caminar.curva` (2 por defecto, con deslizador). Con el salto rápido, la altura máxima a 60 fps se desvía un 3.3 % (antes, menos de 3 %); no se nota en el juego. Las pruebas de la lógica ya no dependen de los valores afinados.
+- 2026-10-18: **segunda ronda en el iPhone, terminada** (una prueba a la vez, por petición del product owner):
+  - **Curva de velocidad:** con 2 todavía costaba ir lento; con **3.5** se siente bien.
+  - **Saltito (fila 3): falla y se acepta.** Un toque normal de pulgar dura ≈ 80 ms y en ese tiempo Mi vo ya sube ≈ 105 px; con el corte llega a ≈ 175 y alcanza el auto (140). Se probó subir el tiempo de subida (quedó en **0.35**) y no bastó; para lograrlo haría falta un salto lento, y el product owner prefiere el salto ágil. `escalonCorto` ahora se calcula con un toque real de pulgar (`TOQUE_PULGAR_S` = 0.08) y no con la altura mínima teórica.
+  - **Ápice colgado:** no se nota. Con el salto rápido, la zona que "flota" dura ≈ 30 ms. Queda apagado; si algún día se quiere, la ventana de `VY_APICE` debe escalar con `v0`.
+  - **Pasan:** bordes de la pantalla (fila 11), Centro de control con el dedo abajo (12), aviso de 30 fps una vez (15; en bajo consumo se siente más trabado, es el límite de iOS: dato para T-041) y dos pulgares un minuto desde la pantalla de inicio, igual que en Safari.
+  - **Bug encontrado y corregido:** zoom de Safari al enfocar la caja del JSON (letra < 16 px).
+  - **Observación del product owner:** mantener B cambia el color de Mi vo solo al tocar. Si mantener B será otra acción, Mi vo debe mostrar que la carga. Va a `ideas.md` junto a los gestos de Brazos.
+  - **Valores por defecto finales:** velocidad 561, proporcional prendida, mínima 0.3, curva 3.5, subida 0.35 s, caída 0.19 s; lo demás igual.
+- 2026-10-18: **veredicto del product owner: plan A.** "Excelente": dos pulgares sin trabarse, igual en Safari que en la pantalla de inicio, salto y velocidad afinados. Se sigue con Phaser en web y controles táctiles.
+- 2026-10-18: **retro** (fuentes: `.local/t004/sdd-ledger.md` y esta bitácora).
+  - **Error repetido 1: pruebas amarradas a los valores por defecto.** Los agentes de las tareas 2, 4, 5 y 9 escribieron pruebas con los números de `ajustes.json` (360 px/s, la física derivada, los límites). Al afinar en el iPhone se rompieron 7 unitarias y 6 e2e. Costo: ≈ 15 min. Arreglo: la lógica se prueba con valores fijos propios y los e2e leen `ajustes.json`.
+  - **Error repetido 2: detalles de Safari en iPhone que ni los agentes ni las pruebas vieron.** El joystick que se movía al cambiar las barras de Safari (lo encontró la revisión final de Opus) y el zoom al enfocar una caja de texto de menos de 16 px (lo encontró el product owner en el iPhone). Costo: una ronda de corrección cada uno, ≈ 20 min.
+  - **Una sola vez:** un subagente cambió un test sin necesidad y con una explicación falsa; el orquestador lo detectó al leer el diff (≈ 2 min). Confirma que el diff de cada subagente se lee, no solo su reporte.
+  - **Acierto:** la revisión de la tarea 2 predijo que el saltito alcanzaría el auto; el iPhone lo confirmó. Las predicciones de sensación de los agentes sirven, pero solo el iPhone decide.
+  - **¿Skill nueva? Recomendación: todavía no.** El error 1 se resuelve con una línea en `docs/planes/README.md` ("Pruebas"): no fijar en pruebas los valores que se afinan. El error 2 es candidato a skill ("Safari en iPhone": zoom de inputs, barras que cambian el tamaño, gestos), pero con dos casos es poco; si aparece un tercero, se crea con su tarea y evaluaciones, como T-035. Decisión del product owner pendiente.
+

@@ -625,7 +625,7 @@ En la red local (`npm run dev -- --host`): primero en Safari y después desde el
 |---|---|---|
 | 1 ★ | Mover el joystick a la derecha y luego a la izquierda | Mi vo arranca en ese instante, sin lag |
 | 2 ★ | Soltar el joystick mientras camina | Frena en seco, sin resbalar |
-| 3 | Un toque corto en Saltar | Saltito: sube a la banqueta, no al auto |
+| 3 | Un toque corto en Saltar | Saltito: sube a la banqueta. Con el pulgar también alcanza el auto, y se acepta (ver Tarea 11) |
 | 4 | Mantener Saltar junto al auto y al pórtico | Sube a los dos |
 | 5 | Desde el pórtico, saltar al techo | Llega encadenando saltos; la cámara sube con ella |
 | 6 ★ | Caminar y saltar con los dos pulgares a la vez, 2 minutos seguidos | Nunca se traba ni ignora un dedo |
@@ -759,3 +759,10 @@ Pedido del product owner en la segunda ronda: para lograr una velocidad baja hay
 - `caminar.curva` (1 a 4, por defecto 2): la velocidad sigue `velocidadMinima + (1 − velocidadMinima) · fuerza ^ curva`. Los extremos no cambian, pero a media distancia del pulgar va al 47.5 % y no al 65 %. Tiene su deslizador en el panel.
 - Las pruebas de la lógica del salto y de la física usan valores fijos, no los de `ajustes.json`, para que afinar en el iPhone no rompa pruebas. Los e2e leen la velocidad de `ajustes.json`.
 - **Modelo y esfuerzo:** lo hizo el orquestador (Opus) directamente; son pocas líneas y las pruebas ya estaban.
+
+### Tarea 11: cierre tras la segunda ronda
+
+- Valores finales en `ajustes.json`: `tiempoSubida` 0.35 y `curva` 3.5 (además de los de la tarea 10).
+- **Fila 3 aceptada como falla:** con el pulgar, el saltito alcanza el auto. `limitesDeSalto` calcula `escalonCorto` con un toque real de pulgar (`TOQUE_PULGAR_S` = 0.08 s, `alturaToquePulgar`) en lugar de `0.85 · alturaMin`. Así la regla dice la verdad sobre qué sube un toque corto. Pruebas: el auto ya es de toque corto y el techo no; la cuenta de `alturaToquePulgar` y su caso sin corte.
+- Veredicto: **plan A**. Retro en la bitácora.
+

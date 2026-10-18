@@ -543,8 +543,9 @@ test.describe('velocidad proporcional', () => {
   test('prendida (por defecto), un arrastre corto da menos velocidad que uno largo', async ({ page }) => {
     const corto = await velocidadConArrastre(page, 30);
     const largo = await velocidadConArrastre(page, 100);
-    // dx 30 da fuerza 0.2; con curva 2: VEL · (0.3 + 0.7 · 0.2²).
-    expect(corto).toBeCloseTo(VEL * (0.3 + 0.7 * 0.04));
+    // dx 30 da fuerza 0.2: VEL · (mínima + (1 − mínima) · 0.2 ^ curva).
+    const { velocidadMinima: min, curva } = ajustesJson.caminar;
+    expect(corto).toBeCloseTo(VEL * (min + (1 - min) * 0.2 ** curva));
     expect(corto).toBeLessThan(largo);
     expect(largo).toBe(VEL);
   });

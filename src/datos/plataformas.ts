@@ -4,7 +4,7 @@
 // Convención: `x` es el borde izquierdo del bloque en px de mundo. `alto` es su
 // grosor propio sobre la superficie que tiene abajo (`sobre`, o la calle si no tiene).
 
-import type { Ajustes } from '../movimiento/ajustes';
+import { derivarFisica, type Ajustes } from '../movimiento/ajustes';
 import calleJson from './calle-prueba.json' with { type: 'json' };
 
 export type Bloque = { nombre: string; x: number; ancho: number; alto: number; sobre?: string };
@@ -12,7 +12,7 @@ export type Bloque = { nombre: string; x: number; ancho: number; alto: number; s
 export type Limites = {
   /** Lo más alto que se sube de un salto máximo (desde la calle o desde un bloque vecino). */
   escalonMax: number;
-  /** Lo más alto que se sube con un toque corto. */
+  /** Lo más alto que se sube con un toque de pulgar (`TOQUE_PULGAR_S`), no con uno teórico. */
   escalonCorto: number;
   /** Altura máxima de cualquier bloque sobre la calle. */
   alturaMax: number;
@@ -31,11 +31,26 @@ export const X_INICIO = 340;
 const MARGEN = 0.85;
 const ALTURA_MAX_FIJA = 400;
 const GROSOR_MIN_FIJO = 32;
+/** Duración de un toque normal con el pulgar, medida a ojo en el iPhone (T-004). */
+export const TOQUE_PULGAR_S = 0.08;
+
+/**
+ * Altura de un toque de pulgar: lo que sube mientras el dedo sigue abajo, más
+ * `alturaMin` tras el corte al soltar. Si al soltar ya va más lento que el corte,
+ * no hay corte y llega a la altura máxima.
+ */
+export function alturaToquePulgar(salto: Ajustes['salto']): number {
+  const f = derivarFisica(salto);
+  const t = TOQUE_PULGAR_S;
+  const vSoltar = f.v0 - f.gSubida * t;
+  if (vSoltar <= f.vCorte) return salto.alturaMax;
+  return f.v0 * t - (f.gSubida * t * t) / 2 + salto.alturaMin;
+}
 
 export function limitesDeSalto(a: Ajustes): Limites {
   return {
     escalonMax: MARGEN * a.salto.alturaMax,
-    escalonCorto: MARGEN * a.salto.alturaMin,
+    escalonCorto: MARGEN * alturaToquePulgar(a.salto),
     alturaMax: ALTURA_MAX_FIJA,
     distanciaMax: MARGEN * a.caminar.velocidad * (a.salto.tiempoSubida + a.salto.tiempoCaida),
     grosorMin: GROSOR_MIN_FIJO,

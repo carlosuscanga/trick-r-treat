@@ -57,7 +57,7 @@ describe('validarAjustes', () => {
   it('el JSON trae la velocidad proporcional afinada en el iPhone', () => {
     expect(AJUSTES_POR_DEFECTO.caminar.proporcional).toBe(true);
     expect(AJUSTES_POR_DEFECTO.caminar.velocidadMinima).toBe(0.3);
-    expect(AJUSTES_POR_DEFECTO.caminar.curva).toBe(2);
+    expect(AJUSTES_POR_DEFECTO.caminar.curva).toBe(3.5);
   });
 
   it('curva tiene que estar entre 1 y 4', () => {

@@ -4,6 +4,7 @@ import {
   BLOQUES_CALLE_PRUEBA,
   X_INICIO,
   perfilDeCalle,
+  alturaToquePulgar,
   esDeToqueCorto,
   limitesDeSalto,
   revisarCalle,
@@ -116,9 +117,19 @@ describe('plataformas', () => {
     expect(errores.some((e) => e.includes('"muro"') && e.includes('inalcanzable'))).toBe(true);
   });
 
-  it('la banqueta es de toque corto y el auto no', () => {
+  it('con un toque de pulgar suben la banqueta y el auto, pero no el techo', () => {
+    // En el iPhone, un toque normal de pulgar alcanza el auto (T-004, segunda ronda).
     expect(esDeToqueCorto(bloque('banqueta'), BLOQUES_CALLE_PRUEBA, limites)).toBe(true);
-    expect(esDeToqueCorto(bloque('auto'), BLOQUES_CALLE_PRUEBA, limites)).toBe(false);
+    expect(esDeToqueCorto(bloque('auto'), BLOQUES_CALLE_PRUEBA, limites)).toBe(true);
+    expect(esDeToqueCorto(bloque('casa'), BLOQUES_CALLE_PRUEBA, limites)).toBe(false);
+  });
+
+  it('el toque de pulgar suma lo que sube con el dedo abajo y la altura mínima', () => {
+    const salto = { ...AJUSTES_POR_DEFECTO.salto, alturaMax: 260, alturaMin: 70, tiempoSubida: 0.35 };
+    // v0 = 1485.7, g = 4244.9: 1485.7 · 0.08 − 4244.9 · 0.08² / 2 + 70 ≈ 175.3
+    expect(alturaToquePulgar(salto)).toBeCloseTo(175.3, 1);
+    // Con un salto muy lento, al soltar ya va más lento que el corte: llega a la máxima.
+    expect(alturaToquePulgar({ ...salto, alturaMin: 255, tiempoSubida: 0.6 })).toBe(260);
   });
 
   it('si el salto crece, los límites crecen', () => {
@@ -132,9 +143,9 @@ describe('plataformas', () => {
 
   it('los límites por defecto salen de los ajustes', () => {
     expect(limites.escalonMax).toBeCloseTo(221);
-    expect(limites.escalonCorto).toBeCloseTo(59.5);
-    // 0.85 · 561 · (0.25 + 0.19)
-    expect(limites.distanciaMax).toBeCloseTo(209.8, 1);
+    expect(limites.escalonCorto).toBeCloseTo(0.85 * 175.3, 0);
+    // 0.85 · 561 · (0.35 + 0.19)
+    expect(limites.distanciaMax).toBeCloseTo(257.5, 1);
   });
 
   it('validarBloques rechaza un sobre inexistente y nombres repetidos', () => {

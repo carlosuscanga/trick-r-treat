@@ -2,14 +2,14 @@
   "salto": {
     "alturaMax": 260,
     "alturaMin": 70,
-    "tiempoSubida": 0.25,
+    "tiempoSubida": 0.35,
     "tiempoCaida": 0.19,
     "caidaMax": 1500,
     "coyoteMs": 100,
     "bufferMs": 130,
     "apiceColgado": false
   },
-  "caminar": { "velocidad": 561, "proporcional": true, "velocidadMinima": 0.3, "curva": 2 },
+  "caminar": { "velocidad": 561, "proporcional": true, "velocidadMinima": 0.3, "curva": 3.5 },
   "joystick": { "radio": 75, "activa": 0.25, "suelta": 0.15, "margenBorde": 48 },
   "botones": {
     "radioToque": 75,
