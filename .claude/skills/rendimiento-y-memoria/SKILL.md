@@ -26,7 +26,7 @@ description: Reglas de rendimiento, memoria y caché de 🎃 Trick-r-Treat para 
 11. **TEX-02 / TEX-03 / TEX-04:** atlas NPOT, ningún lado mayor que 2048 px, arte a 1x del tamaño lógico (alto 720; máximo ×1.25).
 12. **TEX-05:** parallax con `Image` + `setScrollFactor`; `TileSprite` solo con patrones POT de ≤ 512².
 13. **RED-03:** los assets viven en `src/assets/`, se importan (con hash) y pasan por `paraLoader()` (`src/plataforma/assets.ts`); `public/` solo para nombres fijos.
-14. **ROB-01:** en `LOSE_WEBGL` se pausa el juego y el audio; en `RESTORE_WEBGL` se redibuja y se reanuda.
+14. **ROB-01:** en `LOSE_WEBGL` se pausa con el motivo `'contexto'` y en `RESTORE_WEBGL` se redibuja y se quita. Nunca `game.pause()`/`resume()` directo: usa `pausa.activar`/`quitar` (`src/plataforma/pausa.ts`). Toda `RenderTexture`/`DynamicTexture` se redibuja en `RESTORE_WEBGL`.
 15. **ESC-07:** la física se declara en la escena que la usa (`physics: { arcade: {…} }`); el juego no declara `default`.
 16. **AUD-01:** todo con Web Audio; nunca `audio.disableWebAudio`.
 
@@ -119,6 +119,7 @@ Recibe la dificultad y si el disfraz da ventaja, y emite `finished(won)` (ver `C
 - [ ] ¿Efímeros con `destroy()` + `add.*` en vez de pool? ¿Se maneja el `null` de `get()`? (POO-01)
 - [ ] ¿Movimiento sin `delta` o "cada N frames"? (FRA-04)
 - [ ] ¿`fps.limit`, `disableWebAudio`, `.preFX`, `CONTEXT_LOST` o `setContextHandlers`? (FRA-02, AUD-01, TEX-08, ROB-01)
+- [ ] ¿`game.pause()`/`resume()` directo en vez de un motivo de la pausa? ¿`RenderTexture`/`DynamicTexture` sin redibujar en `RESTORE_WEBGL`? (ROB-01)
 - [ ] ¿Más de un postFX de cámara permanente? ¿Light2D con `maxLights` por defecto? (FRA-05, FRA-06)
 - [ ] ¿`add.tileSprite` con frame mayor que 512²? ¿`Text` que cambia cada frame? (TEX-05, TEX-06)
 - [ ] ¿Assets nuevos en `src/assets/` con `paraLoader`? ¿Algo nuevo en `public/`? (RED-03)
