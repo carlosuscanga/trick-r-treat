@@ -34,6 +34,7 @@ export class ControlesTactiles {
   private readonly letraSaltar: Phaser.GameObjects.Text;
   private readonly letraBrazos: Phaser.GameObjects.Text;
   private readonly punteros: Phaser.Input.Pointer[];
+  private readonly escala: Phaser.Scale.ScaleManager;
   /** Desplazamiento de la perilla ya recortado al radio (reutilizado). */
   private readonly tope = { x: 0, y: 0 };
   private reposoX = 0;
@@ -51,6 +52,7 @@ export class ControlesTactiles {
     private readonly ajustes: Ajustes,
   ) {
     this.punteros = escena.input.manager.pointers;
+    this.escala = escena.scale;
 
     const add = escena.add;
     const letra = { fontSize: '44px', color: '#ffffff', fontStyle: 'bold' };
@@ -92,6 +94,29 @@ export class ControlesTactiles {
     this.brazos.setRadius(r).setPosition(d.brazos.x, d.brazos.y);
     this.letraSaltar.setPosition(d.saltar.x, d.saltar.y);
     this.letraBrazos.setPosition(d.brazos.x, d.brazos.y);
+  }
+
+  /**
+   * En cada RESIZE: con el modo FIT la escala cambia (barras de Safari) y el mismo
+   * dedo quieto se mide en otro x/y lógico. Reancla el joystick y, si se sabe dónde
+   * está el dedo, lo mide ya con la escala nueva para que la base y la perilla queden
+   * bajo el pulgar sin esperar al siguiente touchmove.
+   */
+  reanclar(): void {
+    const j = this.control.joystick;
+    if (j.id === LIBRE) return;
+    this.control.reanclarJoystick();
+    const p = this.punteros[j.id];
+    const toques = (p?.event as TouchEvent | undefined)?.changedTouches;
+    if (!toques) return;
+    for (let k = 0; k < toques.length; k++) {
+      const t = toques[k];
+      if (t.identifier === p.identifier) {
+        // canvasBounds y displayScale ya se actualizaron antes de emitir RESIZE.
+        this.control.mover(j.id, this.escala.transformX(t.pageX), this.escala.transformY(t.pageY));
+        return;
+      }
+    }
   }
 
   /** Cada frame: antídoto anti-pegado y dibujo del estado. Sin asignaciones. */

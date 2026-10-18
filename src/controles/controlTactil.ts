@@ -21,6 +21,8 @@ export class ControlTactil {
   readonly joystick = { id: LIBRE, origenX: 0, origenY: 0, dx: 0, dy: 0 };
   private saltarId = LIBRE;
   private brazosId = LIBRE;
+  /** El siguiente `mover` del joystick recoloca el origen (tras un cambio de escala). */
+  private reanclar = false;
 
   constructor(
     private readonly intenciones: Intenciones,
@@ -59,6 +61,7 @@ export class ControlTactil {
       y >= z.y && y <= z.y + z.alto
     ) {
       this.joystick.id = id;
+      this.reanclar = false;
       this.joystick.origenX = x;
       this.joystick.origenY = y;
       this.joystick.dx = 0;
@@ -68,6 +71,13 @@ export class ControlTactil {
 
   mover(id: number, x: number, y: number): void {
     if (id !== this.joystick.id) return;
+    if (this.reanclar) {
+      // Conserva el desplazamiento previo (y la dirección): el dedo no se movió,
+      // cambió la escala con la que se mide.
+      this.joystick.origenX = x - this.joystick.dx;
+      this.joystick.origenY = y - this.joystick.dy;
+      this.reanclar = false;
+    }
     this.joystick.dx = x - this.joystick.origenX;
     this.joystick.dy = y - this.joystick.origenY;
     const j = this.ajustes.joystick;
@@ -78,6 +88,14 @@ export class ControlTactil {
       j.activa,
       j.suelta,
     );
+  }
+
+  /**
+   * Tras un cambio de tamaño, `x/y` del mismo dedo quieto se miden con otra escala
+   * (barras de Safari en horizontal). El siguiente `mover` recoloca el origen.
+   */
+  reanclarJoystick(): void {
+    if (this.joystick.id !== LIBRE) this.reanclar = true;
   }
 
   arriba(id: number): void {
@@ -102,6 +120,7 @@ export class ControlTactil {
 
   private soltarJoystick(): void {
     this.joystick.id = LIBRE;
+    this.reanclar = false;
     this.joystick.dx = 0;
     this.joystick.dy = 0;
     this.intenciones.direccion = 0;

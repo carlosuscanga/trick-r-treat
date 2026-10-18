@@ -195,6 +195,48 @@ describe('suelta', () => {
   });
 });
 
+describe('reanclar tras un cambio de tamaño', () => {
+  it('con el pulgar quieto (dx 0), el siguiente mover a 55 px no da dirección', () => {
+    c.abajo(1, 200, 400, d);
+    c.reanclarJoystick();
+    // El mismo dedo quieto se mide con otra escala: 55 px más a la derecha.
+    c.mover(1, 255, 400);
+    expect(i.direccion).toBe(0);
+    expect(c.joystick.dx).toBe(0);
+    expect(c.joystick.origenX).toBe(255);
+    // Después de reanclar, se mide desde el origen nuevo.
+    c.mover(1, 255 + 30, 400);
+    expect(i.direccion).toBe(1);
+  });
+
+  it('con dirección 1 y dx 40, reanclar y mover a un punto nuevo la conserva', () => {
+    c.abajo(1, 200, 400, d);
+    c.mover(1, 240, 400);
+    expect(i.direccion).toBe(1);
+    c.reanclarJoystick();
+    c.mover(1, 300, 380);
+    expect(i.direccion).toBe(1);
+    expect(c.joystick.dx).toBe(40);
+    expect(c.joystick.dy).toBe(0);
+    expect(c.joystick.origenX).toBe(260);
+    expect(c.joystick.origenY).toBe(380);
+  });
+
+  it('sin dedo en el joystick no hace nada, y soltar baja la bandera', () => {
+    c.reanclarJoystick();
+    c.abajo(1, 200, 400, d);
+    c.mover(1, 255, 400);
+    expect(i.direccion).toBe(1);
+
+    c.reanclarJoystick();
+    c.arriba(1);
+    c.abajo(1, 200, 400, d);
+    c.mover(1, 255, 400);
+    expect(i.direccion).toBe(1);
+    expect(c.joystick.origenX).toBe(200);
+  });
+});
+
 it('lee los ajustes vivos: cambiar el radio aplica sin recrear', () => {
   const ajustes = structuredClone(AJUSTES_POR_DEFECTO);
   const c2 = new ControlTactil(i, ajustes);

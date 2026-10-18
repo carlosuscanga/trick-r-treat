@@ -102,7 +102,7 @@ export class CallePrueba extends EscenaBase {
     this.crearAvisos();
     this.reacomodar();
 
-    this.escuchar(this.scale, Phaser.Scale.Events.RESIZE, this.reacomodar);
+    this.escuchar(this.scale, Phaser.Scale.Events.RESIZE, this.alCambiarTamano);
     this.escuchar(this.game.events, Phaser.Core.Events.HIDDEN, this.soltarTodo);
     this.escuchar(this.game.events, Phaser.Core.Events.BLUR, this.soltarTodo);
     this.escuchar(this.game.events, AJUSTES_CAMBIADOS, this.alCambiarAjustes);
@@ -218,6 +218,12 @@ export class CallePrueba extends EscenaBase {
     this.tactiles.reacomodar(width, height);
     this.cameras.main.setDeadzone(width * ZONA_MUERTA_ANCHO, ZONA_MUERTA_ALTO);
     this.avisoFps.setX(width / 2);
+  }
+
+  /** RESIZE: reacomoda y reancla el joystick, cuyo dedo se mide ahora con otra escala. */
+  private alCambiarTamano(): void {
+    this.reacomodar();
+    this.tactiles.reanclar();
   }
 
   private soltarTodo(): void {

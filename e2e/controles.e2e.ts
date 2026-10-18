@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { tocar } from './tactil';
+import { aCss, tocar } from './tactil';
 
 // e2e de los controles táctiles. Que se sientan bien se prueba a mano en el iPhone.
 
@@ -242,6 +242,37 @@ test.describe('calle de prueba', () => {
       derecha: window.__juego!.registry.get('ajustes').botones.saltar.derecha as number,
     }));
     expect((await disposicion(page)).saltar.x).toBe(ancho - derecha);
+  });
+
+  test('con el pulgar quieto en el joystick, un cambio de escala no mueve a Mi vo', async ({ page }) => {
+    // Dedo abajo sin moverlo (dx = 0). Se guarda su punto en píxeles CSS.
+    await tocar(page, 'touchstart', [{ id: 1, ...JOY }]);
+    const css = await aCss(page, JOY.x, JOY.y);
+    const antes = await page.evaluate(() => window.__juego!.scale.gameSize.width);
+
+    // Mismo ancho y menos alto, como al esconderse las barras de Safari: cambia la escala.
+    const { width } = page.viewportSize()!;
+    await page.setViewportSize({ width, height: 300 });
+    await page.waitForFunction((a) => window.__juego!.scale.gameSize.width !== a, antes);
+    await siguienteFrame(page);
+
+    // Sin esperar al touchmove, la perilla ya está bajo el pulgar en la escala nueva.
+    const perilla = await page.evaluate(({ x, y }) => {
+      const juego = window.__juego!;
+      const calle = juego.scene.getScene('CallePrueba') as any;
+      const p = calle.tactiles.perilla;
+      return { x: p.x as number, y: p.y as number, dedoX: juego.scale.transformX(x), dedoY: juego.scale.transformY(y) };
+    }, css);
+    expect(perilla.x).toBeCloseTo(perilla.dedoX, 0);
+    expect(perilla.y).toBeCloseTo(perilla.dedoY, 0);
+
+    // El pulgar no se movió: el touchmove llega al MISMO punto CSS, que ahora es otro x lógico.
+    await tocar(page, 'touchmove', [{ id: 1, ...css }], { css: true });
+    await siguienteFrame(page);
+    const estado = await leerCalle(page);
+    expect(estado.joystickId).not.toBe(-1);
+    expect(estado.direccion).toBe(0);
+    expect(estado.vx).toBe(0);
   });
 
   test('HIDDEN suelta todo', async ({ page }) => {
