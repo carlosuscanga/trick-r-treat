@@ -41,7 +41,55 @@ La base de config y robustez que T-007 y lo que sigue dan por hecha:
 - [ ] La regla de redibujar `RenderTexture`/`DynamicTexture` está en ROB-01 del skill `rendimiento-y-memoria`.
 - [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la pausa por motivos (un motivo, dos motivos, quitar uno no reanuda, quitar uno que no estaba no truena); e2e de la config que leyó Phaser (`game.config`: AUTO, `disablePreFX`, `panicMax: 0`, sin `fps.limit`, sin `disableWebAudio`, sin física por defecto), de la base de GPU ≤ 32 MiB al arrancar, de perder y restaurar el contexto (pausado y reanudado; en vertical sigue pausado) y de que `CallePrueba` tiene `this.physics`; manual en el iPhone con la GPU del overlay (102 → ≈41 MiB), M13 (ir al inicio y volver) y M14 (bloquear y desbloquear) con la calle de prueba.
 
+## Plan
+
+Talla S, plan dentro de la tarea (como T-049). Se carga el skill `rendimiento-y-memoria` antes de programar.
+
+### Pasos
+
+1. **Pausa por motivos** (`src/plataforma/pausa.ts`, sin Phaser). `crearPausa(game, sonido)` devuelve `activar(motivo)`, `quitar(motivo)` y `activos()`. Motivos: `'vertical' | 'contexto'`. Pausa el juego y el sonido (`pauseAll`) al activarse el primer motivo, y reanuda los dos (`resumeAll`) solo cuando ya no queda ninguno. Activar dos veces el mismo motivo, o quitar uno que no estaba, no hace nada. `pausarEnVertical` (`orientacion.ts`) recibe la pausa en lugar del juego y solo activa o quita `'vertical'`. Tests: `pausa.test.ts` nuevo y `orientacion.test.ts` adaptado.
+2. **Pérdida de contexto** (`src/plataforma/contexto.ts`, sin importar Phaser en tiempo de ejecución). `pausarSinContexto(renderer, pausa, eventos)` escucha `eventos.perder` y `eventos.restaurar` en el emisor del renderer y activa o quita `'contexto'`. `main.ts` le pasa `Phaser.Renderer.Events.LOSE_WEBGL` y `RESTORE_WEBGL`, y solo si el renderer es WebGL. Test: `contexto.test.ts` con un emisor falso.
+3. **Config y escenas:** en `main.ts`, `disablePreFX: true` y crear la pausa una sola vez para los pasos 1 y 2. En `CallePrueba`, quitar `default: 'arcade'` y dejar `physics: { arcade: {...} }`. En `Arranque`, guardar el callback de `UNLOCKED` y quitarlo con `alLimpiar(() => this.sound.off(...))`.
+4. **e2e** (`e2e/config.e2e.ts` nuevo, con `?depurar`):
+   - `game.config` leído por Phaser: renderer WebGL o AUTO, `disablePreFX` verdadero, `panicMax` 0, sin `fps.limit` (`limitRate` 0), `audio.disableWebAudio` falso y `physics.default` vacío.
+   - Base de GPU ≤ 32 MiB en `Arranque` (`__depurar.metricas().gpuMiB`). Se anota en la bitácora el valor que da el CI.
+   - Contexto: `WEBGL_lose_context.loseContext()` → `isPaused`; `restoreContext()` → corre otra vez. Caso en vertical: perder, girar a vertical, restaurar → sigue pausado; girar a horizontal → corre.
+   - `CallePrueba` tiene `this.physics`.
+5. **Skill:** en ROB-01 de `rendimiento-y-memoria` (y en `references/robustez.md` si repite la regla), la regla de redibujar `RenderTexture`/`DynamicTexture` y la mención de la pausa por motivos (nadie llama `game.pause()`/`resume()` directo: se usa un motivo).
+6. **Revisión** de toda la rama y **verificación:** `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`.
+7. **Prueba manual** en el iPhone, una por una (tabla abajo). Va también en la descripción del PR.
+
+### Pruebas
+
+- **Unitarias:** `pausa.test.ts` (un motivo pausa; dos motivos y quitar uno no reanuda; quitar el último reanuda; repetir `activar` o `quitar` no hace nada; el sonido sigue al juego), `orientacion.test.ts` (adaptado a la pausa) y `contexto.test.ts` (perder activa `'contexto'` y restaurar lo quita).
+- **e2e:** los cuatro grupos del paso 4.
+- **Manual en el iPhone** (servidor de la rama por WiFi, con `?depurar`):
+
+| # | Paso | Esperado |
+|---|---|---|
+| 1 | Abrir la calle de prueba y leer GPU en el overlay | ≈41 MiB (antes 102) |
+| 2 | M13: a mitad de un salto, ir al inicio, esperar 30 s y volver | Sin salto de física, sin recarga |
+| 3 | M14: bloquear el teléfono 2 min y desbloquear | Igual que 2; "recargas inesperadas: 0" |
+| 4 | Girar a vertical y volver a horizontal | Aviso de girar, y el juego sigue igual que antes |
+
+La pérdida de contexto no se puede provocar a mano en el iPhone: la cubre el e2e.
+
+### Modelo y esfuerzo
+
+| Paso | Quién | Modelo y esfuerzo | Por qué |
+|---|---|---|---|
+| 1 y 2 | Un subagente | Sonnet `medium` | Lógica chica y bien especificada, con tests. Van juntos porque el 2 usa la pausa del 1. |
+| 3 y 4 | Un subagente (después del 1 y 2) | Sonnet `medium` | Cableado y e2e con patrones que ya existen (`fugas.e2e.ts`, `pantalla.e2e.ts`). |
+| 5 | Un subagente, en paralelo con 1 y 2 | Haiku `low` | Texto del skill, mecánico. |
+| 6 | `code-reviewer-opus55` | Opus `high` | Revisión de la rama completa, como en T-037. |
+| Orquestar y verificar | Sesión principal | Opus `high` | Decide, integra y corre la verificación. |
+
+### Decisión
+
+La pausa por motivos también **pausa el sonido** (decidido por el product owner). Hoy, en vertical, el juego se congela pero el sonido sigue (Phaser no lo pausa con `game.pause()`). Con un solo dueño, vertical y contexto pausan las dos cosas. Hoy no hay música, así que no se nota todavía; con la música de T-017, en vertical se callará.
+
 ## Bitácora
 
 - 2026-10-16: creada a partir de la guía de T-034. Debe estar antes de T-007. Podría ir junto con T-037, pero va separada por la regla de "un cambio a la vez".
 - 2026-10-18: refinada al tomarla, tras revisar su alcance (base, esperar medición o descartar). Talla S. Decisiones del product owner, una a una: (1) entra la **pausa por motivos**, porque `pausarEnVertical` ya pausa y ROB-01 sería un segundo dueño de la pausa; (2) la config se prueba en **e2e** leyendo `game.config`, sin exportarla como objeto; (3) redibujar lo dinámico queda para después, con una regla en el skill; (4) el e2e de contexto no revisa el "píxel conocido". `panicMax` y el estado de `Arranque` en `init()` ya estaban hechos. M11 y las perillas de FRA-05/06/09 quedan en T-041. Con esto se resuelve el pendiente de la retro "bajar T-038 a T-040": no hace falta, lo especulativo quedó fuera. Plan dentro de la tarea, como en T-049.
+- 2026-10-18: plan escrito dentro de la tarea y aprobado por el product owner (revisado aquí, en resumen). Decisión: la pausa por motivos también pausa el sonido, así que en vertical se calla.
