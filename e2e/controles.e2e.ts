@@ -331,3 +331,125 @@ test.describe('calle de prueba', () => {
     expect(estado.vx).toBe(360);
   });
 });
+
+// --- Panel ?depurar ----------------------------------------------------------
+
+// Fija el valor de un deslizador del panel y dispara `input`, como al arrastrarlo.
+function fijarAjuste(page: Page, ruta: string, valor: number) {
+  return page.evaluate(
+    ({ ruta, valor }) => {
+      const rango = document.querySelector<HTMLInputElement>(`input[data-ajuste="${ruta}"]`)!;
+      rango.value = String(valor);
+      rango.dispatchEvent(new Event('input', { bubbles: true }));
+    },
+    { ruta, valor },
+  );
+}
+
+// Abre el panel con un clic. El ratón sale del canvas y Phaser lo procesa en el siguiente
+// frame (GAME_OUT suelta los controles): se espera a que pase para no soltar el primer toque.
+async function abrirPanel(page: Page) {
+  await page.locator('#depurar-boton').click();
+  await siguienteFrame(page);
+  await siguienteFrame(page);
+}
+
+test.describe('panel ?depurar', () => {
+  test('con ?depurar aparece el botón y abre el panel', async ({ page }) => {
+    await page.goto('./?depurar');
+    await esperarJuego(page);
+    const boton = page.locator('#depurar-boton');
+    const panel = page.locator('#depurar-panel');
+    await expect(boton).toBeVisible();
+    await expect(panel).toBeHidden();
+
+    await boton.click();
+    await expect(panel).toBeVisible();
+    // Sus controles funcionan a pesar de las reglas de body, y el panel recibe los toques.
+    const estilo = await panel.evaluate((el) => {
+      const c = getComputedStyle(el);
+      return [c.touchAction, c.userSelect, c.pointerEvents];
+    });
+    expect(estilo).toEqual(['auto', 'text', 'auto']);
+
+    await boton.click();
+    await expect(panel).toBeHidden();
+  });
+
+  test('sin ?depurar no hay panel', async ({ page }) => {
+    await page.goto('./');
+    await expect(page.locator('canvas')).toBeVisible();
+    await expect(page.locator('#depurar-boton')).toHaveCount(0);
+    await expect(page.locator('#depurar-panel')).toHaveCount(0);
+  });
+
+  test('cambiar la velocidad en el panel cambia la velocidad de Mi vo al instante', async ({ page }) => {
+    await entrarALaCalle(page);
+    await abrirPanel(page);
+    await fijarAjuste(page, 'caminar.velocidad', 500);
+    await abrirPanel(page); // el segundo clic lo cierra y deja libre el joystick
+
+    await joystick(page, 1, 100);
+    await siguienteFrame(page);
+    expect((await leerCalle(page)).vx).toBe(500);
+  });
+
+  test('con el panel abierto, los toques que caen sobre él no llegan al juego', async ({ page }) => {
+    await entrarALaCalle(page);
+    await abrirPanel(page);
+
+    // El joystick queda debajo del panel: Phaser ve que el dedo no está sobre el canvas.
+    await joystick(page, 1, 100);
+    await siguienteFrame(page);
+    const estado = await leerCalle(page);
+    expect(estado.joystickId).toBe(-1);
+    expect(estado.vx).toBe(0);
+  });
+
+  test('el panel cambia el objeto vivo y la disposición de los botones', async ({ page }) => {
+    await entrarALaCalle(page);
+    await abrirPanel(page);
+    await fijarAjuste(page, 'botones.saltar.derecha', 300);
+    const { ancho, derecha } = await page.evaluate(() => ({
+      ancho: window.__juego!.scale.gameSize.width,
+      derecha: window.__juego!.registry.get('ajustes').botones.saltar.derecha as number,
+    }));
+    expect(derecha).toBe(300);
+    expect((await disposicion(page)).saltar.x).toBe(ancho - 300);
+  });
+
+  test('con altura 400 y subida 0.2 el salto no se recorta por el tope de caída', async ({ page }) => {
+    await entrarALaCalle(page);
+    await abrirPanel(page);
+    await fijarAjuste(page, 'salto.alturaMax', 400);
+    await fijarAjuste(page, 'salto.tiempoSubida', 0.2);
+    await abrirPanel(page); // lo cierra
+
+    const { saltar } = await disposicion(page);
+    await tocar(page, 'touchstart', [{ id: 2, x: saltar.x, y: saltar.y }]);
+    // El primer frame deja v0 sin pasar por la física; se mide desde el segundo, ya con el tope aplicado.
+    await siguienteFrame(page);
+    let vyMin = 0;
+    for (let i = 0; i < 6; i++) {
+      await siguienteFrame(page);
+      vyMin = Math.min(vyMin, (await leerCalle(page)).vy);
+    }
+    await tocar(page, 'touchend', [{ id: 2, x: saltar.x, y: saltar.y }]);
+    // v0 = 4000 px/s; el tope viejo (1500) la habría recortado.
+    expect(vyMin).toBeLessThan(-1500);
+  });
+
+  test('Copiar valores sin portapapeles muestra el JSON', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+    });
+    await page.goto('./?depurar');
+    await esperarJuego(page);
+    await page.locator('#depurar-boton').click();
+    await page.locator('#depurar-copiar').click();
+    const caja = page.locator('#depurar-json');
+    await expect(caja).toBeVisible();
+    await expect(caja).toHaveValue(/"alturaMax"/);
+    await expect(page.locator('#depurar-panel')).toContainText('Cópialo a mano');
+  });
+});

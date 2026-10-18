@@ -568,13 +568,13 @@ Comportamiento:
 - Cada cambio escribe en el objeto `ajustes` y emite `'ajustes-cambiados'`: el efecto es inmediato, sin recargar.
 - "Copiar valores": `navigator.clipboard?.writeText(JSON.stringify(ajustes, null, 2))`. Si no existe o falla (página en `http`), muestra el JSON en un `<textarea>` seleccionable con la nota "Cópialo a mano".
 
-- [ ] **Paso 1: e2e:**
+- [x] **Paso 1: e2e:**
   - `con ?depurar aparece el botón y abre el panel`;
   - `sin ?depurar no hay panel`;
   - `cambiar la velocidad en el panel cambia la velocidad de Mi vo al instante` (fijar el range a 500 y disparar `input` → joystick a la derecha → `velocity.x` 500);
   - `Copiar valores sin portapapeles muestra el JSON`: borrar `navigator.clipboard` con `addInitScript`; el `textarea` contiene `"alturaMax"`.
-- [ ] **Paso 2:** que falle → implementar → que pase.
-- [ ] **Paso 3:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega el panel de ajustes de ?depurar`.
+- [x] **Paso 2:** que falle → implementar → que pase.
+- [x] **Paso 3:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega el panel de ajustes de ?depurar`.
 
 ---
 
