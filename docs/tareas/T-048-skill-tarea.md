@@ -6,7 +6,7 @@ hito: H2
 estado: en-progreso
 prioridad: alta
 depende: []
-plan: requerido
+plan: docs/planes/T-048-skill-tarea.md
 rama: T-048-skill-tarea
 worktree: .claude/worktrees/T-048-skill-tarea
 ---
@@ -42,14 +42,14 @@ Salió del análisis de administración del proyecto del 2026-10-18, que siguió
 
 - [ ] "Tomar T-NNN" sobre una tarea que no está lista no arranca: muestra qué le falta según la Definition of Ready y la refina con el product owner antes de crear el worktree.
 - [ ] "Tomar T-NNN" sobre una tarea lista deja todo en un solo paso: frontmatter y tablero en `main` (con push), worktree creado, rama con su nombre final y base compilada.
-- [ ] "Tomar" se niega si alguna dependencia no está `hecha` y dice cuál.
+- [x] "Tomar" se niega si alguna dependencia no está `hecha` y dice cuál.
 - [ ] "Cerrar T-NNN" se niega si el PR no está mergeado o si la rama tiene commits fuera de `main`.
 - [ ] "Cerrar T-NNN" deja la tarea `hecha`, el tablero al día y el worktree quitado, y pide el "Estado actual" y el historial.
-- [ ] "Retomar T-NNN" funciona igual que el protocolo de T-046.
-- [ ] La Definition of Ready está en `docs/tareas/README.md`, y la plantilla de tarea la refleja.
-- [ ] `docs/README.md` y `CLAUDE.md` apuntan al skill y ya no repiten los pasos.
+- [x] "Retomar T-NNN" funciona igual que el protocolo de T-046.
+- [x] La Definition of Ready está en `docs/tareas/README.md`, y la plantilla de tarea la refleja.
+- [x] `docs/README.md` y `CLAUDE.md` apuntan al skill y ya no repiten los pasos.
 - [ ] Las notas de memoria que eran parches de este flujo se borran o se actualizan.
-- [ ] Pruebas en tres capas según el plan: unitarias, e2e y manual (o el porqué de la que no aplica).
+- [x] Pruebas en tres capas según el plan: unitarias, e2e y manual (o el porqué de la que no aplica).
 
 ## Decisiones para el plan
 
@@ -62,3 +62,7 @@ Salió del análisis de administración del proyecto del 2026-10-18, que siguió
 
 - 2026-10-18: creada a partir del análisis de administración del proyecto. Decisión del product owner: no hay rutina fija de refinamiento; cada tarea se revisa, y si hace falta se refina, al tomarla.
 - 2026-10-18: decisión del product owner: los worktrees se crean con `git worktree add`, no con la herramienta nativa, porque esta obliga a renombrar la rama y da avisos falsos al salir.
+- 2026-10-18: primera tarea arrancada con `git worktree add` (a mano, siguiendo el plan). Detalle encontrado: sin `--no-track`, la rama nueva rastrea `origin/main`; se corrigió con `git branch --unset-upstream` y el script usa `--no-track`.
+- 2026-10-18: plan aprobado. Decisiones del product owner: el plan se escribe en la rama (la Definition of Ready no lo exige) y el push a `main` es siempre un comando visible, nunca dentro del script.
+- 2026-10-18: Tareas 1 y 2 con subagentes Sonnet `medium`, Tarea 3 en la sesión principal. La revisión de la Tarea 2 encontró un bug crítico: `tomar` y `cerrar` leían las tareas antes del `git pull`, y `cerrar` podía pisar con texto viejo lo recién mergeado. Corregido, junto con fallos a medias de `tomar` y un `cerrar` que no se podía repetir. Desvío del plan: el CLI no fija las líneas de atribución (el enlace de sesión caduca); recibe `--trailer=` y el skill le pasa las de su sesión.
+- 2026-10-18, **para verificar en `main` después del merge** (casillas abiertas): tomar una tarea no lista y una lista, y cerrar T-048 con el propio skill. Las notas de memoria del flujo viejo se borran o actualizan en ese mismo cierre, cuando el flujo nuevo ya está en `main`.

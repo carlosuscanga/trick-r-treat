@@ -63,10 +63,11 @@ El proceso completo (hitos, ciclo, git, sesiones y definición de "hecho") está
 Reglas:
 
 - Al empezar una sesión, leer **"Estado actual"** en `docs/tareas/README.md` y, si existe, `.local/notas.md`. Sin instrucción concreta, proponer la siguiente tarea.
-- Si la sesión empieza con **"retoma T-NNN"**, no se hace lo anterior: seguir el protocolo "Retomar T-NNN" de `docs/README.md` ("Sesiones con Claude"), que solo lee el frontmatter de la tarea, su bitácora y su plan.
+- Si la sesión empieza con **"retoma T-NNN"**, no se hace lo anterior: seguir "Retomar" del skill `tarea`, que solo lee el frontmatter de la tarea, su bitácora y su plan.
+- **Tomar, retomar y cerrar tareas:** siempre con el skill `tarea` ("toma T-NNN", "retoma T-NNN", "cierra T-NNN"). Al tomar una tarea, se revisa contra la Definition of Ready (`docs/tareas/README.md`) y, si no está lista, se refina en ese momento.
 - Al cerrar una sesión (o cuando yo lo pida), actualizar "Estado actual" (qué está en curso, qué sigue y qué está pendiente de decidir) y anotar lo que se hizo arriba de `docs/tareas/historial.md`.
-- Una rama y un worktree por tarea (`T-007-flujo-de-escenas`), creados con la herramienta nativa de worktrees en `.claude/worktrees/`. Entra a `main` por pull request. `main` siempre es jugable. Proceso completo en `docs/README.md`, "Trabajo en paralelo".
-- Antes de crear el worktree, marcar la tarea como `en-progreso` **en `main`** (commit y push). En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
+- Una rama y un worktree por tarea (`T-007-flujo-de-escenas`), creados con `git worktree add` en `.claude/worktrees/` (lo hace el skill `tarea`), no con la herramienta nativa, que obliga a renombrar la rama. Entra a `main` por pull request. `main` siempre es jugable. Proceso completo en `docs/README.md`, "Trabajo en paralelo".
+- El skill `tarea` marca la tarea como `en-progreso` **en `main`** con su commit, crea el worktree y el push a `main` va justo después, antes de empezar a trabajar. En la rama, marcar los criterios de aceptación y llenar la bitácora. Después del merge, pasarla a `hecha` **en `main`**.
 - El tablero y el "Estado actual" solo se editan en `main`, nunca en las ramas de tarea.
 - Todo plan de código incluye su sección "Pruebas" con las tres capas (unitarias, e2e y manual). Las pruebas se definen en el plan, antes de programar, y entran en el mismo PR que el código, nunca después. Detalle en `docs/planes/README.md`.
 - Todo plan incluye su sección "Modelo y esfuerzo": qué modelo y qué esfuerzo usa cada paso o subagente, y por qué. Aprobar el plan aprueba también esa elección. Referencia por rol en `docs/planes/README.md`, "Modelo y esfuerzo".
