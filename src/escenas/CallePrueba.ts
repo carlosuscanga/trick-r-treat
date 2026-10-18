@@ -54,7 +54,7 @@ export class CallePrueba extends EscenaBase {
   constructor() {
     // Física declarada en la escena (ESC-07), a 120 pasos fijos por segundo, con la
     // gravedad por cuerpo (la pone el salto) y no de mundo.
-    super({ key: 'CallePrueba', physics: { default: 'arcade', arcade: { fps: 120, gravity: { x: 0, y: 0 } } } });
+    super({ key: 'CallePrueba', physics: { arcade: { fps: 120, gravity: { x: 0, y: 0 } } } });
   }
 
   // Solo lectura, para los e2e.
