@@ -64,6 +64,31 @@ describe('plataformas', () => {
     expect(errores.some((e) => e.includes('"b"') && e.includes('inalcanzable'))).toBe(true);
   });
 
+  it('sin el barril no se puede regresar del lado de la cerca (el bug)', () => {
+    const sinBarril = BLOQUES_CALLE_PRUEBA.filter((b) => b.nombre !== 'barril');
+    const errores = revisarCalle(sinBarril, limites);
+    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"banqueta"'))).toBe(true);
+  });
+
+  // Dos escalones suben a muros de 250; entre ellos hay un hoyo de la calle.
+  const conHoyo = (xDer: number, xSalida: number): Bloque[] => [
+    { nombre: 's1', x: 100, ancho: 100, alto: 150 },
+    { nombre: 'izq', x: 200, ancho: 100, alto: 250 },
+    { nombre: 'der', x: xDer, ancho: 100, alto: 250 },
+    { nombre: 's2', x: xSalida, ancho: 100, alto: 150 },
+  ];
+
+  it('un hoyo angosto entre dos muros altos atrapa, pero el muro del otro lado se alcanza saltándolo', () => {
+    const errores = revisarCalle(conHoyo(400, 500), limites);
+    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"calle" (x 300 a 400)'))).toBe(true);
+    expect(errores.some((e) => e.includes('inalcanzable'))).toBe(false);
+  });
+
+  it('un hoyo más ancho que la distancia máxima corta el paso', () => {
+    const errores = revisarCalle(conHoyo(600, 700), limites);
+    expect(errores.some((e) => e.includes('"der"') && e.includes('inalcanzable desde el inicio'))).toBe(true);
+  });
+
   it('la banqueta es de toque corto y el auto no', () => {
     expect(esDeToqueCorto(bloque('banqueta'), BLOQUES_CALLE_PRUEBA, limites)).toBe(true);
     expect(esDeToqueCorto(bloque('auto'), BLOQUES_CALLE_PRUEBA, limites)).toBe(false);

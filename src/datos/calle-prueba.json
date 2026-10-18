@@ -6,5 +6,6 @@
   { "nombre": "lapida", "x": 2200, "ancho": 60, "alto": 90, "sobre": "banqueta" },
   { "nombre": "portico", "x": 2900, "ancho": 220, "alto": 140, "sobre": "banqueta" },
   { "nombre": "casa", "x": 3120, "ancho": 600, "alto": 340, "sobre": "banqueta" },
+  { "nombre": "barril", "x": 3720, "ancho": 120, "alto": 160, "sobre": "banqueta" },
   { "nombre": "cerca", "x": 4050, "ancho": 500, "alto": 70 }
 ]

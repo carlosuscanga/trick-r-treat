@@ -108,17 +108,65 @@ export function esDeToqueCorto(b: Bloque, todos: readonly Bloque[], l: Limites):
   return escalon <= l.escalonCorto;
 }
 
-function distanciaHorizontal(a: Bloque, b: Bloque): number {
-  return Math.max(0, b.x - (a.x + a.ancho), a.x - (b.x + b.ancho));
+/** Un tramo de la silueta de la calle vista de lado: de `desde` a `hasta` en x, a `altura`. */
+export type Tramo = { nombre: string; desde: number; hasta: number; altura: number };
+
+/** Silueta de la calle: tramos con la altura del bloque más alto que los cubre (o la calle, a 0). */
+export function perfilDeCalle(bloques: readonly Bloque[]): Tramo[] {
+  const cortes = new Set<number>([0, ANCHO_CALLE]);
+  for (const b of bloques) {
+    for (const x of [b.x, b.x + b.ancho]) cortes.add(Math.min(Math.max(x, 0), ANCHO_CALLE));
+  }
+  const xs = [...cortes].sort((p, q) => p - q);
+  const tramos: Tramo[] = [];
+  for (let k = 0; k + 1 < xs.length; k++) {
+    const medio = (xs[k] + xs[k + 1]) / 2;
+    let nombre = 'calle';
+    let altura = 0;
+    for (const b of bloques) {
+      const h = alturaSuperior(b, bloques);
+      if (b.x <= medio && medio < b.x + b.ancho && h > altura) {
+        nombre = b.nombre;
+        altura = h;
+      }
+    }
+    const ultimo = tramos[tramos.length - 1];
+    if (ultimo && ultimo.nombre === nombre && ultimo.altura === altura) ultimo.hasta = xs[k + 1];
+    else tramos.push({ nombre, desde: xs[k], hasta: xs[k + 1], altura });
+  }
+  return tramos;
+}
+
+/** Se pasa de i a j si sube a lo más escalonMax y es su vecino, o se salta un hueco más bajo y angosto. */
+function hayPaso(tramos: readonly Tramo[], i: number, j: number, l: Limites): boolean {
+  if (tramos[j].altura - tramos[i].altura > l.escalonMax) return false;
+  if (Math.abs(i - j) === 1) return true;
+  const [a, b] = i < j ? [i, j] : [j, i];
+  if (tramos[b].desde - tramos[a].hasta > l.distanciaMax) return false;
+  const techo = Math.min(tramos[i].altura, tramos[j].altura);
+  for (let k = a + 1; k < b; k++) if (tramos[k].altura >= techo) return false;
+  return true;
+}
+
+function alcanzables(inicio: number, aristas: readonly number[][]): Set<number> {
+  const vistos = new Set<number>([inicio]);
+  const cola = [inicio];
+  for (let k = 0; k < cola.length; k++) {
+    for (const v of aristas[cola[k]]) {
+      if (!vistos.has(v)) {
+        vistos.add(v);
+        cola.push(v);
+      }
+    }
+  }
+  return vistos;
 }
 
 export function revisarCalle(bloques: readonly Bloque[], l: Limites): string[] {
   const errores: string[] = [];
-  const alturas = new Map<string, number>();
 
   for (const b of bloques) {
     const altura = alturaSuperior(b, bloques);
-    alturas.set(b.nombre, altura);
     const abajo = buscar(b.sobre, bloques);
     if (abajo && (b.x < abajo.x || b.x + b.ancho > abajo.x + abajo.ancho)) {
       errores.push(`"${b.nombre}" se sale de "${abajo.nombre}" en x`);
@@ -134,30 +182,26 @@ export function revisarCalle(bloques: readonly Bloque[], l: Limites): string[] {
     }
   }
 
-  // Alcance en anchura: desde la calle solo cuenta la altura; entre bloques, también la distancia.
-  const alcanzados = new Set<string>();
-  const pendientes: Bloque[] = [];
-  for (const b of bloques) {
-    if ((alturas.get(b.nombre) ?? 0) <= l.escalonMax) {
-      alcanzados.add(b.nombre);
-      pendientes.push(b);
-    }
-  }
-  for (let i = 0; i < pendientes.length; i++) {
-    const desde = pendientes[i];
-    const alturaDesde = alturas.get(desde.nombre) ?? 0;
-    for (const b of bloques) {
-      if (alcanzados.has(b.nombre)) continue;
-      const sube = (alturas.get(b.nombre) ?? 0) - alturaDesde;
-      if (sube <= l.escalonMax && distanciaHorizontal(desde, b) <= l.distanciaMax) {
-        alcanzados.add(b.nombre);
-        pendientes.push(b);
+  // Perfil de la calle: desde el inicio se llega a todo y desde todo se regresa al inicio.
+  const tramos = perfilDeCalle(bloques);
+  const n = tramos.length;
+  const sale: number[][] = tramos.map(() => []);
+  const entra: number[][] = tramos.map(() => []);
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (i !== j && hayPaso(tramos, i, j, l)) {
+        sale[i].push(j);
+        entra[j].push(i);
       }
     }
   }
-  for (const b of bloques) {
-    if (!alcanzados.has(b.nombre)) errores.push(`"${b.nombre}" es inalcanzable desde la calle`);
-  }
+  const desdeInicio = alcanzables(0, sale);
+  const haciaInicio = alcanzables(0, entra);
+  tramos.forEach((t, i) => {
+    const donde = `"${t.nombre}" (x ${t.desde} a ${t.hasta})`;
+    if (!desdeInicio.has(i)) errores.push(`${donde} es inalcanzable desde el inicio`);
+    if (!haciaInicio.has(i)) errores.push(`desde ${donde} no se puede regresar al inicio`);
+  });
   return errores;
 }
 
