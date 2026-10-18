@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: media
 depende: []
-plan: null
+plan: docs/planes/T-046-retomar-tareas-en-sesion-nueva.md
 ---
 
 ## Qué
@@ -34,3 +34,4 @@ Hoy "Estado actual" mezcla lo vigente con el historial de cada sesión, y crece.
 
 - 2026-10-17: creada. El product owner preguntó si retomar con "retoma T-NNN" era eficiente. Se hace al abrir la siguiente ventana de uso, porque la actual estaba al 96%.
 - 2026-10-17: incluir en el protocolo un `git fetch` después de cada push directo a `main`. Ese push va por URL con la deploy key, no por `origin`, así que `origin/main` local queda viejo y el editor muestra "1 adelante" aunque el push sí se hizo.
+- 2026-10-17: arranca. Worktree creado; `npm install` y `npm run build` limpios. **Choque con el flujo:** la tarea pide partir "Estado actual" y editar el archivo de T-004, y las ramas no pueden tocar ninguno de los dos. **Decisión del product owner** (plan aprobado aquí, sin Plannotator): las reglas van por PR, y el "Estado actual", el historial, la plantilla y los frontmatter van directo a `main` después del merge. Sin subagentes; todo lo hace la sesión principal (Opus).
