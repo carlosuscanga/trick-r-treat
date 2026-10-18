@@ -31,3 +31,4 @@ El "Estado actual" **no** se automatiza, porque contar qué se hizo y qué sigue
 
 - 2026-10-16: creada al cerrar T-001. Se eligió una GitHub Action en lugar de un hook de Claude Code porque el merge puede hacerse desde la web. Va después de T-002, que introduce GitHub Actions para Pages, para aprender la herramienta una sola vez. Riesgo conocido: los commits del bot en `main` pueden chocar con commits locales, así que siempre hay que hacer `git pull` antes de editar `main`.
 - 2026-10-18: pasa de H1 a H2 al cerrar H1 (decisión del product owner): es una mejora del proceso y no bloquea nada. Conviene hacerla después de T-047, que también toca el tablero.
+- 2026-10-18: **decisión del product owner: se descarta.** "cierra T-NNN" (T-048) ya cubre el cierre, y la Action tendría que convivir con el ruleset. Pasa a `descartada` cuando el tablero tenga ese estado (T-049).
