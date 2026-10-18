@@ -1,12 +1,15 @@
 import type Phaser from 'phaser';
+import type { Instantanea, Metricas } from './metricas';
 
 declare global {
   interface Window {
     __juego?: Phaser.Game;
+    // Solo con `?depurar`. Ningún código del juego lo usa: es para la consola y los e2e.
+    __depurar?: { instantanea(): Instantanea; metricas(): Metricas };
   }
 }
 
-// mínima; T-037 la completa (overlay, contadores). Solo con `?depurar` en la URL.
+// Solo con `?depurar` en la URL.
 export function esModoDepurar(search: string): boolean {
   return new URLSearchParams(search).has('depurar');
 }

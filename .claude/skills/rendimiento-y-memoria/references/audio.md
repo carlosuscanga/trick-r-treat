@@ -30,7 +30,7 @@ Reglas de audio para Phaser 3.90 y el presupuesto de PCM vivo. Fuente: [sección
   ```ts
   this.alLimpiar(() => { this.sound.removeByKey('ritmo-cancion'); this.cache.audio.remove('ritmo-cancion'); });
   ```
-- **Si todavía no existe:** `alLimpiar()` llega con la `EscenaBase` completa (T-037). Con la mínima, usa `this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => { … })` con las mismas dos líneas.
+- **Ya existe:** `alLimpiar()` viene en `EscenaBase` (T-037).
 - **Verifica:** e2e de fugas (`sound.getAll().length` y `cache.audio.getKeys().length` vuelven a la base tras N ciclos de escena).
 - **Por qué:** `sound/` no escucha `SHUTDOWN` (un bucle sigue sonando tras `scene.stop()`) y `removeByKey` no libera el PCM de `cache.audio` ([guía](../../../../docs/planes/T-034-performance-y-memoria.md#43-audio-aud)).
 

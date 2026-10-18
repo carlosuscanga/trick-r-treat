@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { Arranque } from './escenas/Arranque';
 import { CallePrueba } from './escenas/CallePrueba';
-import { esModoDepurar, exponerJuego } from './depurar/depurar';
+import { esModoDepurar } from './depurar/depurar';
+import { montarDepurar } from './depurar/montar';
 import { montarPanel } from './depurar/panelAjustes';
 import { AJUSTES_POR_DEFECTO, type Ajustes } from './movimiento/ajustes';
 import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
@@ -41,6 +42,6 @@ ajustarAnchoAlContenedor(game, contenedor);
 pausarEnVertical(game);
 bloquearGestos(document);
 if (esModoDepurar(location.search)) {
-  exponerJuego(game);
+  montarDepurar(game);
   montarPanel(game, ajustes);
 }

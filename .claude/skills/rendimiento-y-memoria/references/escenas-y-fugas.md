@@ -11,7 +11,7 @@ Phaser 3.90. Phaser limpia solo, en `SHUTDOWN`: display list, update list, tween
 
 ### ESC-01 · EscenaBase y escuchar()
 - **Hacer:** toda escena hereda de `EscenaBase`. Todo listener a un emisor que vive más que la escena (`this.scale`, `this.game.events`, `this.registry.events`, `this.sound`, `this.textures`) va con `this.escuchar(...)`. Para `window`, `document` y `ResizeObserver`, `alLimpiar()`.
-- **Si todavía no existe:** si `src/escenas/EscenaBase.ts` no existe y la tarea la necesita, T-004 la crea con la plantilla mínima y el comentario "mínima; T-037 la completa"; no la refines. Si ya existe, úsala. `alLimpiar()` y `this.data.reset()` los agrega T-037.
+- `EscenaBase` completa ya existe (T-037), con `escuchar()` y `alLimpiar()`: úsala y no la reescribas.
 - **Verifica:** e2e de fugas (abajo); revisión: ningún `.on(` a un emisor global fuera de `escuchar`.
 - **Por qué:** cada `create()` agrega otra copia del listener y la closure retiene la escena entera. [guía §4.4](../../../../docs/planes/T-034-performance-y-memoria.md#44-escenas-y-fugas-esc)
 
@@ -23,7 +23,7 @@ Phaser 3.90. Phaser limpia solo, en `SHUTDOWN`: display list, update list, tween
 
 ### ESC-03 · Estado en init(), no en campos de clase
 - **Hacer:** `init() { super.init(); this.puntos = 0; this.terminado = false; }`. Si usas `this.data`, `this.data.reset()` (lo hace la `EscenaBase` completa).
-- **Si todavía no existe:** con la base mínima, haz el `reset()` a mano en `init()` si usas `this.data`.
+- `EscenaBase.init()` ya hace `this.data.reset()` (T-037).
 - **Verifica:** e2e: jugar el minijuego 2 veces seguidas empieza en 0.
 - **Por qué:** `start` y `restart` reutilizan la misma instancia y el constructor corre una sola vez. [guía §4.4](../../../../docs/planes/T-034-performance-y-memoria.md#44-escenas-y-fugas-esc)
 
@@ -49,10 +49,12 @@ Phaser 3.90. Phaser limpia solo, en `SHUTDOWN`: display list, update list, tween
 
 ## Plantilla mínima de EscenaBase (T-004)
 
+Histórica: ya no hace falta, la completa existe desde T-037.
+
 Si la tarea la necesita y no existe, créala así en `src/escenas/EscenaBase.ts`:
 
 ```ts
-// mínima; T-037 la completa
+// Histórica: la versión completa ya existe (T-037), no la copies
 export abstract class EscenaBase extends Phaser.Scene {
   private limpiezas: Array<() => void> = [];
   init(_data?: unknown) {                       // las subclases llaman super.init(data)
@@ -88,7 +90,7 @@ export abstract class EscenaBase extends Phaser.Scene {
 
 Es la capa de prueba de ESC-01 a ESC-05 ([guía §6.2](../../../../docs/planes/T-034-performance-y-memoria.md#62-e2e-playwright-webkit-con-emulación-de-iphone)).
 
-- **Si todavía no existe:** `?depurar` (`window.__depurar`, con `instantanea()`) y `crecimientos(antes, despues)` los crea T-037. Mientras tanto, si el e2e necesita llegar al juego, la mínima es solo `?depurar` → `window.__juego`, y cuentas a mano en el test: `game.scale.listenerCount('resize')`, `sys.events.listenerCount('shutdown')` y `game.anims.anims.size`.
+- Ya existe (T-037): `e2e/fugas.e2e.ts`, con `window.__depurar.instantanea()` y `crecimientos()` de `src/depurar/fugas.ts`. Para un ciclo nuevo, reusa su helper en lugar de copiarlo.
 - **Receta:** abrir `./?depurar`; 1 ciclo de calentamiento; `antes = __depurar.instantanea()`; ciclar N veces (hoy reiniciar `Arranque` 30 veces; después Calle → Puerta → minijuego con `finished(true)` simulado → Calle, 8 casas × 3 vueltas); `despues = ...`; exigir `crecimientos(antes, despues)` igual a `[]`.
 - **Esperas:** 2 frames entre pasos, porque `stop` y `start` se encolan.
 - **Sin errores:** `page.on('pageerror')` y los `console` de tipo error, vacíos durante los ciclos.

@@ -11,7 +11,7 @@ Reglas TEX-01 a TEX-09 (texturas y arte) y FRA-05 a FRA-08 (postFX, Light2D, cut
 
 ### TEX-01 · Un atlas por escena o familia, y objetos ordenados por textura
 - **Hacer:** un atlas por disfraz de Mi vo, uno de escenografía de la Calle, uno de HUD y controles y uno por minijuego. Usa `this.add.image(x, y, 'calle', 'farol')`, no un PNG suelto. No intercales en profundidad objetos de atlas distintos.
-- **Si todavía no existe:** el contador de `drawArrays` de `?depurar` es de T-037: no lo construyas; si el e2e necesita llegar al juego, usa la mínima de `?depurar` (solo `window.__juego`) y calcula a mano en el test o mide en el iPhone.
+- **Si todavía no existe:** el contador de `drawArrays` (*draw calls*) lo agrega T-040, no T-037: no lo construyas antes; si el e2e lo necesita, calcula a mano en el test o mide en el iPhone.
 - **Verifica:** e2e que cuenta `drawArrays` por frame con `?depurar` (WebKit con emulación de iPhone usa el mismo pipeline móvil); más revisión de código.
 - **Por qué:** en móvil cada cambio de textura es otro draw call (11 sprites alternando 2 texturas: 10 draw calls; agrupados: 2). [Guía, TEX](../../../../docs/planes/T-034-performance-y-memoria.md#42-texturas-y-arte-tex).
 
@@ -53,7 +53,7 @@ Reglas TEX-01 a TEX-09 (texturas y arte) y FRA-05 a FRA-08 (postFX, Light2D, cut
   }));
   ```
   No remuevas lo compartido (Mi vo, HUD, Calle).
-- **Si todavía no existe:** `alLimpiar()` llega con la `EscenaBase` completa (T-037). Con la mínima, registra la liberación con `this.events.once(Phaser.Scenes.Events.SHUTDOWN, …)` y no agregues `alLimpiar()`. El e2e de fugas puede contar `textures.getTextureKeys()` a mano mientras no exista `?depurar`.
+- `alLimpiar()` ya existe en `EscenaBase` (T-037). El e2e de fugas cuenta las texturas con `__depurar.instantanea().texturas`.
 - **Verifica:** e2e de fugas (las claves del minijuego desaparecen al salir y la lista vuelve a la base).
 - **Por qué:** las texturas sobreviven a la escena porque el manager es global; `textures.remove` libera GPU y CPU. [Guía, TEX](../../../../docs/planes/T-034-performance-y-memoria.md#42-texturas-y-arte-tex).
 
