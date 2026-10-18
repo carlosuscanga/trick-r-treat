@@ -195,13 +195,15 @@ Lo que queda fuera de la v1 a propósito. No tiene tareas todavía.
 
 ## Reglas
 
-- Los datos de una tarea (estado, prioridad, dependencias, plan) viven **solo en su frontmatter**. Al cambiarlos, correr `npm run tablero`, que regenera las tablas; `npm test` falla si quedan desfasadas. Los cambios de estado van siempre **en `main`**. Las ramas solo tocan los criterios y la bitácora de su propia tarea.
+- Los datos de una tarea (estado, prioridad, dependencias, plan) viven **solo en su frontmatter**. Al cambiarlos, correr `npm run tablero`, que regenera las tablas; `npm test` falla si quedan desfasadas. El estado, `rama:` y `worktree:` cambian siempre **en `main`**. Las ramas solo tocan su propia tarea: criterios, bitácora y, si hace falta, `plan:` (con `npm run tablero` y el README que genera).
 - Los archivos no se mueven ni se borran al terminar; solo cambia el estado.
 - Una tarea grande se parte en subtareas con su propio ID.
 - Los IDs son consecutivos y no se reutilizan.
 - Si la tarea toca varios archivos o tiene decisiones técnicas, se escribe un plan en `docs/planes/` con el mismo ID antes de programar.
 
 ## Plantilla
+
+`plan:` es `null`, `requerido` (todavía no existe, pero hace falta) o la ruta `docs/planes/T-000-titulo.md`. El frontmatter no admite comentarios con `#`.
 
 ```markdown
 ---
@@ -212,7 +214,7 @@ hito: H1 | H2 | H3 | H4 | H5
 estado: pendiente
 prioridad: alta | media | baja
 depende: []
-plan: null  # o requerido, o docs/planes/T-000-titulo.md
+plan: null
 rama: null
 worktree: null
 ---
