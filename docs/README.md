@@ -110,7 +110,7 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 Una tarea está `hecha` cuando:
 
 1. Cumple todos sus criterios de aceptación.
-2. Lo nuevo tiene sus tres capas de pruebas: unitarias, e2e y manual en el iPhone (o el porqué de la que no aplica). `npm test`, `npm run test:e2e` y `npm run build` pasan, y la prueba manual del PR se hizo en el iPhone.
+2. Lo nuevo tiene sus tres capas de pruebas: unitarias, e2e y manual en el iPhone (o el porqué de la que no aplica). `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos` pasan, y la prueba manual del PR se hizo en el iPhone.
 3. Está en `main` mediante un PR mergeado.
 4. La tarea y el tablero están actualizados.
 

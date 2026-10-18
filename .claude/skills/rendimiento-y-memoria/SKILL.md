@@ -39,7 +39,7 @@ Varias reglas dependen de piezas que llegan en tareas posteriores. **Criterio:**
 | `src/escenas/EscenaBase.ts` | la plantilla de abajo | T-037 (`alLimpiar()`, `this.data.reset()`) |
 | `paraLoader` en `src/plataforma/assets.ts` | la función de una línea de RED-03 | T-039 (aviso de versión nueva, lista blanca de `public/`) |
 | `?depurar` y el e2e de fugas | si el e2e necesita llegar al juego: solo `?depurar` → `window.__juego` (sin overlay ni contadores); las fugas se cuentan a mano (`listenerCount`) tras N reinicios | T-037 (overlay, `instantanea()`, `crecimientos`) |
-| `test:presupuestos` | nada: no lo construyas | T-036 |
+| `test:presupuestos` | ya existe (T-036): úsalo, no lo dupliques | — |
 | config del juego (`disablePreFX`, `panicMax`, LOSE/RESTORE) | solo la línea que tu tarea necesite | T-038 |
 
 `EscenaBase` mínima:
@@ -86,7 +86,7 @@ Medidos con el canvas de peor caso (1872×720). ✅ = medido o calculado; 🔬 =
 
 | Qué | Valor | Estado |
 |---|---|---|
-| JS inicial (gzip) | ≤ 340 KiB (hoy 310) | ✅ |
+| JS inicial (gzip) | ≤ 340 KiB (hoy 317.6) | ✅ |
 | Assets de la Calle / por minijuego | tope 2.5 MB / 1 MB | 🔬 |
 | Lado máximo de textura | ≤ 2048 px | ✅ |
 | Base GPU de Phaser con `disablePreFX` | ≤ 32 MiB | ✅ |
@@ -145,7 +145,7 @@ Recibe la dificultad y si el disfraz da ventaja, y emite `finished(won)` (ver `C
 - [ ] ¿Textura POT sin justificación, mayor que 2048 o a más de ×1.25? (TEX-02/03/04)
 - [ ] ¿`import()` dinámico sin manejar `vite:preloadError`? (CAR-02, RED-04)
 - [ ] ¿Las pruebas de las trampas que toca el PR están en unitarias, e2e o en la tabla manual del iPhone?
-- [ ] ¿Pasan `npm test`, `npm run test:e2e` y `npm run build`?
+- [ ] ¿Pasan `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`?
 
 ## Mapa de referencias
 

@@ -31,7 +31,7 @@ Reglas CAR-01 a CAR-04 y RED-01 a RED-06, más los presupuestos de bytes. Solo P
 
 ### CAR-04 · Medir el presupuesto de JS en gzip
 - **Hacer:** medir el JS como lo sirve Pages (gzip, no brotli); `zlib.gzipSync` nivel 6 da casi lo mismo.
-- **Si todavía no existe:** `presupuestos/bundle.test.ts` y `test:presupuestos` son de T-036: no los construyas; mientras, revisa el tamaño en la salida de `npm run build`. Si existen, úsalos.
+- **Ya existe (T-036):** corre `npm run test:presupuestos` después de `npm run build`. Si un cambio se pasa del presupuesto, no subas el número: anótalo en la bitácora de la tarea y lo decide el product owner.
 - **Verifica:** unitaria `presupuestos/bundle.test.ts` en el job `build`.
 - **Por qué:** Pages manda gzip y la medición local coincide con la real. [Guía 4.1](../../../../docs/planes/T-034-performance-y-memoria.md#41-carga-y-bundle-car)
 
@@ -86,7 +86,7 @@ Los de bytes son gates de CI (varios son hipótesis por calibrar en el iPhone). 
 
 | Qué | Valor | Cómo se mide |
 |---|---|---|
-| JS inicial (gzip) | ≤ 340 KiB (hoy 310.0) | `presupuestos/bundle.test.ts` |
+| JS inicial (gzip) | ≤ 340 KiB (hoy 317.6) | `presupuestos/bundle.test.ts` |
 | Chunk de minijuego (solo si se divide) | ≤ 25 KiB gzip c/u; JS total ≤ 420 KiB | igual |
 | Assets hasta "toca para empezar" | ≤ 300 KB | e2e: bytes antes de `trt:listo-para-tocar` |
 | Assets de la Calle (escenografía + Mi vo + HUD) | tope 2.5 MB, meta 1.5 MB | Vitest: manifest + tamaños en `dist/` |

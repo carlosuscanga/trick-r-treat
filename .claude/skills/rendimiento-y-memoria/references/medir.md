@@ -41,7 +41,7 @@ Importar Phaser en Vitest truena con `window is not defined`, y un overlay de Ph
 Los presupuestos se reparten en tres capas. [Guía sección 6](../../../../docs/planes/T-034-performance-y-memoria.md#6-los-presupuestos-en-las-tres-capas-de-pruebas) · [6.1](../../../../docs/planes/T-034-performance-y-memoria.md#61-unitarias-vitest)
 
 - **Bytes del build:** `presupuestos/bundle.test.ts` va fuera de `src/` (usa `node:fs`/`node:zlib` y el `tsconfig` no tiene `@types/node`; en `src/` rompería `tsc --noEmit`).
-  - `package.json`: `"test": "vitest run --dir src"` y `"test:presupuestos": "vitest run --dir presupuestos"`.
+  - `package.json`: `"test": "vitest run --dir src"` y `"test:presupuestos": "vitest run --dir presupuestos --silent=false"` (sin `--silent=false`, Vitest 5 oculta los totales en el log).
   - `deploy.yml`, job `build`: agregar `- run: npm run test:presupuestos` después de `npm run build`. Sin job nuevo ni tocar el ruleset.
   - No usar "skip si no hay `dist/`": daría un falso verde (en el job `tests` no hay `dist/`).
   - El JS inicial es el que referencia `index.html`; el test imprime el total en el log del CI.

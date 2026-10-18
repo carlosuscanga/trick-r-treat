@@ -8,11 +8,12 @@
 - `npm install`: instala dependencias.
 - `npm run dev -- --host`: servidor de desarrollo (`--host` permite abrirlo desde el celular en la misma red).
 - `npm run build`: revisa tipos (`tsc --noEmit`) y genera `dist/`.
+- `npm run test:presupuestos`: después de `npm run build`, revisa que el build quepa en su presupuesto de bytes (JS inicial ≤ 340 KiB en gzip, archivos ≤ 1 MB y `dist/` ≤ 12 MB), en `presupuestos/`. Corre en el job `build` del CI.
 - `npm run preview`: sirve el build.
 - `npm test`: corre los tests (Vitest), también en el CI de cada PR.
 - `npm run test:e2e`: corre los tests end-to-end (Playwright, WebKit con emulación de iPhone) contra el build, en `e2e/*.e2e.ts`. La primera vez: `npx playwright install webkit`.
 
-**Todo lleva tests, en tres capas.** Toda tarea de código trae, en el mismo PR: (1) **unitarias** (Vitest, `*.test.ts` al lado del archivo) para la lógica (estado, reglas, sorteos, datos, catálogo), que va en módulos sin Phaser; (2) **e2e** (Playwright, `e2e/*.e2e.ts`) para lo que se ve y se toca en el navegador; y (3) **prueba manual** en el iPhone, escrita como tabla en la descripción del PR. Si una capa no aplica, el plan dice por qué. Verificar siempre con `npm test`, `npm run test:e2e` y `npm run build`.
+**Todo lleva tests, en tres capas.** Toda tarea de código trae, en el mismo PR: (1) **unitarias** (Vitest, `*.test.ts` al lado del archivo) para la lógica (estado, reglas, sorteos, datos, catálogo), que va en módulos sin Phaser; (2) **e2e** (Playwright, `e2e/*.e2e.ts`) para lo que se ve y se toca en el navegador; y (3) **prueba manual** en el iPhone, escrita como tabla en la descripción del PR. Si una capa no aplica, el plan dice por qué. Verificar siempre con `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`.
 
 ## Stack y versiones
 
