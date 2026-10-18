@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: alta
 depende: [T-034]
-plan: null
+plan: docs/planes/T-036-presupuesto-de-bundle-en-ci.md
 rama: T-036-presupuesto-de-bundle-en-ci
 worktree: .claude/worktrees/T-036-presupuesto-de-bundle-en-ci
 ---
@@ -33,3 +33,4 @@ Es el presupuesto más barato y determinista: si el JS inicial crece sin querer,
 ## Bitácora
 
 - 2026-10-16: creada a partir de la guía de T-034. Puede ir en paralelo con T-035.
+- 2026-10-18: arranca en su worktree. El product owner aprobó el plan en Plannotator. Decisión 8: sin `@types/node`, así que `presupuestos/` no tiene revisión de tipos. Base medida: el JS inicial pesa 317.6 KiB en gzip (T-004 sumó ≈ 7.6 KiB a los 310 de T-034).
