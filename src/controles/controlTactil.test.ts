@@ -82,6 +82,18 @@ describe('botones', () => {
     expect(i.brazosPresionado).toBe(true);
   });
 
+  it('saltarAbajo y brazosAbajo dicen si el botón tiene un dedo (para dibujarlo presionado)', () => {
+    expect([c.saltarAbajo, c.brazosAbajo]).toEqual([false, false]);
+    c.abajo(2, d.saltar.x, d.saltar.y, d);
+    c.abajo(3, d.brazos.x, d.brazos.y, d);
+    limpiarFlancos(i);
+    expect([c.saltarAbajo, c.brazosAbajo]).toEqual([true, true]);
+    c.arriba(3);
+    expect([c.saltarAbajo, c.brazosAbajo]).toEqual([true, false]);
+    c.soltarTodo();
+    expect([c.saltarAbajo, c.brazosAbajo]).toEqual([false, false]);
+  });
+
   it('joystick y Saltar a la vez con dos ids no se estorban', () => {
     c.abajo(1, 200, 400, d);
     c.mover(1, 270, 400);

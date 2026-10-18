@@ -524,11 +524,11 @@ Comportamiento:
 - **`init()`** reinicia el estado (ESC-03): `crearEstadoSalto()`, intenciones nuevas y vigía nueva.
 - **`Arranque`:** después del toque que hace sonar la prueba (o de mostrar el motivo sin sonido), `this.time.delayedCall(800, () => this.scene.start('CallePrueba'))`. En `main.ts`, `scene: [Arranque, CallePrueba]`.
 
-- [ ] **Paso 1: unitaria de `VigiaFps`:**
+- [x] **Paso 1: unitaria de `VigiaFps`:**
   - `40 frames de 33 ms (≈ 1.3 s) no avisan; 3 s seguidos sí, una sola vez`;
   - `un frame de 16 ms en medio reinicia la cuenta`.
-- [ ] **Paso 2:** que falle → implementar → que pase.
-- [ ] **Paso 3: e2e** (en `e2e/controles.e2e.ts`; un ayudante `entrarALaCalle(page)` abre `./?depurar`, toca y espera a que `CallePrueba` esté activa). Si la tarea 1 descartó los dos dedos, los casos de dos dedos se omiten con la nota del paso 6 de esa tarea.
+- [x] **Paso 2:** que falle → implementar → que pase.
+- [x] **Paso 3: e2e** (en `e2e/controles.e2e.ts`; un ayudante `entrarALaCalle(page)` abre `./?depurar`, toca y espera a que `CallePrueba` esté activa). Si la tarea 1 descartó los dos dedos, los casos de dos dedos se omiten con la nota del paso 6 de esa tarea.
   - `tras el primer toque llega a la calle de prueba`;
   - `joystick a la derecha mueve a Mi vo a la derecha y al soltar frena en el siguiente frame` (`velocity.x` 360 → 0);
   - `joystick a la izquierda mueve a la izquierda`;
@@ -540,9 +540,9 @@ Comportamiento:
   - **(foco 4)** `HIDDEN suelta todo` (`__juego.events.emit('hidden')` → `direccion` 0);
   - **(foco 5)** `reiniciar la escena 5 veces no duplica listeners`: `listenerCount` de `scale` `'resize'` y de `game.events` `'hidden'`, `'blur'` y `'ajustes-cambiados'` igual que tras el primer arranque. Además, un toque en Saltar sigue dando un solo `'salto'`;
   - `la franja de 48 px del borde izquierdo no activa el joystick`.
-- [ ] **Paso 4:** que falle → implementar `CallePrueba`, `ControlesTactiles` y los cambios en `Arranque` y `main.ts` → que pase.
-- [ ] **Paso 5:** revisar a mano con `npm run dev -- --host` desde la Mac (y el iPhone si está a la mano), con el checklist de PR del skill `rendimiento-y-memoria`.
-- [ ] **Paso 6:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega la calle de prueba con controles táctiles`.
+- [x] **Paso 4:** que falle → implementar `CallePrueba`, `ControlesTactiles` y los cambios en `Arranque` y `main.ts` → que pase.
+- [x] **Paso 5:** revisar a mano con `npm run dev -- --host` desde la Mac (y el iPhone si está a la mano), con el checklist de PR del skill `rendimiento-y-memoria`.
+- [x] **Paso 6:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega la calle de prueba con controles táctiles`.
 
 ---
 

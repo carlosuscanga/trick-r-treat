@@ -28,6 +28,16 @@ export class ControlTactil {
     private readonly ajustes: Ajustes,
   ) {}
 
+  /** Saltar tiene un dedo encima (para dibujarlo presionado). */
+  get saltarAbajo(): boolean {
+    return this.saltarId !== LIBRE;
+  }
+
+  /** Brazos tiene un dedo encima (para dibujarlo presionado). */
+  get brazosAbajo(): boolean {
+    return this.brazosId !== LIBRE;
+  }
+
   abajo(id: number, x: number, y: number, d: Disposicion): void {
     if (id === this.joystick.id || id === this.saltarId || id === this.brazosId) return;
 

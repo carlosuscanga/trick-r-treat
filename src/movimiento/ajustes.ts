@@ -127,3 +127,6 @@ export function derivarFisica(salto: Ajustes['salto']): Fisica {
 }
 
 export const AJUSTES_POR_DEFECTO: Readonly<Ajustes> = validarAjustes(ajustesJson);
+
+/** Evento de `game.events`: el panel `?depurar` cambió el objeto de ajustes vivo del registry. */
+export const AJUSTES_CAMBIADOS = 'ajustes-cambiados';

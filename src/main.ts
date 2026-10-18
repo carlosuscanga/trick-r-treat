@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { Arranque } from './escenas/Arranque';
+import { CallePrueba } from './escenas/CallePrueba';
 import { esModoDepurar, exponerJuego } from './depurar/depurar';
+import { AJUSTES_POR_DEFECTO } from './movimiento/ajustes';
 import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
 import { bloquearGestos } from './plataforma/gestos';
 import { pausarEnVertical } from './plataforma/orientacion';
@@ -27,8 +29,11 @@ const game = new Phaser.Game({
   input: { activePointers: 3 },
   // Sin tope de delta: al volver del segundo plano no hay cámara lenta (FRA-03).
   fps: { panicMax: 0 },
-  scene: [Arranque],
+  scene: [Arranque, CallePrueba],
 });
+
+// Ajustes vivos del movimiento: las escenas los leen de aquí y el panel ?depurar los cambia.
+game.registry.set('ajustes', structuredClone(AJUSTES_POR_DEFECTO));
 
 ajustarAnchoAlContenedor(game, contenedor);
 pausarEnVertical(game);
