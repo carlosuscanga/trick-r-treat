@@ -33,12 +33,12 @@ La base de config y robustez que T-007 y lo que sigue dan por hecha:
 
 ## Criterios de aceptación
 
-- [ ] `disablePreFX: true` en la raíz de la config de `main.ts`, y ningún `.preFX` en `src/`.
-- [ ] Ninguna escena declara `physics.default`; las que usan física declaran `physics: { arcade: {...} }`, y el juego no declara física.
-- [ ] Hay un módulo de pausa por motivos sin Phaser: el juego se pausa al activarse el primer motivo y se reanuda solo cuando ya no queda ninguno. `pausarEnVertical` lo usa.
-- [ ] En `LOSE_WEBGL` se activan el motivo "contexto" y la pausa del sonido; en `RESTORE_WEBGL` se quitan. Sin `CONTEXT_LOST` ni `setContextHandlers`.
-- [ ] `Arranque` quita el listener de `UNLOCKED` al apagarse (con `alLimpiar`).
-- [ ] La regla de redibujar `RenderTexture`/`DynamicTexture` está en ROB-01 del skill `rendimiento-y-memoria`.
+- [x] `disablePreFX: true` en la raíz de la config de `main.ts`, y ningún `.preFX` en `src/`.
+- [x] Ninguna escena declara `physics.default`; las que usan física declaran `physics: { arcade: {...} }`, y el juego no declara física.
+- [x] Hay un módulo de pausa por motivos sin Phaser: el juego se pausa al activarse el primer motivo y se reanuda solo cuando ya no queda ninguno. `pausarEnVertical` lo usa.
+- [x] En `LOSE_WEBGL` se activan el motivo "contexto" y la pausa del sonido; en `RESTORE_WEBGL` se quitan. Sin `CONTEXT_LOST` ni `setContextHandlers`.
+- [x] `Arranque` quita el listener de `UNLOCKED` al apagarse (con `alLimpiar`).
+- [x] La regla de redibujar `RenderTexture`/`DynamicTexture` está en ROB-01 del skill `rendimiento-y-memoria`.
 - [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la pausa por motivos (un motivo, dos motivos, quitar uno no reanuda, quitar uno que no estaba no truena); e2e de la config que leyó Phaser (`game.config`: AUTO, `disablePreFX`, `panicMax: 0`, sin `fps.limit`, sin `disableWebAudio`, sin física por defecto), de la base de GPU ≤ 32 MiB al arrancar, de perder y restaurar el contexto (pausado y reanudado; en vertical sigue pausado) y de que `CallePrueba` tiene `this.physics`; manual en el iPhone con la GPU del overlay (102 → ≈41 MiB), M13 (ir al inicio y volver) y M14 (bloquear y desbloquear) con la calle de prueba.
 
 ## Plan
@@ -93,3 +93,5 @@ La pausa por motivos también **pausa el sonido** (decidido por el product owner
 - 2026-10-16: creada a partir de la guía de T-034. Debe estar antes de T-007. Podría ir junto con T-037, pero va separada por la regla de "un cambio a la vez".
 - 2026-10-18: refinada al tomarla, tras revisar su alcance (base, esperar medición o descartar). Talla S. Decisiones del product owner, una a una: (1) entra la **pausa por motivos**, porque `pausarEnVertical` ya pausa y ROB-01 sería un segundo dueño de la pausa; (2) la config se prueba en **e2e** leyendo `game.config`, sin exportarla como objeto; (3) redibujar lo dinámico queda para después, con una regla en el skill; (4) el e2e de contexto no revisa el "píxel conocido". `panicMax` y el estado de `Arranque` en `init()` ya estaban hechos. M11 y las perillas de FRA-05/06/09 quedan en T-041. Con esto se resuelve el pendiente de la retro "bajar T-038 a T-040": no hace falta, lo especulativo quedó fuera. Plan dentro de la tarea, como en T-049.
 - 2026-10-18: plan escrito dentro de la tarea y aprobado por el product owner (revisado aquí, en resumen). Decisión: la pausa por motivos también pausa el sonido, así que en vertical se calla.
+- 2026-10-18: pasos 1 a 5 hechos con subagentes (Sonnet `medium` para el código, Haiku `low` para el skill). El e2e mide la base de GPU en `Arranque` en **29.8 MiB** (límite 32; antes ≈91). JS inicial: 319.4 de 340 KiB. Confirmado en el código de Phaser: `game.renderer` y `game.sound` ya existen en `main.ts` (el módulo corre con el DOM listo) y la pausa no choca con la visibilidad, el *blur* ni el desbloqueo de audio de iOS.
+- 2026-10-18: revisión de código (Opus `high`), sin bloqueantes. Se corrigieron: (1) la pausa reanudaba **todos** los sonidos, también los pausados a propósito: ahora pausa los que sonaban y reanuda solo esos (importa para la música de T-017); (2) el e2e de vertical usaba una espera fija de 500 ms; (3) el e2e no detectaba un `physics.default` en la escena; (4) texto viejo de ROB-01 en el skill. **Para después (T-007):** con el juego pausado, los toques siguen llegando a las escenas (Phaser despacha la entrada aunque `isPaused`). En vertical no pasa porque el aviso tapa el canvas; con el contexto perdido, sí. Si una escena dispara sonido o lógica con un toque, conviene revisar `this.game.isPaused`.

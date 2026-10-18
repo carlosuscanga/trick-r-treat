@@ -11,5 +11,5 @@ paths: ["src/**/*.ts"]
 - POO-03: nada de `new`, `{}`, `[]` ni *closures* dentro de `update()`.
 - FRA-04: todo movimiento con `delta` (px/s), nunca px por frame.
 - RED-03: assets en `src/assets/`, importados y con `paraLoader()`; en `public/` solo nombres fijos (manifest, íconos, `sw.js`).
-- ROB-01: pausar en `LOSE_WEBGL`, redibujar y reanudar en `RESTORE_WEBGL`.
+- ROB-01: nunca `game.pause()`/`resume()` directo: se activa un motivo de la pausa (`src/plataforma/pausa.ts`). Toda `RenderTexture`/`DynamicTexture` se redibuja en `RESTORE_WEBGL`.
 - Carga el skill `rendimiento-y-memoria` antes de escribir o revisar escenas.
