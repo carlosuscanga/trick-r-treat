@@ -517,3 +517,37 @@ test.describe('panel ?depurar', () => {
     await expect(page.locator('#depurar-panel')).toContainText('Cópialo a mano');
   });
 });
+
+test.describe('velocidad proporcional', () => {
+  test.beforeEach(async ({ page }) => {
+    await entrarALaCalle(page);
+  });
+
+  // Velocidad con un arrastre de `dx` px y luego se suelta el dedo.
+  async function velocidadConArrastre(page: Page, dx: number) {
+    await joystick(page, 1, dx);
+    await siguienteFrame(page);
+    const { vx } = await leerCalle(page);
+    await tocar(page, 'touchend', [{ id: 1, x: JOY.x + dx, y: JOY.y }]);
+    await siguienteFrame(page);
+    return vx;
+  }
+
+  test('prendida, un arrastre corto da menos velocidad que uno largo', async ({ page }) => {
+    await abrirPanel(page);
+    await page.locator('input[data-ajuste="caminar.proporcional"]').click();
+    await page.locator('#depurar-boton').click(); // cierra el panel antes de tocar
+    await siguienteFrame(page);
+
+    const corto = await velocidadConArrastre(page, 30);
+    const largo = await velocidadConArrastre(page, 100);
+    expect(corto).toBeGreaterThan(0);
+    expect(corto).toBeLessThan(largo);
+    expect(largo).toBe(360);
+  });
+
+  test('apagada, el arrastre corto y el largo dan la velocidad completa', async ({ page }) => {
+    expect(await velocidadConArrastre(page, 30)).toBe(360);
+    expect(await velocidadConArrastre(page, 100)).toBe(360);
+  });
+});

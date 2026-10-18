@@ -59,6 +59,36 @@ describe('joystick', () => {
   });
 });
 
+describe('fuerza', () => {
+  it('mover la llena: 0 en la zona muerta, parcial en medio, 1 en el radio o más', () => {
+    c.abajo(1, 200, 400, d);
+    c.mover(1, 210, 400);
+    expect(i.fuerza).toBe(0);
+    c.mover(1, 200 + 46.875, 400);
+    expect(i.fuerza).toBeCloseTo(0.5);
+    c.mover(1, 200 + 200, 400);
+    expect(i.fuerza).toBe(1);
+  });
+
+  it('soltar, revisar y soltarTodo la ponen en 0', () => {
+    c.abajo(1, 200, 400, d);
+    c.mover(1, 270, 400);
+    c.arriba(1);
+    expect(i.fuerza).toBe(0);
+
+    c.abajo(2, 200, 400, d);
+    c.mover(2, 270, 400);
+    expect(i.fuerza).toBeGreaterThan(0);
+    c.revisar(() => false);
+    expect(i.fuerza).toBe(0);
+
+    c.abajo(3, 200, 400, d);
+    c.mover(3, 270, 400);
+    c.soltarTodo();
+    expect(i.fuerza).toBe(0);
+  });
+});
+
 describe('botones', () => {
   it('dedo en Saltar: presionado y sostenido; al levantarlo deja de sostenerse', () => {
     c.abajo(2, d.saltar.x, d.saltar.y, d);

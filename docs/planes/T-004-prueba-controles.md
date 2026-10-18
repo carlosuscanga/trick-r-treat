@@ -706,7 +706,7 @@ Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cam
 - `src/controles/joystick.ts` agrega `fuerzaJoystick(dx, radio, activa)`: 0 en el umbral de activación, 1 en el borde del radio, recortada a 0..1 y simétrica.
 - `Intenciones` agrega `fuerza` (0..1). `ControlTactil.mover` la llena y soltar el joystick la pone en 0.
 - `src/movimiento/caminar.ts` (nuevo) agrega `velocidadCaminar(direccion, fuerza, caminar)`: con la casilla apagada da `direccion · velocidad`; prendida, `direccion · velocidad · (velocidadMinima + (1 − velocidadMinima) · fuerza)`. La escena la usa en lugar de `direccion · velocidad`. Sin asignaciones en `update()`.
-- El panel agrega la casilla "Velocidad proporcional" y el deslizador "Velocidad mínima (%)" (0.1 a 1). "Copiar valores" los incluye solo, porque copia `ajustes`.
+- El panel agrega la casilla "Velocidad proporcional" y el deslizador "Velocidad mínima (fracción)" (0.1 a 1). "Copiar valores" los incluye solo, porque copia `ajustes`.
 
 **Decisión del orquestador, a confirmar:** la velocidad mínima (30 % al empezar a mover el pulgar) evita que Mi vo arranque casi quieta justo después de la zona muerta. Se afina con el deslizador.
 

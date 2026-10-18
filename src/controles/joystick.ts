@@ -22,6 +22,16 @@ export function direccionJoystick(
   return 0;
 }
 
+/**
+ * Fuerza 0..1 según qué tan lejos está el dedo: 0 en el umbral de activación
+ * (`activa·radio`), 1 en el borde del radio. Recortada y simétrica en dx.
+ */
+export function fuerzaJoystick(dx: number, radio: number, activa: number): number {
+  const umbral = activa * radio;
+  const f = (Math.abs(dx) - umbral) / (radio - umbral);
+  return f < 0 ? 0 : f > 1 ? 1 : f;
+}
+
 /** Recorta (dx, dy) a un círculo de `radio` y lo escribe en `salida`. */
 export function limitarPerilla(dx: number, dy: number, radio: number, salida: { x: number; y: number }): void {
   const largo = Math.hypot(dx, dy);

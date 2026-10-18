@@ -20,6 +20,7 @@ const CAMPOS: readonly Campo[] = [
   { ruta: 'salto.tiempoSubida', etiqueta: 'Tiempo de subida (s)', min: 0.2, max: 0.6, step: 0.01 },
   { ruta: 'salto.tiempoCaida', etiqueta: 'Tiempo de caída (s)', min: 0.15, max: 0.5, step: 0.01 },
   { ruta: 'caminar.velocidad', etiqueta: 'Velocidad (px/s)', min: 200, max: 600, step: 1 },
+  { ruta: 'caminar.velocidadMinima', etiqueta: 'Velocidad mínima (fracción)', min: 0.1, max: 1, step: 0.05 },
   { ruta: 'salto.coyoteMs', etiqueta: 'Coyote (ms)', min: 0, max: 200, step: 1 },
   { ruta: 'salto.bufferMs', etiqueta: 'Búfer (ms)', min: 0, max: 250, step: 1 },
   { ruta: 'botones.radioToque', etiqueta: 'Radio de toque (px)', min: 50, max: 110, step: 1 },
@@ -29,7 +30,11 @@ const CAMPOS: readonly Campo[] = [
   { ruta: 'botones.brazos.abajo', etiqueta: 'Brazos: abajo (px)', min: 60, max: 500, step: 1 },
 ];
 
-const RUTA_APICE = 'salto.apiceColgado';
+// Casillas (booleanos), con el mismo `data-ajuste` que los deslizadores.
+const CASILLAS: readonly { ruta: string; etiqueta: string }[] = [
+  { ruta: 'salto.apiceColgado', etiqueta: 'Ápice colgado' },
+  { ruta: 'caminar.proporcional', etiqueta: 'Velocidad proporcional' },
+];
 
 // touch-action y user-select propios: body los apaga y el panel necesita usarlos.
 const ESTILOS = `
@@ -104,18 +109,20 @@ export function montarPanel(game: Phaser.Game, ajustes: Ajustes, doc: Document =
     panel.append(fila);
   }
 
-  const { objeto: saltoObj, campo: apiceCampo } = dueno(ajustes, RUTA_APICE);
-  const filaApice = doc.createElement('label');
-  const casilla = doc.createElement('input');
-  casilla.type = 'checkbox';
-  casilla.checked = saltoObj[apiceCampo] === true;
-  casilla.dataset.ajuste = RUTA_APICE;
-  casilla.addEventListener('change', () => {
-    saltoObj[apiceCampo] = casilla.checked;
-    avisar();
-  });
-  filaApice.append(casilla, ' Ápice colgado');
-  panel.append(filaApice);
+  for (const { ruta, etiqueta } of CASILLAS) {
+    const { objeto, campo: nombre } = dueno(ajustes, ruta);
+    const fila = doc.createElement('label');
+    const casilla = doc.createElement('input');
+    casilla.type = 'checkbox';
+    casilla.checked = objeto[nombre] === true;
+    casilla.dataset.ajuste = ruta;
+    casilla.addEventListener('change', () => {
+      objeto[nombre] = casilla.checked;
+      avisar();
+    });
+    fila.append(casilla, ` ${etiqueta}`);
+    panel.append(fila);
+  }
 
   const copiar = doc.createElement('button');
   copiar.type = 'button';

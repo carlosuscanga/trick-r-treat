@@ -5,6 +5,7 @@ describe('intenciones', () => {
   it('nacen en reposo', () => {
     expect(crearIntenciones()).toEqual({
       direccion: 0,
+      fuerza: 0,
       saltarSostenido: false,
       saltarPresionado: false,
       brazosPresionado: false,

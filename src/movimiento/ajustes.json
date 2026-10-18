@@ -9,7 +9,7 @@
     "bufferMs": 130,
     "apiceColgado": false
   },
-  "caminar": { "velocidad": 360 },
+  "caminar": { "velocidad": 360, "proporcional": false, "velocidadMinima": 0.3 },
   "joystick": { "radio": 75, "activa": 0.25, "suelta": 0.15, "margenBorde": 48 },
   "botones": {
     "radioToque": 75,

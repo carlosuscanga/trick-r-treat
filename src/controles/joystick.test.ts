@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { direccionJoystick, limitarPerilla } from './joystick';
+import { direccionJoystick, fuerzaJoystick, limitarPerilla } from './joystick';
 
 const R = 75;
 const ACTIVA = 0.25;
@@ -51,5 +51,22 @@ describe('limitarPerilla', () => {
     const s = { x: 0, y: 0 };
     limitarPerilla(30, 40, 75, s);
     expect(s).toEqual({ x: 30, y: 40 });
+  });
+});
+
+describe('fuerzaJoystick', () => {
+  it('0 en el umbral de activación y 1 en el radio', () => {
+    expect(fuerzaJoystick(18.75, 75, 0.25)).toBeCloseTo(0);
+    expect(fuerzaJoystick(75, 75, 0.25)).toBeCloseTo(1);
+    expect(fuerzaJoystick(46.875, 75, 0.25)).toBeCloseTo(0.5);
+  });
+
+  it('se recorta a 0..1', () => {
+    expect(fuerzaJoystick(5, 75, 0.25)).toBe(0);
+    expect(fuerzaJoystick(300, 75, 0.25)).toBe(1);
+  });
+
+  it('es simétrica con dx negativo', () => {
+    expect(fuerzaJoystick(-40, 75, 0.25)).toBe(fuerzaJoystick(40, 75, 0.25));
   });
 });

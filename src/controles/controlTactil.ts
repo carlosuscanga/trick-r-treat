@@ -5,7 +5,7 @@
 
 import type { Ajustes } from '../movimiento/ajustes';
 import type { Circulo, Disposicion } from './disposicion';
-import { direccionJoystick } from './joystick';
+import { direccionJoystick, fuerzaJoystick } from './joystick';
 import type { Intenciones } from './intenciones';
 
 const LIBRE = -1;
@@ -88,6 +88,7 @@ export class ControlTactil {
       j.activa,
       j.suelta,
     );
+    this.intenciones.fuerza = fuerzaJoystick(this.joystick.dx, j.radio, j.activa);
   }
 
   /**
@@ -124,6 +125,7 @@ export class ControlTactil {
     this.joystick.dx = 0;
     this.joystick.dy = 0;
     this.intenciones.direccion = 0;
+    this.intenciones.fuerza = 0;
   }
 
   private soltarSaltar(): void {

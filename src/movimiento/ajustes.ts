@@ -23,7 +23,13 @@ export type Ajustes = {
     /** Gravedad a la mitad cerca del ápice mientras se mantiene Saltar. */
     apiceColgado: boolean;
   };
-  caminar: { velocidad: number };
+  caminar: {
+    velocidad: number;
+    /** La velocidad crece con la distancia del dedo al origen del joystick. */
+    proporcional: boolean;
+    /** Fracción de `velocidad` al pasar la zona muerta (con `proporcional`). */
+    velocidadMinima: number;
+  };
   joystick: { radio: number; activa: number; suelta: number; margenBorde: number };
   botones: {
     radioToque: number;
@@ -93,7 +99,11 @@ export function validarAjustes(datos: unknown): Ajustes {
       bufferMs: numero(salto, 'bufferMs', 'ajustes.salto'),
       apiceColgado: booleano(salto, 'apiceColgado', 'ajustes.salto'),
     },
-    caminar: { velocidad: numero(caminar, 'velocidad', 'ajustes.caminar') },
+    caminar: {
+      velocidad: numero(caminar, 'velocidad', 'ajustes.caminar'),
+      proporcional: booleano(caminar, 'proporcional', 'ajustes.caminar'),
+      velocidadMinima: numero(caminar, 'velocidadMinima', 'ajustes.caminar'),
+    },
     joystick: {
       radio: numero(joystick, 'radio', 'ajustes.joystick'),
       activa: numero(joystick, 'activa', 'ajustes.joystick'),

@@ -4,6 +4,7 @@ import type { Disposicion } from '../controles/disposicion';
 import { crearIntenciones, limpiarFlancos, type Intenciones } from '../controles/intenciones';
 import { ANCHO_CALLE, BLOQUES_CALLE_PRUEBA, alturaSuperior } from '../datos/plataformas';
 import { AJUSTES_CAMBIADOS, derivarFisica, topeVertical, type Ajustes, type Fisica } from '../movimiento/ajustes';
+import { velocidadCaminar } from '../movimiento/caminar';
 import { crearEstadoSalto, pasoSalto, type EstadoSalto, type SalidaSalto } from '../movimiento/salto';
 import { ALTO } from '../plataforma/escala';
 import { VigiaFps } from '../plataforma/vigiaFps';
@@ -116,7 +117,7 @@ export class CallePrueba extends EscenaBase {
     const body = this.cuerpo.body;
 
     this.tactiles.revisar();
-    body.setVelocityX(i.direccion * this.ajustes.caminar.velocidad);
+    body.setVelocityX(velocidadCaminar(i.direccion, i.fuerza, this.ajustes.caminar));
 
     // vy >= 0: si blocked.down llega un frame tarde tras despegar, no hay doble salto.
     const enSuelo = body.blocked.down && body.velocity.y >= 0;

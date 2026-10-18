@@ -37,6 +37,20 @@ describe('validarAjustes', () => {
     expect(() => validarAjustes(datos)).toThrow('ajustes.salto.apiceColgado');
   });
 
+  it('proporcional tiene que ser booleano y velocidadMinima un número', () => {
+    const a = copia();
+    a.caminar.proporcional = 1;
+    expect(() => validarAjustes(a)).toThrow('ajustes.caminar.proporcional');
+    const b = copia();
+    b.caminar.velocidadMinima = '0.3';
+    expect(() => validarAjustes(b)).toThrow('ajustes.caminar.velocidadMinima');
+  });
+
+  it('el JSON trae la velocidad proporcional apagada', () => {
+    expect(AJUSTES_POR_DEFECTO.caminar.proporcional).toBe(false);
+    expect(AJUSTES_POR_DEFECTO.caminar.velocidadMinima).toBe(0.3);
+  });
+
   it('una sección faltante lanza un error que la nombra', () => {
     const datos = copia();
     delete datos.botones.brazos;
