@@ -221,6 +221,25 @@ test.describe('calle de prueba', () => {
     expect((await leerCalle(page)).direccion).toBe(0);
   });
 
+  test('touchcancel de un dedo suelta todos los controles', async ({ page }) => {
+    const { saltar } = await disposicion(page);
+    await joystick(page, 1, 100);
+    await tocar(page, 'touchstart', [{ id: 2, x: saltar.x, y: saltar.y }]);
+    expect(await punterosAbajo(page)).toBe(2);
+
+    // Solo se cancela el dedo de Saltar; el del joystick sigue abajo para Phaser.
+    await tocar(page, 'touchcancel', [{ id: 2, x: saltar.x, y: saltar.y }]);
+    const estado = await page.evaluate(() => {
+      const calle = window.__juego!.scene.getScene('CallePrueba') as any;
+      return {
+        direccion: calle.intenciones.direccion,
+        sostenido: calle.intenciones.saltarSostenido,
+        joystickId: calle.controles.joystick.id,
+      };
+    });
+    expect(estado).toEqual({ direccion: 0, sostenido: false, joystickId: -1 });
+  });
+
   test('con el dedo en el joystick, cambiar el tamaño de la página no lo suelta', async ({ page }) => {
     const anchoAntes = await page.evaluate(() => window.__juego!.scale.gameSize.width);
     await joystick(page, 1, 100);

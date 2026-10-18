@@ -159,8 +159,11 @@ export class ControlesTactiles {
     this.control.mover(p.id, p.x, p.y);
   }
 
+  // touchcancel (llamada, gesto del sistema) suelta todos los controles, no solo el de
+  // ese dedo: Phaser lo entrega como POINTER_UP con `wasCanceled` en true.
   private alSubir(p: Phaser.Input.Pointer): void {
-    this.control.arriba(p.id);
+    if (p.wasCanceled) this.control.soltarTodo();
+    else this.control.arriba(p.id);
   }
 
   private soltarTodo(): void {
