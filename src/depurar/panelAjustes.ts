@@ -52,7 +52,7 @@ const ESTILOS = `
 .depurar-panel label.casilla{display:flex;align-items:center;gap:8px}
 .depurar-panel output{text-align:right;font-variant-numeric:tabular-nums}
 .depurar-panel button{font:inherit;padding:8px 12px;margin-top:8px}
-.depurar-panel textarea{width:100%;height:160px;margin-top:8px;box-sizing:border-box;font:12px monospace}
+.depurar-panel textarea{width:100%;height:160px;margin-top:8px;box-sizing:border-box;font:16px monospace}
 .depurar-panel p{margin:6px 0 0}
 `;
 

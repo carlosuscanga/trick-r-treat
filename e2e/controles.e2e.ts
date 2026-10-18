@@ -515,6 +515,9 @@ test.describe('panel ?depurar', () => {
     await expect(caja).toBeVisible();
     await expect(caja).toHaveValue(/"alturaMax"/);
     await expect(page.locator('#depurar-panel')).toContainText('Cópialo a mano');
+    // Con menos de 16 px, Safari de iPhone hace zoom al enfocarla y el juego no deja quitarlo.
+    const letra = await caja.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(letra).toBeGreaterThanOrEqual(16);
   });
 });
 
