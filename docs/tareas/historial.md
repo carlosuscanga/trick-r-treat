@@ -2,6 +2,7 @@
 
 Lo que se hizo en cada sesión, la más nueva arriba. Al cerrar una sesión, su resumen se agrega aquí arriba y el ["Estado actual"](README.md#estado-actual) se queda solo con lo vigente.
 
+- **Sesión (2026-10-17, noche, "retoma T-004"):** primera prueba del protocolo de T-046, que funcionó. Se planeó y se implementó la ronda 2 de T-004 con dos subagentes Sonnet y revisión Opus: el barril junto a la casa, con una regla que exige poder regresar, y la casilla de velocidad proporcional (mínima de 30 %, aprobada por el product owner). Todo quedó en el PR #12, con la rama al día con `main`.
 - **Sesión (2026-10-17, noche, T-004):** se implementó T-004 con subagentes (las 7 tareas del plan), se abrió el PR #12 y el product owner hizo la primera ronda de prueba en el iPhone. Esta sesión no actualizó el "Estado actual"; el detalle está en la bitácora de T-004.
 - **Sesión (2026-10-17, noche, corta):** se registró T-046 (retomar una tarea en una sesión nueva leyendo lo mínimo), revisada en Plannotator. Se hace al abrir la siguiente ventana de uso. T-004 no se tocó.
 - **Sesión (2026-10-17, noche):** se cerró T-045 y arrancó la implementación de T-004.
