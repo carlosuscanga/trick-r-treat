@@ -40,7 +40,7 @@ Salió del análisis de administración del proyecto del 2026-10-18, que siguió
 
 ## Criterios de aceptación
 
-- [ ] "Tomar T-NNN" sobre una tarea que no está lista no arranca: muestra qué le falta según la Definition of Ready y la refina con el product owner antes de crear el worktree.
+- [x] "Tomar T-NNN" sobre una tarea que no está lista no arranca: muestra qué le falta según la Definition of Ready y la refina con el product owner antes de crear el worktree.
 - [x] "Tomar T-NNN" sobre una tarea lista deja todo en un solo paso: frontmatter y tablero en `main` (con push), worktree creado, rama con su nombre final y base compilada.
 - [x] "Tomar" se niega si alguna dependencia no está `hecha` y dice cuál.
 - [ ] "Cerrar T-NNN" se niega si el PR no está mergeado o si la rama tiene commits fuera de `main`.
@@ -68,3 +68,4 @@ Salió del análisis de administración del proyecto del 2026-10-18, que siguió
 - 2026-10-18, **para verificar en `main` después del merge** (casillas abiertas): tomar una tarea no lista y una lista, y cerrar T-048 con el propio skill. Las notas de memoria del flujo viejo se borran o actualizan en ese mismo cierre, cuando el flujo nuevo ya está en `main`.
 - 2026-10-18: PR #17 mergeado (sin squash). **Primer cierre con el propio script:** `npm run tarea -- cerrar T-048` comprobó el merge y la rama, quitó el worktree sin `--force` (con `node_modules` y archivos ignorados adentro) y dejó la tarea `hecha` con el tablero al día. Esta única vez hubo que hacer `git pull` antes, porque el script llegaba con el merge. Se borró la nota de memoria del aviso falso de `ExitWorktree`. Quedan tres casillas que solo se prueban en uso: tomar una tarea no lista y una lista, y que `cerrar` se niegue sin merge. Se marcan aquí, en `main`, al tomar T-037.
 - 2026-10-18: probado en uso con T-049: "tomar" sobre una tarea lista hizo todo en un solo paso (commit en `main` con su push, worktree, rama con su nombre final y base compilada). Se marca esa casilla. Siguen abiertas tomar una tarea no lista (T-037) y que `cerrar` se niegue sin merge.
+- 2026-10-18: probado en uso con T-037: `revisar` dijo qué le faltaba (la casilla de tres capas), la revisión con criterio encontró cuatro huecos más, se refinó con el product owner una pregunta a la vez, y `tomar` aceptó el `main` local adelantado con el commit de la refinación. Se marca esa casilla. Sigue abierta: que `cerrar` se niegue sin merge.
