@@ -85,8 +85,9 @@ test('con el contexto perdido y la pantalla en vertical, restaurar no reanuda ha
   await expect(page.getByRole('alert')).toBeVisible();
 
   await cambiarContexto(page, 'restoreContext');
-  // Margen para que llegue RESTORE_WEBGL; debe seguir pausado por el motivo vertical.
-  await page.waitForTimeout(500);
+  // Espera a que el renderer haya restaurado (contextLost = false justo antes de RESTORE_WEBGL);
+  // debe seguir pausado por el motivo vertical.
+  await page.waitForFunction(() => !(window.__juego!.renderer as any).contextLost);
   expect(await estaPausado(page)).toBe(true);
 
   await page.setViewportSize(horizontal);
@@ -100,7 +101,13 @@ test('CallePrueba tiene física Arcade aunque la config no define una por defect
 
   const fisica = await page.evaluate(() => {
     const calle = window.__juego!.scene.getScene('CallePrueba');
-    return { fisica: !!calle.physics, mundo: !!calle.physics?.world };
+    const config = calle.sys.settings.physics as Record<string, unknown>;
+    return {
+      fisica: !!calle.physics,
+      mundo: !!calle.physics?.world,
+      sinDefault: !('default' in config),
+      conArcade: 'arcade' in config,
+    };
   });
-  expect(fisica).toEqual({ fisica: true, mundo: true });
+  expect(fisica).toEqual({ fisica: true, mundo: true, sinDefault: true, conArcade: true });
 });
