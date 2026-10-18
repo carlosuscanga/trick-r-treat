@@ -7,6 +7,8 @@ estado: en-progreso
 prioridad: media
 depende: []
 plan: docs/planes/T-046-retomar-tareas-en-sesion-nueva.md
+rama: null
+worktree: null
 ---
 
 ## Qué
@@ -37,3 +39,4 @@ Hoy "Estado actual" mezcla lo vigente con el historial de cada sesión, y crece.
 - 2026-10-17: arranca. Worktree creado; `npm install` y `npm run build` limpios. **Choque con el flujo:** la tarea pide partir "Estado actual" y editar el archivo de T-004, y las ramas no pueden tocar ninguno de los dos. **Decisión del product owner** (plan aprobado aquí, sin Plannotator): las reglas van por PR, y el "Estado actual", el historial, la plantilla y los frontmatter van directo a `main` después del merge. Sin subagentes; todo lo hace la sesión principal (Opus).
 - 2026-10-17: pasos 1 a 4 del plan hechos en la rama: protocolo "Retomar T-NNN", cuándo se llenan y se vacían `rama:` y `worktree:`, `git fetch` pegado al comando de push directo, y la regla de `CLAUDE.md`. Al retomar no se lee `.local/notas.md`: el criterio pide leer solo la tarea, el plan y la bitácora. Los criterios 1, 2 y 4 se cumplen en `main` después del merge (paso 7 del plan) y se marcan al cerrar, como dice el paso 6 de "Trabajo en paralelo".
 - 2026-10-17: **desvío del plan:** también cambia la regla de cierre de sesión (`CLAUDE.md` y "Al terminar" en `docs/README.md`). "Qué se hizo" ahora va arriba de `historial.md`, no en "Estado actual". Sin esto, el "Estado actual" volvería a crecer en cada sesión. Plan actualizado (paso 4).
+- 2026-10-18: PR #13 mergeado y worktree quitado. **Paso 7 en `main`:** el "Estado actual" queda en 7 líneas, y las sesiones viejas pasaron a `historial.md` (un script confirmó que no falta ninguna línea; el único cambio de texto es "Última sesión" → "Sesión"). Se agregó una entrada para la sesión de T-004 que no había dejado resumen. `rama:` y `worktree:` quedaron en la plantilla y en T-004; en T-046 van en `null`, porque su worktree ya no existe y lo que falta se hace en `main`. Se anotaron las escaleras verticales en T-027. Falta la prueba con "retoma T-004" en una sesión nueva.

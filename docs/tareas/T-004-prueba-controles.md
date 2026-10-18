@@ -7,6 +7,8 @@ estado: en-progreso
 prioridad: alta
 depende: [T-003, T-034, T-035, T-045]
 plan: docs/planes/T-004-prueba-controles.md
+rama: T-004-prueba-controles
+worktree: .claude/worktrees/T-004-prueba-controles
 ---
 
 ## Qué
