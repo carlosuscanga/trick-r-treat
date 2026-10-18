@@ -33,3 +33,4 @@ Phaser limpia lo de la escena en `SHUTDOWN`, pero no lo global (listeners en `sc
 
 - 2026-10-16: creada a partir de la guía de T-034. Debe estar antes de T-007 o hacerse dentro de ella.
 - 2026-10-16: en el brainstorming de T-035 se decidió que T-004 crea una `EscenaBase` mínima (`escuchar()`, `once(SHUTDOWN)` e `init()`). Esta tarea parte de ella y la completa (`alLimpiar()`, `this.data.reset()`, `?depurar` y e2e de fugas).
+- 2026-10-18: pedido del product owner tras T-004: que el panel `?depurar` recuerde los valores en el iPhone entre visitas (en el navegador, con `localStorage`) y tenga un botón "volver a los valores por defecto". Así se puede afinar en Pages, de forma casual, sin perder lo ajustado al recargar. Las pruebas no deben depender de lo guardado (ver `docs/planes/README.md`, "Pruebas").
