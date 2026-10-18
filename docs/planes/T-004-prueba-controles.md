@@ -2,7 +2,7 @@
 
 Tarea: [T-004](../tareas/T-004-prueba-controles.md)
 
-> **Estado:** diseño en revisión. Cuando el product owner lo apruebe, se agregan las secciones Archivos, Pasos, Pruebas y Modelo y esfuerzo.
+> **Estado:** diseño aprobado por el product owner (2026-10-17). El plan de implementación está al final, en "Implementación".
 
 ## Para qué es esta tarea
 
@@ -173,7 +173,7 @@ Se siguen las reglas del skill `rendimiento-y-memoria`. Las que más pesan aquí
 - Cero asignaciones dentro de `update()` (POO-03).
 - Física declarada en la escena (ESC-07).
 - Trampas que esta tarea toca y se prueban: duplicar listeners al reiniciar la escena (doble salto, joystick que responde dos veces) y movimiento por frame en lugar de por tiempo.
-- Config del juego: solo las líneas que la tarea necesita (`activePointers`). `panicMax: 0` (al volver del segundo plano no hay cámara lenta) se agrega aquí si el builder confirma que afecta la sensación del salto; si no, queda para T-038.
+- Config del juego: solo las líneas que la tarea necesita: `input.activePointers: 3` y `fps: { panicMax: 0 }` (FRA-03). Esta última entra porque, sin ella, al volver del segundo plano el juego corre en cámara lenta unos segundos, y eso se sentiría como "lag" en la prueba manual. El resto de la config de T-038 queda para T-038.
 
 ## Contingencia (se decide al cerrar la tarea)
 
@@ -211,3 +211,462 @@ La decisión la toma el product owner en su iPhone y se anota en la bitácora de
 ## Fuentes
 
 Tres investigaciones en paralelo (subagentes, 2026-10-17): multitouch en Phaser 3.90, sensación de salto en Arcade y gestos de iOS Safari. Los informes completos están en `.local/t004/` (local, sin respaldo).
+
+---
+
+# Implementación
+
+> **Para agentes:** sub-skill requerido: `superpowers:subagent-driven-development` (recomendado) o `superpowers:executing-plans`. Los pasos usan casillas (`- [ ]`). Antes de escribir código de escenas, cargar el skill `rendimiento-y-memoria`.
+
+**Objetivo:** una calle de prueba jugable en el iPhone, donde un rectángulo camina con un joystick táctil, salta con altura variable y responde a Brazos, con dos pulgares a la vez y valores afinables con `?depurar`.
+
+**Arquitectura:** la lógica vive en módulos puros sin Phaser: intenciones, joystick, asignación de dedos, disposición, salto, ajustes, regla de plataformas y vigía de fps. Todos con unitarias. Una escena `CallePrueba` y un objeto `ControlesTactiles` (Phaser) solo traducen toques a intenciones y aplican el resultado al cuerpo Arcade. El panel de `?depurar` es HTML y cambia un objeto de ajustes compartido.
+
+**Stack:** Phaser 3.90.0 (Arcade), TypeScript 7.0.2, Vite 8.3.4, Vitest 5.0.3, Playwright 1.63.0 (WebKit, `iPhone 17 landscape`). Sin dependencias nuevas.
+
+**Diseño:** la primera mitad de este archivo. Quien ejecute lee las dos mitades.
+
+## Restricciones globales
+
+- Phaser 3.90: nunca APIs de Phaser 4. Ante la duda, `node_modules/phaser/src/`.
+- Sin dependencias nuevas (`package.json` no cambia).
+- Reglas del skill `rendimiento-y-memoria`: ESC-01 (`escuchar()`), ESC-02 (`once(SHUTDOWN)`), ESC-03 (estado en `init()`), ESC-07 (física en la escena), POO-03 (cero asignaciones en `update()`), FRA-04 (todo con `delta`).
+- Módulos puros (`src/controles/`, `src/movimiento/`, `src/datos/`) sin `import Phaser`: los prueba Vitest en Node, sin DOM.
+- Datos en JSON, validados al cargar, como `src/datos/index.ts`.
+- Assets: ninguno nuevo. Todo se dibuja con formas de Phaser.
+- Textos, comentarios, nombres y commits en español. Commits `T-004: <imperativo>`, con la línea `Co-Authored-By` de la sesión.
+- Cada tarea termina con `npm test` y `npm run build` en verde; desde la tarea 1, también `npm run test:e2e`. Node 24 (`.nvmrc`).
+
+## Foco de revisión
+
+Fallas que la especificación implica y que conviene fijar con una prueba en la tarea que las posee:
+
+1. **Un dedo que empieza en el joystick y se desliza sobre Saltar** no salta: el dedo sigue siendo del joystick. → tarea 3 (unitaria) y tarea 5 (e2e).
+2. **Un tercer dedo** que toca mientras hay dos abajo no le roba el control a ninguno. → tarea 3.
+3. **Cambio de tamaño con un dedo abajo** (aparecen o se van las barras de Safari): el joystick no se suelta y la disposición se recalcula. → tarea 5 (e2e).
+4. **Volver del segundo plano:** los controles se sueltan (`HIDDEN` o `BLUR`) y no hay cámara lenta (`panicMax: 0`). → tarea 1 (config) y tarea 5 (e2e).
+5. **Reiniciar la escena N veces** no duplica listeners: un toque en Saltar sigue dando un solo salto. → tarea 5 (e2e).
+
+## Mapa de archivos
+
+| Archivo | Responsabilidad |
+|---|---|
+| `src/escenas/EscenaBase.ts` (crear) | Base mínima del skill (`escuchar`, limpieza en `SHUTDOWN`). `// mínima; T-037 la completa` |
+| `src/escenas/Arranque.ts` (modificar) | Hereda de `EscenaBase`; tras el primer toque, pasa a `CallePrueba` |
+| `src/escenas/CallePrueba.ts` (crear) | Escena: calle, Mi vo, cámara, aplica intenciones y salto, aviso de fps, destello de Brazos |
+| `src/escenas/ControlesTactiles.ts` (crear) | Dibuja el joystick y los botones; conecta el input de Phaser con `ControlTactil` |
+| `src/controles/intenciones.ts` (crear) | Tipo `Intenciones` y utilidades |
+| `src/controles/joystick.ts` (crear) | Dirección con zona muerta e histéresis; tope de la perilla |
+| `src/controles/disposicion.ts` (crear) | Dónde va cada control según el ancho y los ajustes |
+| `src/controles/controlTactil.ts` (crear) | Asigna cada dedo a un control y llena las intenciones |
+| `src/movimiento/ajustes.json` (crear) | Valores por defecto (salto, caminar, botones, joystick) |
+| `src/movimiento/ajustes.ts` (crear) | Tipo `Ajustes`, validación y física derivada |
+| `src/movimiento/salto.ts` (crear) | Máquina del salto: coyote, búfer, corte, gravedad por fase |
+| `src/datos/calle-prueba.json` (crear) | Bloques de la calle de prueba |
+| `src/datos/plataformas.ts` (crear) | Validación de bloques y regla de alcance |
+| `src/plataforma/gestos.ts` (crear) | Cancela `gesturestart/change/end` |
+| `src/plataforma/vigiaFps.ts` (crear) | Detecta ~30 fps sostenidos, una sola vez |
+| `src/depurar/depurar.ts` (crear) | `?depurar`: `window.__juego` y arranque del panel |
+| `src/depurar/panelAjustes.ts` (crear) | Panel HTML con deslizadores y "Copiar valores" |
+| `src/main.ts` (modificar) | `activePointers`, `panicMax`, escenas, gestos, ajustes, depurar |
+| `index.html` (modificar) | `touch-action: none` en `#game` y `canvas` |
+| `e2e/tactil.ts` (crear) | Ayudante para despachar toques sintéticos de varios dedos |
+| `e2e/controles.e2e.ts` (crear) | e2e de controles, gestos, reinicios y `?depurar` |
+| `docs/diseno/ideas.md`, `docs/diseno/CAMBIOS.md` (modificar) | Agacharse y gestos de Brazos como ideas |
+
+Las unitarias van al lado de cada módulo (`*.test.ts`).
+
+---
+
+### Tarea 1: Base táctil y validación del e2e de varios dedos
+
+Es la primera porque valida el riesgo de las pruebas: si el truco del evento sintético no funciona con Phaser, el plan cambia (ver el paso 6).
+
+**Archivos:** crear `src/escenas/EscenaBase.ts`, `src/plataforma/gestos.ts` (+ test), `src/depurar/depurar.ts`, `e2e/tactil.ts` y `e2e/controles.e2e.ts`; modificar `src/main.ts`, `index.html` y `src/escenas/Arranque.ts`.
+
+**Interfaces:**
+- Produce: `abstract class EscenaBase extends Phaser.Scene` con `protected escuchar(em: Phaser.Events.EventEmitter, ev: string | symbol, fn: (...a: any[]) => void): void` (plantilla exacta del skill).
+- Produce: `bloquearGestos(doc: Pick<Document, 'addEventListener'>): void`.
+- Produce: `esModoDepurar(search: string): boolean` y `exponerJuego(game: Phaser.Game): void` (asigna `window.__juego`). `declare global { interface Window { __juego?: Phaser.Game } }`.
+- Produce (e2e): `type Dedo = { id: number; x: number; y: number }` con `x`, `y` en **coordenadas lógicas** del juego, y `tocar(page: Page, tipo: 'touchstart' | 'touchmove' | 'touchend' | 'touchcancel', dedos: Dedo[]): Promise<boolean>` (devuelve `defaultPrevented`).
+
+- [ ] **Paso 1: unitaria de `bloquearGestos`** en `src/plataforma/gestos.test.ts`, con un `doc` falso que guarda los listeners:
+  ```ts
+  it('cancela gesturestart, gesturechange y gestureend con listeners no pasivos', () => {
+    // doc falso: addEventListener(tipo, fn, opciones) guarda [tipo, fn, opciones]
+    bloquearGestos(doc);
+    expect(tipos).toEqual(['gesturestart', 'gesturechange', 'gestureend']);
+    expect(opciones.every((o) => o.passive === false)).toBe(true);
+    const e = { preventDefault: vi.fn() }; fn(e);
+    expect(e.preventDefault).toHaveBeenCalled();
+  });
+  ```
+- [ ] **Paso 2:** `npm test` → falla (no existe `gestos.ts`). Implementar `bloquearGestos`. `npm test` → pasa.
+- [ ] **Paso 3: base del juego.**
+  - `EscenaBase` con la plantilla del skill.
+  - `Arranque` hereda de `EscenaBase`, llama `super.init(data)` y usa `this.escuchar(this.scale, RESIZE, this.centrar)` en lugar de su `on`/`off` manual. Sin más cambios por ahora.
+  - `main.ts`: `input: { activePointers: 3 }`, `fps: { panicMax: 0 }`, `bloquearGestos(document)`, y `if (esModoDepurar(location.search)) exponerJuego(game)`.
+  - `index.html`: `#game, #game canvas { touch-action: none; }`.
+- [ ] **Paso 4: ayudante `tocar`** en `e2e/tactil.ts`.
+  - Convierte coordenadas lógicas a `clientX/clientY` con el `getBoundingClientRect()` del canvas y `__juego.scale.gameSize`.
+  - Despacha sobre el `canvas` un `Event(tipo, { bubbles: true, cancelable: true })` con `changedTouches` y `touches` definidos con `Object.defineProperty`. Cada toque lleva `identifier`, `clientX`, `clientY`, `pageX`, `pageY`, `screenX`, `screenY` y `target: canvas`.
+  - `new Touch()` no existe en este WebKit ("Illegal constructor").
+- [ ] **Paso 5: e2e de validación** en `e2e/controles.e2e.ts` (la página abre con `./?depurar`):
+  ```ts
+  test('dos dedos sintéticos quedan abajo a la vez en Phaser', async ({ page }) => {
+    await tocar(page, 'touchstart', [{ id: 1, x: 300, y: 500 }]);
+    await tocar(page, 'touchstart', [{ id: 2, x: 1100, y: 600 }]);
+    // pointers[0] es el ratón; los táctiles son 1..3
+    expect(await punterosAbajo(page)).toBe(2);
+    await tocar(page, 'touchend', [{ id: 1, x: 300, y: 500 }]);
+    expect(await punterosAbajo(page)).toBe(1);
+  });
+  test('arrastrar sobre el canvas no hace scroll ni deja pasar el gesto', async ({ page }) => {
+    // touchstart y touchmove regresan defaultPrevented === true; window.scrollY === 0
+    // getComputedStyle(canvas).touchAction === 'none' y lo mismo en #game
+  });
+  test('sin ?depurar no existe window.__juego', async ({ page }) => { /* ... */ });
+  ```
+- [ ] **Paso 6: correr `npm run test:e2e`.**
+  - Si "dos dedos" pasa, seguir.
+  - **Si no pasa después de dos intentos:** no forzarlo. Anotarlo en la bitácora, borrar ese test y avisar al orquestador. El plan sigue con el multitouch cubierto por las unitarias de `ControlTactil` (tarea 3) y la prueba manual, y los e2e de la tarea 5 usan un solo dedo a la vez.
+- [ ] **Paso 7:** `npm test`, `npm run build` y `npm run test:e2e` en verde (los e2e de T-003 siguen pasando). Commit: `T-004: agrega la base táctil y valida el e2e de varios dedos`.
+
+---
+
+### Tarea 2: Ajustes y salto (lógica pura)
+
+**Archivos:** crear `src/movimiento/ajustes.json`, `ajustes.ts` (+ test) y `salto.ts` (+ test).
+
+**Interfaces:**
+- Produce `Ajustes` (y el JSON con estos valores por defecto; en el tipo, todos son `number` o `boolean`):
+  ```ts
+  type Ajustes = {
+    salto: { alturaMax: 260; alturaMin: 70; tiempoSubida: 0.38; tiempoCaida: 0.27;
+             caidaMax: 1500; coyoteMs: 100; bufferMs: 130; apiceColgado: false };
+    caminar: { velocidad: 360 };
+    joystick: { radio: 75; activa: 0.25; suelta: 0.15; margenBorde: 48 };
+    botones: { radioToque: 75; radioDibujo: 60; margenAbajo: 40;
+               saltar: { derecha: 140; abajo: 130 }; brazos: { derecha: 310; abajo: 250 } };
+  };
+  ```
+  `derecha` y `abajo` son la distancia del centro del botón al borde derecho y al de abajo de la pantalla.
+- Produce `validarAjustes(datos: unknown): Ajustes` (lanza un error que nombra el campo, como `src/datos/index.ts`) y `AJUSTES_POR_DEFECTO: Readonly<Ajustes>`.
+- Produce `type Fisica = { gSubida: number; gBajada: number; v0: number; vCorte: number; caidaMax: number; coyoteMs: number; bufferMs: number; apiceColgado: boolean }` y `derivarFisica(salto: Ajustes['salto']): Fisica`, con `gSubida = 2H/tp²`, `v0 = 2H/tp`, `gBajada = 2H/td²` y `vCorte = √(2·gSubida·Hmin)`.
+- Produce `type EstadoSalto` (campos internos: `tiempoSinSuelo`, `tiempoBuffer`, `saltoUsado`, `enSueloAntes`), `crearEstadoSalto(): EstadoSalto`, `type SalidaSalto = { vy: number | null; gravedad: number; evento: 'salto' | 'aterrizaje' | null }` y:
+  ```ts
+  pasoSalto(e: EstadoSalto, enSuelo: boolean, vy: number, presionado: boolean,
+            sostenido: boolean, dtMs: number, f: Fisica, salida: SalidaSalto): SalidaSalto
+  ```
+  Escribe en `salida`, que el que llama reutiliza: cero asignaciones. `vy` negativo es hacia arriba (como en Phaser). `presionado` es el flanco del frame (se tocó Saltar); `sostenido`, que sigue abajo.
+
+Reglas de `pasoSalto`, en orden:
+1. `presionado` → `tiempoBuffer = bufferMs`; si no, `tiempoBuffer -= dtMs`.
+2. En suelo → `tiempoSinSuelo = 0` y `saltoUsado = false` (más `evento = 'aterrizaje'` si antes no estaba en suelo). En el aire → `tiempoSinSuelo += dtMs`.
+3. Puede saltar si `tiempoBuffer > 0` y (`enSuelo` o (`tiempoSinSuelo <= coyoteMs` y `!saltoUsado`)). Al saltar: `vy = -v0`, `saltoUsado = true`, `tiempoBuffer = 0` y `evento = 'salto'`.
+4. Si no saltó, `!sostenido` y `vy < -vCorte` → `salida.vy = -vCorte` (corte de la altura variable).
+5. Gravedad: `gSubida` si `vy < 0`; `gBajada` si no. Con `apiceColgado`, `sostenido` y `|vy| < 120`, la mitad.
+
+- [ ] **Paso 1: unitarias de ajustes** (`ajustes.test.ts`): el JSON pasa la validación; un campo faltante o no numérico lanza un error que lo nombra; `derivarFisica(AJUSTES_POR_DEFECTO.salto)` da `gSubida ≈ 3601`, `v0 ≈ 1368.4`, `gBajada ≈ 7133` y `vCorte ≈ 710` (`toBeCloseTo`, 0 decimales).
+- [ ] **Paso 2:** que falle → implementar → que pase.
+- [ ] **Paso 3: unitarias del salto** (`salto.test.ts`). Usan un ayudante de prueba `simular(f, sostenerMs, dtFrameMs)` que llama a `pasoSalto` por frame e integra la posición a 120 pasos fijos por segundo, como Arcade en la escena:
+  - `salta desde el suelo con vy = -v0 y emite 'salto'`;
+  - `coyote: salta a 100 ms de dejar el suelo, no a 101 ms` (pasos de `dtMs = 1`);
+  - `búfer: Saltar 130 ms antes de aterrizar salta al tocar suelo; 131 ms no`;
+  - `no hay doble salto: sin suelo, tras un salto, el coyote no aplica`;
+  - `toque corto ≈ alturaMin (±10 %) y mantener ≈ alturaMax (±3 %)`;
+  - `cae con gBajada > gSubida`;
+  - `la altura máxima es la misma con frames de 8.3, 16.7 y 33.3 ms (±2 %)`;
+  - `apiceColgado apagado no cambia la gravedad; encendido la reduce a la mitad cerca del ápice`.
+- [ ] **Paso 4:** que falle → implementar `salto.ts` → que pase.
+- [ ] **Paso 5:** `npm test`, `npm run build`. Commit: `T-004: agrega los ajustes y la lógica del salto`.
+
+---
+
+### Tarea 3: Intenciones, joystick, disposición y asignación de dedos (lógica pura)
+
+**Archivos:** crear en `src/controles/` `intenciones.ts`, `joystick.ts`, `disposicion.ts` y `controlTactil.ts`, cada uno con su test.
+
+**Interfaces:**
+- Consume: `Ajustes` (tarea 2).
+- Produce:
+  ```ts
+  type Intenciones = { direccion: -1 | 0 | 1; saltarSostenido: boolean;
+                       saltarPresionado: boolean; brazosPresionado: boolean };
+  crearIntenciones(): Intenciones
+  limpiarFlancos(i: Intenciones): void      // *Presionado = false; se llama al final de cada update
+  direccionJoystick(dx: number, previa: -1 | 0 | 1, radio: number, activa: number, suelta: number): -1 | 0 | 1
+  limitarPerilla(dx: number, dy: number, radio: number, salida: { x: number; y: number }): void
+  type Circulo = { x: number; y: number; r: number };
+  type Disposicion = { zonaJoystick: { x: number; y: number; ancho: number; alto: number };
+                       saltar: Circulo; brazos: Circulo };
+  calcularDisposicion(ancho: number, alto: number, a: Ajustes, salida: Disposicion): void
+  class ControlTactil {
+    constructor(intenciones: Intenciones, ajustes: Ajustes);
+    readonly joystick: { id: number; origenX: number; origenY: number; dx: number; dy: number }; // id -1 = libre
+    abajo(id: number, x: number, y: number, d: Disposicion): void;
+    mover(id: number, x: number, y: number): void;
+    arriba(id: number): void;
+    soltarTodo(): void;
+    revisar(estaAbajo: (id: number) => boolean): void;  // antídoto anti-pegado
+  }
+  ```
+- Disposición:
+  - zona del joystick: de `x = margenBorde` a `ancho / 2`, de `y = margenAbajo` a `alto - margenAbajo`;
+  - `saltar`: `{ x: ancho - 140, y: alto - 130, r: radioToque }`; `brazos`: `{ x: ancho - 310, y: alto - 250, r: radioToque }`.
+
+- [ ] **Paso 1: unitarias** (nombres y asserts clave):
+  - `direccionJoystick`: `dx = 0.2·radio` desde 0 → 0; `0.26·radio` → 1; ya en 1, `0.16·radio` → 1 y `0.14·radio` → 0; lo mismo hacia −1.
+  - `limitarPerilla`: `(300, 0)` con radio 75 → `(75, 0)`; `(30, 40)` queda igual.
+  - `calcularDisposicion`: con 1280 y 1872 de ancho, `saltar` y `brazos` no se solapan (distancia entre centros − 2r ≥ 40); ningún círculo baja de `alto - 40`; la zona del joystick empieza en 48.
+  - `ControlTactil`:
+    - `dedo en el joystick a la derecha → direccion 1; arriba → 0`;
+    - `dedo en saltar → saltarPresionado y saltarSostenido; arriba → sostenido false`;
+    - `joystick y saltar a la vez con dos ids no se estorban`;
+    - **(foco 1)** `dedo que empieza en el joystick y se mueve sobre saltar no salta`;
+    - **(foco 2)** `un tercer dedo en la zona del joystick ocupada no le roba el control`;
+    - `un toque en la franja de 48 px del borde no activa el joystick`;
+    - `brazos da brazosPresionado una vez por toque`;
+    - `revisar suelta el joystick si su dedo ya no está abajo`;
+    - `soltarTodo deja direccion 0 y nada sostenido`.
+- [ ] **Paso 2:** que falle → implementar → que pase.
+- [ ] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega el joystick y la asignación de dedos`.
+
+---
+
+### Tarea 4: Calle de prueba y regla de plataformas (datos + lógica pura)
+
+**Archivos:** crear `src/datos/calle-prueba.json`, `src/datos/plataformas.ts` y `src/datos/plataformas.test.ts`.
+
+**Interfaces:**
+- Consume: `Fisica`, `derivarFisica`, `AJUSTES_POR_DEFECTO` (tarea 2).
+- Produce:
+  ```ts
+  type Bloque = { nombre: string; x: number; ancho: number; alto: number; sobre?: string };
+  validarBloques(datos: unknown): Bloque[]                // forma: textos, números > 0, nombres únicos, `sobre` existente
+  type Limites = { escalonMax: number; escalonCorto: number; alturaMax: number; distanciaMax: number; grosorMin: number };
+  limitesDeSalto(a: Ajustes): Limites                     // alturaMax 400 y grosorMin 32 fijos
+  alturaSuperior(b: Bloque, todos: readonly Bloque[]): number      // alto + altura superior del bloque de abajo
+  revisarCalle(bloques: readonly Bloque[], l: Limites): string[]   // errores en español; [] si todo bien
+  esDeToqueCorto(b: Bloque, todos: readonly Bloque[], l: Limites): boolean
+  BLOQUES_CALLE_PRUEBA: readonly Bloque[]
+  ```
+- Límites:
+  - `escalonMax = 0.85 · alturaMax del salto`; `escalonCorto = 0.85 · alturaMin`;
+  - `distanciaMax = 0.85 · velocidad · (tiempoSubida + tiempoCaida)`.
+- `revisarCalle` reporta:
+  - un bloque `sobre` otro que se sale de él en `x`;
+  - `alto < grosorMin`;
+  - altura superior `> alturaMax`;
+  - un bloque **inalcanzable**: alcance como búsqueda en anchura desde la calle (altura 0, todo `x`). Un bloque B se alcanza desde una superficie S alcanzada si `alturaSuperior(B) − altura(S) ≤ escalonMax` y la distancia horizontal entre sus bordes es `≤ distanciaMax` (0 si se tocan o se solapan). Desde la calle, solo cuenta la diferencia de altura.
+- Calle de prueba (≈ 4800 px de ancho; los valores exactos los afina quien implemente, siempre que la unitaria pase):
+  - banqueta (alto 40, larga);
+  - bote (60 sobre la banqueta);
+  - auto (140, en la calle);
+  - casa (340 sobre la banqueta: techo a 380);
+  - pórtico (140 sobre la banqueta, pegado a la casa: 180);
+  - dos o tres adornos de Halloween de ejemplo: calabaza, lápida y cerca.
+
+- [ ] **Paso 1: unitarias:**
+  - `la calle de prueba cumple la regla` (`revisarCalle(BLOQUES_CALLE_PRUEBA, limitesDeSalto(AJUSTES_POR_DEFECTO))` → `[]`);
+  - `un bloque de 450 rompe la altura máxima`;
+  - `un bloque a 230 sobre la calle sin escalón intermedio es inalcanzable`;
+  - `el techo es alcanzable solo encadenando el pórtico` (sin el pórtico, error);
+  - `un bloque de 20 de alto rompe el grosor`;
+  - `la banqueta es de toque corto y el auto no`;
+  - `si el salto crece, los límites crecen` (alturaMax 320 → escalonMax 272);
+  - `validarBloques rechaza un sobre inexistente y nombres repetidos`.
+- [ ] **Paso 2:** que falle → implementar → que pase.
+- [ ] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega la calle de prueba y su regla de plataformas`.
+
+---
+
+### Tarea 5: Escena `CallePrueba` y controles en pantalla
+
+**Archivos:** crear `src/escenas/CallePrueba.ts`, `src/escenas/ControlesTactiles.ts` y `src/plataforma/vigiaFps.ts` (+ test); modificar `src/escenas/Arranque.ts`, `src/main.ts` y `e2e/controles.e2e.ts`.
+
+**Interfaces:**
+- Consume: todo lo anterior. Los ajustes vigentes se leen de `this.registry.get('ajustes') as Ajustes`; `main.ts` los pone con `game.registry.set('ajustes', structuredClone(AJUSTES_POR_DEFECTO))`.
+- Produce `class VigiaFps { constructor(umbralFps = 40, sostenidoMs = 3000); registrar(dtMs: number): boolean }`: `true` una sola vez, cuando el fps (`1000 / dtMs`) se queda bajo el umbral durante `sostenidoMs` seguidos. Un frame bueno reinicia la cuenta.
+- Produce `class CallePrueba extends EscenaBase` (key `'CallePrueba'`). Campos públicos de solo lectura para los e2e: `miVo` (rectángulo con cuerpo Arcade), `intenciones`, `controles` y `ultimoEvento` (el último `evento` del salto).
+- Produce `class ControlesTactiles` con `constructor(escena: EscenaBase, control: ControlTactil, ajustes: Ajustes)`, `reacomodar(ancho: number, alto: number): void` y `revisar(): void`.
+- Evento de cambio de ajustes: `'ajustes-cambiados'` en `game.events` (lo emite el panel de la tarea 6).
+
+Comportamiento:
+- **Física:** `super({ key: 'CallePrueba', physics: { default: 'arcade', arcade: { fps: 120, gravity: { x: 0, y: 0 } } } })`.
+- **Mundo:**
+  - calle con su parte superior en `y = 620`; mundo de `x` 0 a 4800 y de `y` −400 a 720;
+  - bloques estáticos desde `BLOQUES_CALLE_PRUEBA` (grises, con su nombre en texto pequeño);
+  - Mi vo: rectángulo naranja de 90×200, `setMaxVelocity(velocidad, caidaMax)`, `bounce` 0, colisiona con calle y bloques.
+- **`update(t, delta)`:**
+  1. `controles.revisar()`;
+  2. `vx = direccion · velocidad`;
+  3. `pasoSalto(...)` con `body.blocked.down` y `body.velocity.y`; aplica `salida.vy` si no es `null` y `setGravityY(salida.gravedad)`;
+  4. si `brazosPresionado`: destello en Mi vo y el texto "¡Brazos!" con un tween corto;
+  5. `vigiaFps.registrar(delta)` → aviso de una vez arriba al centro: "Modo de bajo consumo: el juego puede ir a 30 fps";
+  6. `limpiarFlancos`.
+
+  Sin asignaciones: `salida`, `disposicion` e `intenciones` son campos que se crean en `create()`.
+- **Cámara:**
+  - `startFollow(miVo, true, 1, 0.15)`, con `setBounds(0, -400, 4800, 1120)` y zona muerta de `ancho·0.25` × 300;
+  - con esa zona muerta, los saltitos no mueven la cámara y el techo sí;
+  - quien implemente puede afinar estos valores sin cambiar la idea.
+- **Controles:**
+  - `this.input.on('pointerdown' | 'pointermove' | 'pointerup', ...)` traduce `pointer.x/y` (de pantalla, no de mundo) a `ControlTactil`;
+  - los gráficos van con `setScrollFactor(0)` y una profundidad alta;
+  - joystick: una base tenue fija en reposo en la zona del joystick; al tocar, base y perilla aparecen donde cayó el dedo;
+  - botones: círculo con su letra, más claro mientras se presiona.
+- **Listeners** con `escuchar()`:
+  - `scale` `RESIZE` → `calcularDisposicion` + `controles.reacomodar` (sin soltar los dedos);
+  - `game.events` `Phaser.Core.Events.HIDDEN` y `BLUR` → `soltarTodo()`;
+  - `game.events` `'ajustes-cambiados'` → recalcular la física, `setMaxVelocity` y la disposición;
+  - `input` `GAME_OUT` → `soltarTodo()`. Este emisor muere con la escena, así que basta con `this.input.on`.
+- **`init()`** reinicia el estado (ESC-03): `crearEstadoSalto()`, intenciones nuevas y vigía nueva.
+- **`Arranque`:** después del toque que hace sonar la prueba (o de mostrar el motivo sin sonido), `this.time.delayedCall(800, () => this.scene.start('CallePrueba'))`. En `main.ts`, `scene: [Arranque, CallePrueba]`.
+
+- [ ] **Paso 1: unitaria de `VigiaFps`:**
+  - `40 frames de 33 ms (≈ 1.3 s) no avisan; 3 s seguidos sí, una sola vez`;
+  - `un frame de 16 ms en medio reinicia la cuenta`.
+- [ ] **Paso 2:** que falle → implementar → que pase.
+- [ ] **Paso 3: e2e** (en `e2e/controles.e2e.ts`; un ayudante `entrarALaCalle(page)` abre `./?depurar`, toca y espera a que `CallePrueba` esté activa). Si la tarea 1 descartó los dos dedos, los casos de dos dedos se omiten con la nota del paso 6 de esa tarea.
+  - `tras el primer toque llega a la calle de prueba`;
+  - `joystick a la derecha mueve a Mi vo a la derecha y al soltar frena en el siguiente frame` (`velocity.x` 360 → 0);
+  - `joystick a la izquierda mueve a la izquierda`;
+  - `Saltar despega (velocity.y < 0) y Mi vo vuelve al suelo` (`blocked.down`);
+  - `joystick y Saltar a la vez: avanza y despega`;
+  - **(foco 1)** `deslizar del joystick hasta Saltar no salta`;
+  - `touchcancel suelta el joystick` (`direccion` 0);
+  - **(foco 3)** `con el dedo en el joystick, cambiar el tamaño de la página no lo suelta` (`page.setViewportSize` → `direccion` sigue en 1);
+  - **(foco 4)** `HIDDEN suelta todo` (`__juego.events.emit('hidden')` → `direccion` 0);
+  - **(foco 5)** `reiniciar la escena 5 veces no duplica listeners`: `listenerCount` de `scale` `'resize'` y de `game.events` `'hidden'`, `'blur'` y `'ajustes-cambiados'` igual que tras el primer arranque. Además, un toque en Saltar sigue dando un solo `'salto'`;
+  - `la franja de 48 px del borde izquierdo no activa el joystick`.
+- [ ] **Paso 4:** que falle → implementar `CallePrueba`, `ControlesTactiles` y los cambios en `Arranque` y `main.ts` → que pase.
+- [ ] **Paso 5:** revisar a mano con `npm run dev -- --host` desde la Mac (y el iPhone si está a la mano), con el checklist de PR del skill `rendimiento-y-memoria`.
+- [ ] **Paso 6:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega la calle de prueba con controles táctiles`.
+
+---
+
+### Tarea 6: Panel de `?depurar`
+
+**Archivos:** crear `src/depurar/panelAjustes.ts`; modificar `src/depurar/depurar.ts`, `src/main.ts` y `e2e/controles.e2e.ts`.
+
+**Interfaces:**
+- Consume: `Ajustes` (el objeto vivo de `game.registry`) y el evento `'ajustes-cambiados'`.
+- Produce: `montarPanel(game: Phaser.Game, ajustes: Ajustes, doc: Document = document): void`, que se llama desde `main.ts` solo con `?depurar`.
+
+Comportamiento:
+- Botón "⚙︎" fijo arriba al centro (fuera de las franjas de 40 px de arriba y de 48 px de los lados). Abre y cierra un panel HTML encima del juego.
+- El panel lleva `touch-action: auto` y `user-select: text`, para que sus controles funcionen a pesar de las reglas de `body`. Mientras está abierto, los toques en él no llegan al juego.
+- Deslizadores (`input type="range"`), con su valor a un lado:
+  - altura máxima (150–400) y mínima (30–150);
+  - tiempo de subida (0.2–0.6) y de caída (0.15–0.5);
+  - velocidad (200–600);
+  - coyote (0–200) y búfer (0–250);
+  - radio de toque (50–110);
+  - `derecha` y `abajo` de cada botón (60–500);
+  - además, una casilla de "ápice colgado".
+- Cada cambio escribe en el objeto `ajustes` y emite `'ajustes-cambiados'`: el efecto es inmediato, sin recargar.
+- "Copiar valores": `navigator.clipboard?.writeText(JSON.stringify(ajustes, null, 2))`. Si no existe o falla (página en `http`), muestra el JSON en un `<textarea>` seleccionable con la nota "Cópialo a mano".
+
+- [ ] **Paso 1: e2e:**
+  - `con ?depurar aparece el botón y abre el panel`;
+  - `sin ?depurar no hay panel`;
+  - `cambiar la velocidad en el panel cambia la velocidad de Mi vo al instante` (fijar el range a 500 y disparar `input` → joystick a la derecha → `velocity.x` 500);
+  - `Copiar valores sin portapapeles muestra el JSON`: borrar `navigator.clipboard` con `addInitScript`; el `textarea` contiene `"alturaMax"`.
+- [ ] **Paso 2:** que falle → implementar → que pase.
+- [ ] **Paso 3:** `npm test`, `npm run build`, `npm run test:e2e`. Commit: `T-004: agrega el panel de ajustes de ?depurar`.
+
+---
+
+### Tarea 7: Documentación, verificación y PR
+
+**Archivos:** modificar `docs/diseno/ideas.md`, `docs/diseno/CAMBIOS.md` y `docs/tareas/T-004-prueba-controles.md` (criterios de esta rama y bitácora).
+
+- [ ] **Paso 1:** en `ideas.md`, dos ideas:
+  - **agacharse** con el joystick hacia abajo;
+  - **gestos de Brazos**: toque = golpe, doble toque = patada, mantener = agarrar.
+
+  En `CAMBIOS.md`, una línea con fecha y el porqué. Ninguna cambia el diseño vigente.
+- [ ] **Paso 2:** bitácora de T-004:
+  - el resultado del paso 6 de la tarea 1 (si el e2e de dos dedos funcionó);
+  - cualquier desvío del plan.
+- [ ] **Paso 3:** verificación final: `npm test`, `npm run test:e2e` y `npm run build` en verde. `superpowers:verification-before-completion`.
+- [ ] **Paso 4:** revisión del branch completo con `code-reviewer-opus55`, que lleva el checklist del skill `rendimiento-y-memoria` y el foco de revisión de este plan.
+- [ ] **Paso 5:** push y PR con la tabla de prueba manual de abajo. El merge lo hace el product owner, tras su ronda en el iPhone.
+
+## Pruebas
+
+### Unitarias (`npm test`)
+
+| Archivo | Qué cubre |
+|---|---|
+| `src/plataforma/gestos.test.ts` | Cancela los tres eventos de gesto, sin listeners pasivos |
+| `src/movimiento/ajustes.test.ts` | Validación del JSON y física derivada (3601, 1368, 7133, 710) |
+| `src/movimiento/salto.test.ts` | Coyote 100/101, búfer 130/131, sin doble salto, toque corto contra mantener, gravedad por fase, independencia del framerate, ápice |
+| `src/controles/joystick.test.ts` | Zona muerta con histéresis y tope de la perilla |
+| `src/controles/disposicion.test.ts` | Márgenes y sin solapes en 1280 y 1872 |
+| `src/controles/controlTactil.test.ts` | Un dedo por control, dedo que se desliza (foco 1), tercer dedo (foco 2), franja del borde, antídoto y `soltarTodo` |
+| `src/datos/plataformas.test.ts` | La calle de prueba cumple la regla; alcance encadenado; límites que crecen con el salto; validación |
+| `src/plataforma/vigiaFps.test.ts` | Aviso de 30 fps sostenidos, una sola vez |
+
+### e2e (`npm run test:e2e`, `e2e/controles.e2e.ts`)
+
+- Dos dedos sintéticos a la vez en Phaser (valida el truco; si no funciona, ver tarea 1, paso 6).
+- Sin scroll ni gestos del navegador: `defaultPrevented`, `scrollY === 0` y `touch-action`.
+- Arranque → calle; caminar, frenar, saltar, joystick y Saltar a la vez, deslizar a Saltar sin saltar, `touchcancel`, cambio de tamaño con el dedo abajo, `HIDDEN`, 5 reinicios sin listeners duplicados y la franja del borde.
+- `?depurar`: el panel aparece solo con el parámetro, aplica cambios al instante y tiene el respaldo de "Copiar valores".
+- Los e2e de T-003 siguen pasando.
+
+### Manual en el iPhone 13 (va en la descripción del PR)
+
+En la red local (`npm run dev -- --host`): primero en Safari y después desde el ícono de la pantalla de inicio agregado desde esa URL. Los casos marcados con ★ se repiten en los dos modos.
+
+| # | Paso | Resultado esperado |
+|---|---|---|
+| 1 ★ | Mover el joystick a la derecha y luego a la izquierda | Mi vo arranca en ese instante, sin lag |
+| 2 ★ | Soltar el joystick mientras camina | Frena en seco, sin resbalar |
+| 3 | Un toque corto en Saltar | Saltito: sube a la banqueta, no al auto |
+| 4 | Mantener Saltar junto al auto y al pórtico | Sube a los dos |
+| 5 | Desde el pórtico, saltar al techo | Llega encadenando saltos; la cámara sube con ella |
+| 6 ★ | Caminar y saltar con los dos pulgares a la vez, 2 minutos seguidos | Nunca se traba ni ignora un dedo |
+| 7 | Tocar Brazos mientras caminas | Destello y "¡Brazos!", sin frenar |
+| 8 ★ | Usar el joystick cerca del borde izquierdo | La página no regresa ni se mueve |
+| 9 | Empezar a arrastrar desde el borde mismo de la pantalla | Anotar si Safari va hacia atrás (en Safari se espera que sí; en la pantalla de inicio, no) |
+| 10 | Pellizcar, doble toque rápido y mantener un dedo 30 s | Sin zoom, lupa, selección ni menú |
+| 11 | Deslizar desde arriba y desde abajo a mitad del juego, y volver | Nada queda pegado |
+| 12 | Abrir el Centro de control o recibir una notificación con un dedo abajo | Al volver, joystick y botones están sueltos |
+| 13 | Ir a la pantalla de inicio del iPhone y regresar | Sin cámara lenta; controles sueltos |
+| 14 | En Safari, hacer que las barras aparezcan o se escondan mientras caminas | Se reacomoda sin soltar el joystick |
+| 15 | Activar el modo de bajo consumo y jugar 5 s | Aparece el aviso de 30 fps una vez |
+| 16 | Mirar el rectángulo de Mi vo junto a las cajas | Anotar si el tamaño se siente correcto para el personaje |
+| 17 | Con `?depurar`, cambiar la altura, los tiempos y la velocidad hasta que se sienta bien; "Copiar valores" | Efecto inmediato; el JSON se copia o aparece para copiarlo a mano |
+| 18 | Veredicto | Plan A, A′ o B, con el porqué. Se anota en la bitácora |
+
+Por cada fila que falle, el agente responde si se corrige con ajustes o si es casi imposible en web (ver "Qué es falla").
+
+### Capas que no aplican
+
+Ninguna: las tres aplican.
+
+## Modelo y esfuerzo
+
+| Paso o subagente | Modelo | Esfuerzo | Por qué |
+|---|---|---|---|
+| Orquestación, decisiones y PR (esta sesión) | Opus | `high` | Referencia por rol |
+| Tarea 1 (base táctil y validación del e2e) | Sonnet | `high` | Sigue una receta, pero el truco del evento sintético es un riesgo: necesita razonar si falla |
+| Tarea 2 (ajustes y salto) | Opus | `medium` | Es física; un error en coyote o búfer se siente aunque los tests pasen. Las fórmulas ya están dadas, así que no hace falta `high` |
+| Tarea 3 (joystick y dedos) | Sonnet | `medium` | Lógica pura con interfaces y casos ya definidos |
+| Tarea 4 (calle y regla) | Sonnet | `medium` | Búsqueda en anchura sencilla con los casos ya definidos |
+| Tarea 5 (escena y controles) | Opus | `high` | Integra todo: input, física, cámara, listeners y las reglas de memoria. Es donde más fallas sutiles caben |
+| Tarea 6 (panel `?depurar`) | Sonnet | `medium` | DOM sencillo con e2e definidos |
+| Tarea 7, pasos 1–2 (docs y bitácora) | Haiku | `low` | Mecánico |
+| Revisión de cada tarea (spec y calidad) | Sonnet | `medium` | Una puerta barata entre tareas; la revisión fuerte va al final |
+| Revisión final del branch | Opus (`code-reviewer-opus55`) | `high` | Referencia por rol |
+
+No se sugiere Fable: el riesgo está en la sensación en el iPhone, no en la complejidad del código. Si la tarea 5 falla dos veces con Opus, se escala según `docs/planes/README.md`.
+
+## Riesgos y dudas del plan
+
+- **El truco del evento sintético** puede no funcionar con Phaser. La tarea 1 lo valida primero y trae la alternativa.
+- **El orden entre la física y `update()`:** Arcade avanza en el evento `UPDATE` de la escena, antes de `update()`, así que las intenciones se aplican al paso siguiente (≤ 1 frame). Si en el iPhone se siente lag por eso, se mueven al evento `PRE_UPDATE`. Se anota en la bitácora si pasa.
+- **Los valores de cámara y de los botones son estimaciones.** Por eso existe el panel. Afinar no es un desvío del plan.
