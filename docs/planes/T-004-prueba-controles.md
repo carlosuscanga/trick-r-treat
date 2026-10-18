@@ -415,7 +415,7 @@ Reglas de `pasoSalto`, en orden:
   - zona del joystick: de `x = margenBorde` a `ancho / 2`, de `y = margenAbajo` a `alto - margenAbajo`;
   - `saltar`: `{ x: ancho - 140, y: alto - 130, r: radioToque }`; `brazos`: `{ x: ancho - 310, y: alto - 250, r: radioToque }`.
 
-- [ ] **Paso 1: unitarias** (nombres y asserts clave):
+- [x] **Paso 1: unitarias** (nombres y asserts clave):
   - `direccionJoystick`: `dx = 0.2·radio` desde 0 → 0; `0.26·radio` → 1; ya en 1, `0.16·radio` → 1 y `0.14·radio` → 0; lo mismo hacia −1.
   - `limitarPerilla`: `(300, 0)` con radio 75 → `(75, 0)`; `(30, 40)` queda igual.
   - `calcularDisposicion`: con 1280 y 1872 de ancho, `saltar` y `brazos` no se solapan (distancia entre centros − 2r ≥ 40); ningún círculo baja de `alto - 40`; la zona del joystick empieza en 48.
@@ -429,8 +429,8 @@ Reglas de `pasoSalto`, en orden:
     - `brazos da brazosPresionado una vez por toque`;
     - `revisar suelta el joystick si su dedo ya no está abajo`;
     - `soltarTodo deja direccion 0 y nada sostenido`.
-- [ ] **Paso 2:** que falle → implementar → que pase.
-- [ ] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega el joystick y la asignación de dedos`.
+- [x] **Paso 2:** que falle → implementar → que pase.
+- [x] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega el joystick y la asignación de dedos`.
 
 ---
 
