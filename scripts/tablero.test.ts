@@ -253,6 +253,28 @@ describe('reemplazarTablas', () => {
   });
 });
 
+describe('casos raros del frontmatter', () => {
+  it('rechaza claves repetidas y comentarios con #', () => {
+    expect(() => leerFrontmatter('---\nid: T-001\nid: T-002\n---')).toThrow('aparece dos veces');
+    expect(() => leerFrontmatter('---\nplan: null  # o requerido\n---')).toThrow('no admite comentarios');
+  });
+
+  it('acepta # dentro de una palabra y quita comillas en las listas', () => {
+    expect(leerFrontmatter('---\ntitulo: Paso C#\ndepende: ["T-001", \'T-002\']\n---')).toEqual({
+      titulo: 'Paso C#',
+      depende: ['T-001', 'T-002'],
+    });
+  });
+
+  it('rechaza dependencias repetidas', () => {
+    expect(
+      problemasDe(() =>
+        leerTareas([tarea('T-001-algo.md', { depende: '[T-002, T-002]' }), tarea('T-002-otra.md')], []),
+      ),
+    ).toEqual(['T-001-algo.md: `depende` tiene IDs repetidos']);
+  });
+});
+
 describe('generarTablero', () => {
   it('no genera nada si hay datos inválidos', () => {
     expect(() => generarTablero(README, [tarea('T-001-algo.md', { estado: 'lista' })], [])).toThrow(ErrorTablero);

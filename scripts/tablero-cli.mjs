@@ -1,5 +1,6 @@
 // `npm run tablero`: regenera las tablas de docs/tareas/README.md desde el
-// frontmatter de cada tarea. La lógica y las validaciones están en tablero.ts
+// frontmatter de cada tarea. Con `-- --revisar` no escribe nada: solo falla si
+// el tablero está desfasado (va antes de un push directo a main). La lógica y las validaciones están en tablero.ts
 // (Node 24 lo corre directo, sin compilar).
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { generarTablero } from './tablero.ts';
@@ -9,7 +10,7 @@ const planes = new URL('../docs/planes/', import.meta.url);
 const readme = new URL('README.md', tareas);
 
 const archivos = readdirSync(tareas)
-  .filter((nombre) => /^T-\d{3}-.*\.md$/.test(nombre))
+  .filter((nombre) => /^T-.*\.md$/.test(nombre)) // igual que el glob `T-*.md` del test; el nombre se valida después
   .map((nombre) => ({ nombre, texto: readFileSync(new URL(nombre, tareas), 'utf8') }));
 const rutasDePlanes = readdirSync(planes)
   .filter((nombre) => nombre.endsWith('.md'))
@@ -20,6 +21,9 @@ try {
   const despues = generarTablero(antes, archivos, rutasDePlanes);
   if (despues === antes) {
     console.log('El tablero ya estaba al día.');
+  } else if (process.argv.includes('--revisar')) {
+    console.error('El tablero está desfasado: corre `npm run tablero` y haz commit del README.');
+    process.exitCode = 1;
   } else {
     writeFileSync(readme, despues);
     console.log('Tablero actualizado: docs/tareas/README.md');

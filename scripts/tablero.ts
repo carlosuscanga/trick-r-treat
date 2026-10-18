@@ -56,6 +56,8 @@ export function leerFrontmatter(texto: string): Record<string, Valor> {
     if (linea.trim() === '') continue;
     const partes = /^([a-z_]+):\s*(.*)$/.exec(linea);
     if (!partes) throw new Error(`línea del frontmatter que no se entiende: "${linea}"`);
+    if (partes[1] in datos) throw new Error(`\`${partes[1]}\` aparece dos veces en el frontmatter`);
+    if (/(^|\s)#/.test(partes[2])) throw new Error(`el frontmatter no admite comentarios con #: "${linea}"`);
     datos[partes[1]] = leerValor(partes[2].trim());
   }
   return datos;
@@ -67,11 +69,15 @@ function leerValor(crudo: string): Valor {
     return crudo
       .slice(1, -1)
       .split(',')
-      .map((parte) => parte.trim())
+      .map((parte) => sinComillas(parte.trim()))
       .filter((parte) => parte !== '');
   }
-  const comillas = /^(["'])(.*)\1$/.exec(crudo);
-  return comillas ? comillas[2] : crudo;
+  return sinComillas(crudo);
+}
+
+function sinComillas(texto: string): string {
+  const comillas = /^(["'])(.*)\1$/.exec(texto);
+  return comillas ? comillas[2] : texto;
 }
 
 /** Lee y valida todas las tareas. `planes` son las rutas `docs/planes/….md` que existen. */
@@ -142,6 +148,9 @@ export function leerTareas(archivos: ArchivoTarea[], planes: readonly string[]):
     ids.add(tarea.id);
   }
   for (const tarea of tareas) {
+    if (new Set(tarea.depende).size !== tarea.depende.length) {
+      problemas.push(`${tarea.nombre}: \`depende\` tiene IDs repetidos`);
+    }
     for (const dependencia of tarea.depende) {
       if (dependencia === tarea.id) problemas.push(`${tarea.nombre}: depende de sí misma`);
       else if (!ids.has(dependencia)) problemas.push(`${tarea.nombre}: depende de ${dependencia}, que no existe`);
