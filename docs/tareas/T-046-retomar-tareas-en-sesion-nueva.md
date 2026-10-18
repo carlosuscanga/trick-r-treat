@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: media
 depende: []
-plan: null
+plan: docs/planes/T-046-retomar-tareas-en-sesion-nueva.md
 ---
 
 ## Qué
@@ -26,7 +26,7 @@ Hoy "Estado actual" mezcla lo vigente con el historial de cada sesión, y crece.
 
 - [ ] "Estado actual" queda en menos de 15 líneas y el historial está en `docs/tareas/historial.md`, sin perder contenido.
 - [ ] La plantilla de tarea y T-004 tienen `rama:` y `worktree:`. `docs/README.md` ("Trabajo en paralelo") dice cuándo se llenan y cuándo se vacían.
-- [ ] `docs/README.md` tiene el protocolo "Retomar T-NNN" y `CLAUDE.md` apunta a él.
+- [x] `docs/README.md` tiene el protocolo "Retomar T-NNN" y `CLAUDE.md` apunta a él.
 - [ ] Prueba: una sesión nueva con "retoma T-004" llega al worktree y al paso siguiente del plan leyendo solo el archivo de la tarea, el plan y la bitácora (anotado en la bitácora).
 - [ ] Pruebas: no aplican unitarias ni e2e porque es un cambio solo de docs. La prueba manual es el criterio anterior.
 
@@ -34,3 +34,6 @@ Hoy "Estado actual" mezcla lo vigente con el historial de cada sesión, y crece.
 
 - 2026-10-17: creada. El product owner preguntó si retomar con "retoma T-NNN" era eficiente. Se hace al abrir la siguiente ventana de uso, porque la actual estaba al 96%.
 - 2026-10-17: incluir en el protocolo un `git fetch` después de cada push directo a `main`. Ese push va por URL con la deploy key, no por `origin`, así que `origin/main` local queda viejo y el editor muestra "1 adelante" aunque el push sí se hizo.
+- 2026-10-17: arranca. Worktree creado; `npm install` y `npm run build` limpios. **Choque con el flujo:** la tarea pide partir "Estado actual" y editar el archivo de T-004, y las ramas no pueden tocar ninguno de los dos. **Decisión del product owner** (plan aprobado aquí, sin Plannotator): las reglas van por PR, y el "Estado actual", el historial, la plantilla y los frontmatter van directo a `main` después del merge. Sin subagentes; todo lo hace la sesión principal (Opus).
+- 2026-10-17: pasos 1 a 4 del plan hechos en la rama: protocolo "Retomar T-NNN", cuándo se llenan y se vacían `rama:` y `worktree:`, `git fetch` pegado al comando de push directo, y la regla de `CLAUDE.md`. Al retomar no se lee `.local/notas.md`: el criterio pide leer solo la tarea, el plan y la bitácora. Los criterios 1, 2 y 4 se cumplen en `main` después del merge (paso 7 del plan) y se marcan al cerrar, como dice el paso 6 de "Trabajo en paralelo".
+- 2026-10-17: **desvío del plan:** también cambia la regla de cierre de sesión (`CLAUDE.md` y "Al terminar" en `docs/README.md`). "Qué se hizo" ahora va arriba de `historial.md`, no en "Estado actual". Sin esto, el "Estado actual" volvería a crecer en cada sesión. Plan actualizado (paso 4).
