@@ -2,7 +2,7 @@
 id: T-005
 titulo: Investigar minijuegos de referencia
 tipo: investigacion
-hito: H1
+hito: H2
 estado: pendiente
 prioridad: alta
 depende: []
@@ -28,3 +28,4 @@ El diseño lo pide antes de elegir minijuegos. Es la base para decidir cuáles 4
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1. No depende de nada: puede arrancar desde ya, en paralelo al código.
+- 2026-10-18: pasa de H1 a H2 al cerrar H1 (decisión del product owner): no es parte del esqueleto y solo bloquea T-023 (H4).

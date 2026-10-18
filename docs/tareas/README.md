@@ -6,9 +6,9 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Solo lo vigente. Se actualiza al cerrar cada sesión, y lo que se hizo en cada una va arriba de [`historial.md`](historial.md). Para seguir una sola tarea basta con "retoma T-NNN" ([`docs/README.md`](../README.md), "Sesiones con Claude").
 
-- **Fase:** H1 · Esqueleto en el iPhone, con su objetivo cumplido: el rectángulo camina y salta en el iPhone desde Pages (T-004, **plan A**). Quedan T-036, T-005 y T-030, que no bloquean; la ruta crítica sigue con T-037.
-- **En curso:** T-036 (presupuesto de bundle en CI), para cerrar H1, y T-047 (tablero generado desde el frontmatter), que salió de la retro de proceso del 2026-10-18. T-005 y T-030 pasarán a H2 y después se pone el tag `hito-h1`.
-- **Siguiente paso:** T-037 (`EscenaBase`, `?depurar` y e2e de fugas), que sigue en la ruta crítica. En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
+- **Fase:** H2 · Bucle completo. H1 cerró el 2026-10-18 (tag `hito-h1`): el rectángulo camina y salta en el iPhone desde Pages (T-004, **plan A**), y el CI ya tiene presupuesto de bundle (T-036). T-005, T-030 y T-047 pasaron a H2.
+- **En curso:** T-047 (tablero generado desde el frontmatter), que salió de la retro de proceso del 2026-10-18.
+- **Siguiente paso:** T-037 (`EscenaBase`, `?depurar` y e2e de fugas), que sigue en la ruta crítica. El JS inicial pesa 317.6 de 340 KiB: si un PR se pasa, no se sube el límite sin decisión del product owner (T-036, "Riesgos" del plan). En paralelo se pueden hacer T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
 - **Pendiente de decidir:** volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
@@ -55,26 +55,24 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | hecha | alta | T-001 | [plan](../planes/T-003-pantalla-base.md) |
 | [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | hecha | alta | T-003, T-034, T-035, T-045 | [plan](../planes/T-004-prueba-controles.md) |
-| [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
-| [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
 | [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [plan](../planes/T-034-performance-y-memoria.md) |
 | [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | [plan](../planes/T-035-skill-rendimiento-y-memoria.md) |
-| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | en-progreso | alta | T-034 | [plan](../planes/T-036-presupuesto-de-bundle-en-ci.md) |
+| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | hecha | alta | T-034 | [plan](../planes/T-036-presupuesto-de-bundle-en-ci.md) |
 | [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | hecha | alta | — | — |
 | [T-046](T-046-retomar-tareas-en-sesion-nueva.md) | Retomar una tarea en una sesión nueva | codigo | hecha | media | — | [plan](../planes/T-046-retomar-tareas-en-sesion-nueva.md) |
-| [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | en-progreso | alta | — | — |
 
 <!-- /tablero:H1 -->
 
+Cerrado el 2026-10-18 con el tag `hito-h1`. T-005, T-030 y T-047 pasaron a H2.
+
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-034 ─→ T-035 ─→ T-004   ← el skill va antes de programar T-004
-B                     └──→ T-002 ─→ T-030
-C                 T-005                       ← desde ya
-D (CI)            T-006 ─→ T-031 ─→ T-033     ← T-006 es de H2; no en paralelo con T-030
+B                     └──→ T-002
+D (CI)            T-006 ─→ T-031 ─→ T-033     ← T-006 es de H2
 E (presupuestos)                        └──→ T-036            ← en paralelo con T-035 y T-004
-F (proceso)       T-045 ─→ T-046 ─→ T-047     ← T-047 en paralelo con T-036 y T-037
+F (proceso)       T-045 ─→ T-046
 ```
 
 ### H2 · Bucle completo
@@ -85,6 +83,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
+| [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-006](T-006-gamestate-y-datos.md) | GameState y datos en JSON | codigo | hecha | alta | T-001 | [plan](../planes/T-006-gamestate-y-datos.md) |
 | [T-007](T-007-flujo-de-escenas.md) | Flujo de escenas placeholder | codigo | pendiente | alta | T-004, T-006, T-037, T-038 | — |
 | [T-008](T-008-calle-de-8-casas.md) | Calle de 8 casas con sorteo | codigo | pendiente | alta | T-007 | — |
@@ -92,10 +91,12 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-010](T-010-minijuego-lluvia-de-dulces.md) | Minijuego Lluvia de dulces | codigo | pendiente | alta | T-009 | — |
 | [T-011](T-011-hud-y-fin-de-partida.md) | HUD y fin de partida | codigo | pendiente | alta | T-008 | — |
 | [T-012](T-012-prueba-pipeline-arte.md) | Prueba del pipeline de arte | investigacion | pendiente | alta | — | — |
+| [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-037](T-037-escena-base-depurar-y-fugas.md) | `EscenaBase`, `?depurar` y e2e de fugas | codigo | pendiente | alta | T-034 | — |
 | [T-038](T-038-config-rendimiento-y-webgl.md) | Config de rendimiento y robustez WebGL | codigo | pendiente | alta | T-034 | — |
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
+| [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | en-progreso | alta | — | — |
 
 <!-- /tablero:H2 -->
 
@@ -106,6 +107,8 @@ C                 T-006                       ← puede adelantarse a H1, tras T
 D (arte)          T-012                       ← desde ya; debe cerrar antes de H3
 E (assets)        T-039                       ← desde ya; antes del primer arte (T-013 a T-015)
 F (medición)      T-037 ─→ T-041              ← en el iPhone; se repite en H3 con el arte real
+G (investigación) T-005                       ← desde ya; antes de T-023 (H4)
+H (proceso)       T-047 ─→ T-030              ← T-030 tiene que convivir con el ruleset (plan de T-031); no en paralelo con T-047, que también toca el tablero
 ```
 
 ### H3 · La demo → `hito-h3`

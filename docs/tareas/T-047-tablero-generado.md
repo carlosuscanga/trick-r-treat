@@ -2,7 +2,7 @@
 id: T-047
 titulo: Tablero generado desde el frontmatter
 tipo: codigo
-hito: H1
+hito: H2
 estado: en-progreso
 prioridad: alta
 depende: []
@@ -53,3 +53,4 @@ Tarea chica: el plan va aquí y no en `docs/planes/`.
 - 2026-10-18: implementada. El generador reproduce el tablero casi igual y encontró dos desfases más: T-035 y T-036 tenían plan y el tablero decía "—". Cambios visibles en las tablas: T-034 enlaza su guía como "plan" y T-029 muestra `T-001 … T-028` donde decía "todas". Se corrigieron frontmatters (T-009 `plan: requerido`, la ruta de T-034 y los títulos de T-035, T-037 y T-043 con su formato).
 - 2026-10-18: **desvíos del plan:** el CLI se llama `tablero-cli.mjs` (con `tablero.mjs`, Vite resolvía `./tablero` al `.mjs` y no al `.ts`). `npm test` corre ahora `--dir src` y `--dir scripts`, porque T-036 lo había limitado a `src`. Se agregó `npm run tablero -- --revisar`, que va antes de cada push directo a `main`.
 - 2026-10-18: revisión con `code-reviewer-opus55`: sin bloqueantes. Se corrigieron: reglas contradictorias sobre si una rama toca el tablero (ahora puede cambiar `plan:` y regenerar), revisar el tablero antes del push con la deploy key, la plantilla con un comentario `#` que el lector rechazaba, claves y dependencias repetidas, comillas en listas, el filtro de archivos del CLI y `engines` a `>=22.18.0` (Node corre `.ts` desde esa versión). **Pendiente del product owner:** T-029 no depende de T-030 a T-047; decidir si se agregan.
+- 2026-10-18: pasa de H1 a H2 al cerrar H1 (decisión del product owner, desde la sesión que cerró T-036). Solo cambia `hito:` en el frontmatter.
