@@ -46,6 +46,23 @@ describe('jsInicial', () => {
     expect(jsInicial(html, base)).toEqual([]);
   });
 
+  it('acepta mayúsculas, valores sin comillas y rel con varios tokens', () => {
+    const html = [
+      '<SCRIPT TYPE="MODULE" SRC="/base/assets/a.js"></SCRIPT>',
+      '<script type=module src=/base/assets/b.js></script>',
+      '<link rel="modulepreload prefetch" href="/base/assets/c.js">',
+    ].join('\n');
+    expect(jsInicial(html, base)).toEqual(['assets/a.js', 'assets/b.js', 'assets/c.js']);
+  });
+
+  it('no cuenta dos veces el mismo archivo y quita ?query y #hash', () => {
+    const html = [
+      '<script type="module" src="/base/assets/a.js?v=1"></script>',
+      '<link rel="modulepreload" href="/base/assets/a.js#x">',
+    ].join('\n');
+    expect(jsInicial(html, base)).toEqual(['assets/a.js']);
+  });
+
   it('devuelve [] si no hay nada', () => {
     expect(jsInicial('<html><body></body></html>', base)).toEqual([]);
   });

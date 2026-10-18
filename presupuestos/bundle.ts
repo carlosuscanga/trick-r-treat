@@ -17,29 +17,31 @@ export interface Archivo {
   bytes: number;
 }
 
-/** Valor de un atributo dentro de una etiqueta, o undefined. */
+/** Valor de un atributo dentro de una etiqueta (con o sin comillas), o undefined. */
 function atributo(etiqueta: string, nombre: string): string | undefined {
-  return etiqueta.match(new RegExp(`\\s${nombre}\\s*=\\s*["']([^"']*)["']`, 'i'))?.[1];
+  const m = etiqueta.match(new RegExp(`\\s${nombre}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'));
+  return m ? (m[1] ?? m[2] ?? m[3]) : undefined;
 }
 
 /**
- * Rutas (relativas a dist/) del JS que index.html carga al inicio:
+ * Rutas (relativas a dist/, sin repetir) del JS que index.html carga al inicio:
  * `<script type="module" src>` y `<link rel="modulepreload" href>` bajo `base`.
  */
 export function jsInicial(html: string, base: string): string[] {
-  const rutas: string[] = [];
+  const rutas = new Set<string>();
   for (const [etiqueta] of html.matchAll(/<(?:script|link)\b[^>]*>/gi)) {
     const esScript = /^<script/i.test(etiqueta);
     const url = esScript
-      ? atributo(etiqueta, 'type') === 'module'
+      ? atributo(etiqueta, 'type')?.toLowerCase() === 'module'
         ? atributo(etiqueta, 'src')
         : undefined
-      : atributo(etiqueta, 'rel') === 'modulepreload'
+      : (atributo(etiqueta, 'rel') ?? '').toLowerCase().split(/\s+/).includes('modulepreload')
         ? atributo(etiqueta, 'href')
         : undefined;
-    if (url?.startsWith(base)) rutas.push(url.slice(base.length));
+    // Sin ?query ni #hash: en dist/ el archivo se llama sin ellos.
+    if (url?.startsWith(base)) rutas.add(url.slice(base.length).split(/[?#]/)[0]);
   }
-  return rutas;
+  return [...rutas];
 }
 
 /** Los archivos que pesan más de `maxBytes` (justo en el límite todavía cabe). */
