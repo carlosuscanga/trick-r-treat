@@ -27,8 +27,8 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 
 ## Criterios de aceptación
 
-- [ ] Joystick a la izquierda; Saltar y Brazos a la derecha, como en el diseño.
-- [ ] Mi vo camina, salta y cae con gravedad; la cámara la sigue.
+- [x] Joystick a la izquierda; Saltar y Brazos a la derecha, como en el diseño.
+- [x] Mi vo camina, salta y cae con gravedad; la cámara la sigue.
 - [ ] Se usan dos dedos a la vez (moverse y saltar) sin que se trabe.
 - [ ] Probado en el iPhone, con la decisión anotada en la bitácora: plan A, A′ o B.
 - [ ] Retro anotada en la bitácora: qué errores repitieron los agentes, cuánto costó corregirlos y si alguno justifica una skill nueva.
@@ -43,3 +43,14 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
 - 2026-10-17: brainstorming hecho. Éxito: caminar y frenar sin lag, salto "como Mario de Game Boy", dos pulgares sin trabarse. Falla: que la pantalla se mueva o se sienta torpe. **Decisiones del product owner:** sin doble salto; agacharse y los gestos de Brazos van a `ideas.md`; calle de prueba con bloques de Halloween y una regla de alturas derivada del salto; A′, si hace falta, es un segundo PR de esta misma tarea desde `main` (excepción a "una rama por tarea").
 - 2026-10-17: investigación de los dos riesgos con 3 subagentes Sonnet (multitouch, salto, gestos de iOS). Hallazgos clave: Phaser trae un solo puntero táctil por defecto (`activePointers: 3`), riesgo de controles pegados (antídoto por frame) y el gesto "atrás" del borde izquierdo no se puede bloquear (márgenes + pantalla de inicio). Informes en `.local/t004/`. Un revisor (Opus) leyó el diseño y sus 4 preguntas quedaron resueltas.
 - 2026-10-17: diseño y plan aprobados por el product owner (revisados en Plannotator): `docs/planes/T-004-prueba-controles.md`, 7 tareas, ejecución con subagentes. La implementación arranca en una sesión nueva.
+- 2026-10-17: implementación con subagentes (7 tareas, cada una con su revisión). La prueba e2e de dos dedos sintéticos **sí funciona** con Phaser 3.90, así que el multitouch también se prueba en e2e. El contador de punteros es `game.input.pointers` (`pointers[0]` es el ratón y `1..3` son táctiles).
+- 2026-10-17: **desvíos del plan** (decisiones del orquestador; el diseño manda sobre el texto del plan):
+  - Búfer de salto: la condición es `>= 0`, con un centinela, para que 130 ms salte y 131 no, como pide el plan.
+  - Altura variable: el corte aplica también en el frame del salto si ya se soltó Saltar. Con la regla literal, el toque más corto subía 89 px y cambiaba con los fps; así sube unos 67 px a cualquier framerate.
+  - La disposición de los botones sale de `ajustes`, para que el panel `?depurar` pueda moverlos.
+  - Suelo para el salto: `blocked.down && velocity.y >= 0`. Evita un doble salto si la física avisa del suelo un frame tarde.
+  - Tope vertical: `maxVelocity.y = max(caidaMax, v0)` más un recorte manual de la caída. Antes, un salto rápido afinado en el panel se recortaba sin aviso. La caída puede pasar el tope por un paso de gravedad (≈ 130 px/s con los valores iniciales).
+  - Mi vo arranca en x = 340 y no en 200, porque en 200 quedaba debajo del joystick en reposo.
+  - `validarBloques` exige que `sobre` apunte a un bloque anterior en la lista; así no puede haber ciclos.
+  - El retraso de un frame entre la física y `update()` se dejó como dice el plan, sin pasarlo a `PRE_UPDATE`.
+- 2026-10-17: **a vigilar en el iPhone:** un toque humano (50 a 100 ms) sube unos 130 a 180 px, no 70, y el saltito podría alcanzar el auto (fila 3 de la prueba manual). El bote queda a 0.5 px del límite del toque corto. Se afina con `?depurar`. El panel tapa los controles mientras está abierto: hay que cerrarlo para sentir cada cambio.

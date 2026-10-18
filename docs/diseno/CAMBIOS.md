@@ -2,6 +2,10 @@
 
 Cada versión del diseño, con qué cambió y por qué. El diseño vigente siempre está en esta carpeta; las versiones viejas se consultan con el tag de git `diseno-vX.Y` (por ejemplo, `git show diseno-v0.2:docs/diseno/reglas.md`).
 
+## Sin cambio de versión (2026-10-17)
+
+Se agregan a `ideas.md` agacharse y los gestos de Brazos, que salieron del brainstorming de T-004 y quedaron fuera de su alcance. No cambia el diseño vigente.
+
 ## v0.2 (2026-10-16)
 
 Surge de una entrevista de requerimientos. La v0.1 tenía las reglas básicas, pero los minijuegos, que son el centro del juego, estaban vacíos.

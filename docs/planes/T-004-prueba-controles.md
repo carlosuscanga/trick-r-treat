@@ -582,12 +582,12 @@ Comportamiento:
 
 **Archivos:** modificar `docs/diseno/ideas.md`, `docs/diseno/CAMBIOS.md` y `docs/tareas/T-004-prueba-controles.md` (criterios de esta rama y bitácora).
 
-- [ ] **Paso 1:** en `ideas.md`, dos ideas:
+- [x] **Paso 1:** en `ideas.md`, dos ideas:
   - **agacharse** con el joystick hacia abajo;
   - **gestos de Brazos**: toque = golpe, doble toque = patada, mantener = agarrar.
 
   En `CAMBIOS.md`, una línea con fecha y el porqué. Ninguna cambia el diseño vigente.
-- [ ] **Paso 2:** bitácora de T-004:
+- [x] **Paso 2:** bitácora de T-004:
   - el resultado del paso 6 de la tarea 1 (si el e2e de dos dedos funcionó);
   - cualquier desvío del plan.
 - [ ] **Paso 3:** verificación final: `npm test`, `npm run test:e2e` y `npm run build` en verde. `superpowers:verification-before-completion`.
@@ -670,3 +670,11 @@ No se sugiere Fable: el riesgo está en la sensación en el iPhone, no en la com
 - **El truco del evento sintético** puede no funcionar con Phaser. La tarea 1 lo valida primero y trae la alternativa.
 - **El orden entre la física y `update()`:** Arcade avanza en el evento `UPDATE` de la escena, antes de `update()`, así que las intenciones se aplican al paso siguiente (≤ 1 frame). Si en el iPhone se siente lag por eso, se mueven al evento `PRE_UPDATE`. Se anota en la bitácora si pasa.
 - **Los valores de cámara y de los botones son estimaciones.** Por eso existe el panel. Afinar no es un desvío del plan.
+
+## Desvíos durante la implementación
+
+La bitácora de [T-004](../tareas/T-004-prueba-controles.md) (2026-10-17) lista los desvíos. Los que cambian lo escrito arriba son estos tres:
+
+- **Tarea 2, reglas 1, 3 y 4 de `pasoSalto`:** el búfer se compara con `>= 0`, y el corte de altura variable aplica también en el frame del salto.
+- **Tarea 3, disposición:** los valores 140/130/310/250 son solo los valores por defecto. La posición se calcula desde `ajustes.botones`.
+- **Tarea 6:** se agregó `topeVertical` (`max(caidaMax, v0)`) para que el tope de caída no recorte la subida.
