@@ -681,3 +681,72 @@ La bitácora de [T-004](../tareas/T-004-prueba-controles.md) (2026-10-17) lista 
 - **Tarea 5, suelo para el salto:** `enSuelo = blocked.down && velocity.y >= 0`.
 - **Tarea 6:** se agregó `topeVertical` (`max(caidaMax, v0)`) para que el tope de caída no recorte la subida.
 - **Revisión final:** el joystick se reancla tras un cambio de tamaño, para que las barras de Safari no muevan su origen, y `touchcancel` suelta todos los controles.
+
+# Ronda 2: correcciones tras la primera prueba en el iPhone
+
+Decisiones del product owner del 2026-10-17 (bitácora de T-004). Entran en el mismo PR #12. Pruebas definidas aquí, antes de programar.
+
+### Tarea 8: escalón de la casa y regla de regreso
+
+**Bug:** después de subir al techo y caer del lado de la cerca, no se puede regresar a la izquierda. El techo de la casa está a 380 y la banqueta de su derecha a 40: un muro de 340, y `escalonMax` es 221. `revisarCalle` no lo vio porque solo revisa *llegar* a cada bloque y trata la calle como alcanzable en todos lados.
+
+**Corrección de datos:** `src/datos/calle-prueba.json` agrega un `barril` sobre la banqueta, pegado a la derecha de la casa: `x 3720, ancho 120, alto 160` (cara de arriba a 200). Escalones: banqueta → barril 160 y barril → techo 180, los dos menores que 221.
+
+**Corrección de la regla** (`src/datos/plataformas.ts`): `revisarCalle` cambia la búsqueda de alcance por un **perfil** de la calle:
+
+1. El perfil es la silueta vista de lado: tramos de x con la altura del bloque más alto que los cubre (o la calle, a 0). Cada tramo lleva el nombre de ese bloque (o `calle`).
+2. De un tramo se pasa a otro si sube a lo más `escalonMax` y además: es el vecino, o está a lo más a `distanciaMax` y todo lo que hay en medio es más bajo que los dos (un hoyo angosto se salta). Bajar siempre se puede.
+3. Desde el **inicio** (el tramo en x = 0, donde arranca Mi vo) se tiene que llegar a todos los tramos, y desde todos se tiene que poder **regresar** al inicio. Errores: `"<nombre>" (x a a b) es inalcanzable desde el inicio` y `desde "<nombre>" (x a a b) no se puede regresar al inicio`.
+
+Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cambian.
+
+### Tarea 9: casilla de velocidad proporcional en `?depurar`
+
+- `ajustes.json` agrega `caminar.proporcional: false` y `caminar.velocidadMinima: 0.3` (fracción de la velocidad). `validarAjustes` los exige.
+- `src/controles/joystick.ts` agrega `fuerzaJoystick(dx, radio, activa)`: 0 en el umbral de activación, 1 en el borde del radio, recortada a 0..1 y simétrica.
+- `Intenciones` agrega `fuerza` (0..1). `ControlTactil.mover` la llena y soltar el joystick la pone en 0.
+- `src/movimiento/caminar.ts` (nuevo) agrega `velocidadCaminar(direccion, fuerza, caminar)`: con la casilla apagada da `direccion · velocidad`; prendida, `direccion · velocidad · (velocidadMinima + (1 − velocidadMinima) · fuerza)`. La escena la usa en lugar de `direccion · velocidad`. Sin asignaciones en `update()`.
+- El panel agrega la casilla "Velocidad proporcional" y el deslizador "Velocidad mínima (%)" (0.1 a 1). "Copiar valores" los incluye solo, porque copia `ajustes`.
+
+**Decisión del orquestador, a confirmar:** la velocidad mínima (30 % al empezar a mover el pulgar) evita que Mi vo arranque casi quieta justo después de la zona muerta. Se afina con el deslizador.
+
+### Pruebas de la ronda 2
+
+**Unitarias:**
+
+| Archivo | Qué cubre |
+|---|---|
+| `src/datos/plataformas.test.ts` | La calle con el barril cumple la regla. Sin el barril, error de "no se puede regresar" que nombra la banqueta (el bug). Un hoyo entre dos muros altos atrapa (error de regreso), pero el muro del otro lado no queda inalcanzable porque el hoyo angosto se salta. Un hoyo más ancho que `distanciaMax` sí corta el paso. Los casos actuales siguen pasando |
+| `src/controles/joystick.test.ts` | `fuerzaJoystick`: 0 en el umbral, 1 en el radio, recorte más allá del radio, simetría con dx negativo |
+| `src/movimiento/caminar.test.ts` | Apagada: velocidad completa con cualquier fuerza. Prendida: mínima con fuerza 0, completa con 1, lineal en medio. Dirección 0 da 0 |
+| `src/controles/controlTactil.test.ts` | `mover` llena `fuerza`; soltar, `revisar` y `soltarTodo` la ponen en 0 |
+| `src/movimiento/ajustes.test.ts` | `proporcional` tiene que ser booleano y `velocidadMinima` número; el JSON trae la casilla apagada |
+
+**e2e** (`e2e/controles.e2e.ts`):
+
+- Con la casilla prendida (clic en el panel), un arrastre corto da `velocity.x` menor que uno largo. Con la casilla apagada, los dos dan la velocidad completa.
+- El barril: no hay e2e. Es un cambio de datos que cubren la regla unitaria y la prueba manual; recorrer la calle con toques sintéticos sería lento y frágil.
+
+**Manual en el iPhone** (filas nuevas en la descripción del PR):
+
+| # | Paso | Resultado esperado |
+|---|---|---|
+| 19 | Subir al techo, bajar del lado de la cerca y regresar a la izquierda | Sube por el barril al techo y vuelve al inicio |
+| 20 | En `?depurar`, prender "Velocidad proporcional" y caminar con el pulgar cerca y lejos del origen | Más lento cerca, completo lejos. Comparar con la fija y decidir cuál queda |
+
+### Modelo y esfuerzo de la ronda 2
+
+| Paso o subagente | Modelo | Esfuerzo | Por qué |
+|---|---|---|---|
+| Orquestación y PR (esta sesión) | Opus | `high` | Referencia por rol |
+| Tarea 8 (perfil y regla de regreso) | Sonnet | `medium` | Lógica pura con el algoritmo y los casos ya definidos |
+| Tarea 9 (velocidad proporcional) | Sonnet | `medium` | Funciones puras, un cambio de una línea en la escena y un control más en el panel |
+| Revisión final de la ronda | Opus (`code-reviewer-opus55`) | `high` | Referencia por rol |
+
+### Casillas de la ronda 2
+
+- [ ] Tarea 8 con sus pruebas, commit.
+- [ ] Tarea 9 con sus pruebas, commit.
+- [ ] `npm test`, `npm run test:e2e` y `npm run build` en verde.
+- [ ] Revisión con `code-reviewer-opus55`.
+- [ ] Push al PR #12 y filas 19 y 20 en su descripción.
