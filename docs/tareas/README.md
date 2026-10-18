@@ -97,6 +97,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
 | [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | hecha | alta | — | — |
+| [T-048](T-048-skill-tarea.md) | Skill `tarea` (tomar, retomar y cerrar) con revisión de "lista" | codigo | pendiente | alta | — | requerido |
 
 <!-- /tablero:H2 -->
 
@@ -109,6 +110,7 @@ E (assets)        T-039                       ← desde ya; antes del primer art
 F (medición)      T-037 ─→ T-041              ← en el iPhone; se repite en H3 con el arte real
 G (investigación) T-005                       ← desde ya; antes de T-023 (H4)
 H (proceso)       T-047 ─→ T-030              ← T-030 tiene que convivir con el ruleset (plan de T-031); no en paralelo con T-047, que también toca el tablero
+I (proceso)       T-048                       ← skill `tarea`; al cerrarla se decide si T-030 sigue haciendo falta
 ```
 
 ### H3 · La demo → `hito-h3`
