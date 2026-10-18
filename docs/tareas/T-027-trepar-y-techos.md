@@ -26,3 +26,4 @@ Es una de las acciones de la exploración para alcanzar dulces escondidos.
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1.
+- 2026-10-17: **escaleras verticales** (joystick arriba para subir, por ejemplo en los pórticos de las casas). Las pidió el product owner al probar T-004 en el iPhone y quedaron fuera de esa tarea. Se consideran aquí, junto con trepar.
