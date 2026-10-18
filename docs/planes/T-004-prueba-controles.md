@@ -696,7 +696,7 @@ Decisiones del product owner del 2026-10-17 (bitácora de T-004). Entran en el m
 
 1. El perfil es la silueta vista de lado: tramos de x con la altura del bloque más alto que los cubre (o la calle, a 0). Cada tramo lleva el nombre de ese bloque (o `calle`).
 2. De un tramo se pasa a otro si sube a lo más `escalonMax` y además: es el vecino, o está a lo más a `distanciaMax` y todo lo que hay en medio es más bajo que los dos (un hoyo angosto se salta). Bajar siempre se puede.
-3. Desde el **inicio** (el tramo en x = 0, donde arranca Mi vo) se tiene que llegar a todos los tramos, y desde todos se tiene que poder **regresar** al inicio. Errores: `"<nombre>" (x a a b) es inalcanzable desde el inicio` y `desde "<nombre>" (x a a b) no se puede regresar al inicio`.
+3. Desde el **inicio** (el tramo que contiene `X_INICIO` = 340, donde aparece Mi vo; la escena usa la misma constante) se tiene que llegar a todos los tramos, y desde todos se tiene que poder **regresar** al inicio. Errores: `"<nombre>" (x a a b) es inalcanzable desde el inicio` y `desde "<nombre>" (x a a b) no se puede regresar al inicio`.
 
 Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cambian.
 
@@ -745,8 +745,8 @@ Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cam
 
 ### Casillas de la ronda 2
 
-- [ ] Tarea 8 con sus pruebas, commit.
-- [ ] Tarea 9 con sus pruebas, commit.
-- [ ] `npm test`, `npm run test:e2e` y `npm run build` en verde.
-- [ ] Revisión con `code-reviewer-opus55`.
+- [x] Tarea 8 con sus pruebas, commit.
+- [x] Tarea 9 con sus pruebas, commit.
+- [x] `npm test`, `npm run test:e2e` y `npm run build` en verde.
+- [x] Revisión con `code-reviewer-opus55`.
 - [ ] Push al PR #12 y filas 19 y 20 en su descripción.

@@ -49,6 +49,7 @@ const ESTILOS = `
 .depurar-panel[hidden]{display:none}
 .depurar-panel label{display:grid;grid-template-columns:1fr 52px;gap:2px 8px;margin:6px 0}
 .depurar-panel input[type=range]{grid-column:1/3;width:100%}
+.depurar-panel label.casilla{display:flex;align-items:center;gap:8px}
 .depurar-panel output{text-align:right;font-variant-numeric:tabular-nums}
 .depurar-panel button{font:inherit;padding:8px 12px;margin-top:8px}
 .depurar-panel textarea{width:100%;height:160px;margin-top:8px;box-sizing:border-box;font:12px monospace}
@@ -112,6 +113,7 @@ export function montarPanel(game: Phaser.Game, ajustes: Ajustes, doc: Document =
   for (const { ruta, etiqueta } of CASILLAS) {
     const { objeto, campo: nombre } = dueno(ajustes, ruta);
     const fila = doc.createElement('label');
+    fila.className = 'casilla';
     const casilla = doc.createElement('input');
     casilla.type = 'checkbox';
     casilla.checked = objeto[nombre] === true;
@@ -120,7 +122,7 @@ export function montarPanel(game: Phaser.Game, ajustes: Ajustes, doc: Document =
       objeto[nombre] = casilla.checked;
       avisar();
     });
-    fila.append(casilla, ` ${etiqueta}`);
+    fila.append(casilla, etiqueta);
     panel.append(fila);
   }
 

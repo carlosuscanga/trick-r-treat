@@ -25,6 +25,9 @@ export type Limites = {
 /** Ancho del mundo de la calle de prueba, en px. */
 export const ANCHO_CALLE = 4800;
 
+/** x donde aparece Mi vo: la regla de regreso se mide desde el tramo que la contiene. */
+export const X_INICIO = 340;
+
 const MARGEN = 0.85;
 const ALTURA_MAX_FIJA = 400;
 const GROSOR_MIN_FIJO = 32;
@@ -195,8 +198,9 @@ export function revisarCalle(bloques: readonly Bloque[], l: Limites): string[] {
       }
     }
   }
-  const desdeInicio = alcanzables(0, sale);
-  const haciaInicio = alcanzables(0, entra);
+  const inicio = Math.max(0, tramos.findIndex((t) => t.desde <= X_INICIO && X_INICIO < t.hasta));
+  const desdeInicio = alcanzables(inicio, sale);
+  const haciaInicio = alcanzables(inicio, entra);
   tramos.forEach((t, i) => {
     const donde = `"${t.nombre}" (x ${t.desde} a ${t.hasta})`;
     if (!desdeInicio.has(i)) errores.push(`${donde} es inalcanzable desde el inicio`);

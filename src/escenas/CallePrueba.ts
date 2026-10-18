@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { ControlTactil } from '../controles/controlTactil';
 import type { Disposicion } from '../controles/disposicion';
 import { crearIntenciones, limpiarFlancos, type Intenciones } from '../controles/intenciones';
-import { ANCHO_CALLE, BLOQUES_CALLE_PRUEBA, alturaSuperior } from '../datos/plataformas';
+import { ANCHO_CALLE, BLOQUES_CALLE_PRUEBA, X_INICIO, alturaSuperior } from '../datos/plataformas';
 import { AJUSTES_CAMBIADOS, derivarFisica, topeVertical, type Ajustes, type Fisica } from '../movimiento/ajustes';
 import { velocidadCaminar } from '../movimiento/caminar';
 import { crearEstadoSalto, pasoSalto, type EstadoSalto, type SalidaSalto } from '../movimiento/salto';
@@ -19,7 +19,7 @@ const PISO = 620;
 /** El mundo sube hasta aquí para que quepan el techo y el salto desde él. */
 const MUNDO_ARRIBA = -400;
 // Empieza a la derecha de la base del joystick en reposo, para que no la tape.
-const MI_VO = { x: 340, ancho: 90, alto: 200 };
+const MI_VO = { x: X_INICIO, ancho: 90, alto: 200 };
 const NARANJA = 0xff7a1a;
 const BLANCO = 0xffffff;
 const COLOR_CALLE = 0x2b2b3a;

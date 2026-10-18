@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { AJUSTES_POR_DEFECTO, type Ajustes } from '../movimiento/ajustes';
 import {
   BLOQUES_CALLE_PRUEBA,
+  X_INICIO,
+  perfilDeCalle,
   esDeToqueCorto,
   limitesDeSalto,
   revisarCalle,
@@ -31,7 +33,7 @@ describe('plataformas', () => {
     expect(errores.some((e) => e.includes('muro') && e.includes('inalcanzable'))).toBe(true);
   });
 
-  it('el techo es alcanzable solo encadenando el pórtico', () => {
+  it('sin el pórtico no se llega al techo (el barril queda del otro lado de la casa)', () => {
     const sinPortico = BLOQUES_CALLE_PRUEBA.filter((b) => b.nombre !== 'portico');
     const errores = revisarCalle(sinPortico, limites);
     expect(errores.some((e) => e.includes('casa') && e.includes('inalcanzable'))).toBe(true);
@@ -67,26 +69,51 @@ describe('plataformas', () => {
   it('sin el barril no se puede regresar del lado de la cerca (el bug)', () => {
     const sinBarril = BLOQUES_CALLE_PRUEBA.filter((b) => b.nombre !== 'barril');
     const errores = revisarCalle(sinBarril, limites);
-    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"banqueta"'))).toBe(true);
+    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"banqueta" (x 3720 a 3900)'))).toBe(true);
   });
 
   // Dos escalones suben a muros de 250; entre ellos hay un hoyo de la calle.
+  // Empieza en x 600, a la derecha de donde aparece Mi vo.
   const conHoyo = (xDer: number, xSalida: number): Bloque[] => [
-    { nombre: 's1', x: 100, ancho: 100, alto: 150 },
-    { nombre: 'izq', x: 200, ancho: 100, alto: 250 },
+    { nombre: 's1', x: 600, ancho: 100, alto: 150 },
+    { nombre: 'izq', x: 700, ancho: 100, alto: 250 },
     { nombre: 'der', x: xDer, ancho: 100, alto: 250 },
     { nombre: 's2', x: xSalida, ancho: 100, alto: 150 },
   ];
 
   it('un hoyo angosto entre dos muros altos atrapa, pero el muro del otro lado se alcanza saltándolo', () => {
-    const errores = revisarCalle(conHoyo(400, 500), limites);
-    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"calle" (x 300 a 400)'))).toBe(true);
+    const errores = revisarCalle(conHoyo(900, 1000), limites);
+    expect(errores.some((e) => e.includes('no se puede regresar') && e.includes('"calle" (x 800 a 900)'))).toBe(true);
     expect(errores.some((e) => e.includes('inalcanzable'))).toBe(false);
   });
 
   it('un hoyo más ancho que la distancia máxima corta el paso', () => {
-    const errores = revisarCalle(conHoyo(600, 700), limites);
+    const errores = revisarCalle(conHoyo(1100, 1200), limites);
     expect(errores.some((e) => e.includes('"der"') && e.includes('inalcanzable desde el inicio'))).toBe(true);
+  });
+
+  it('el perfil recorta a la calle, fusiona tramos iguales y omite lo que queda fuera', () => {
+    const tramos = perfilDeCalle([
+      { nombre: 'a', x: 0, ancho: 100, alto: 50 },
+      { nombre: 'b', x: 300, ancho: 100, alto: 80 },
+      { nombre: 'c', x: 330, ancho: 40, alto: 40, sobre: 'b' },
+      { nombre: 'fuera', x: 4800, ancho: 100, alto: 50 },
+    ]);
+    expect(tramos).toEqual([
+      { nombre: 'a', desde: 0, hasta: 100, altura: 50 },
+      { nombre: 'calle', desde: 100, hasta: 300, altura: 0 },
+      { nombre: 'b', desde: 300, hasta: 330, altura: 80 },
+      { nombre: 'c', desde: 330, hasta: 370, altura: 120 },
+      { nombre: 'b', desde: 370, hasta: 400, altura: 80 },
+      { nombre: 'calle', desde: 400, hasta: 4800, altura: 0 },
+    ]);
+  });
+
+  it('el inicio es el tramo donde aparece Mi vo, no el de x = 0', () => {
+    // Un muro alto pegado al borde izquierdo no atrapa a Mi vo, que aparece a su derecha.
+    const errores = revisarCalle([{ nombre: 'muro', x: 0, ancho: X_INICIO - 40, alto: 300 }], limites);
+    expect(errores.some((e) => e.includes('no se puede regresar'))).toBe(false);
+    expect(errores.some((e) => e.includes('"muro"') && e.includes('inalcanzable'))).toBe(true);
   });
 
   it('la banqueta es de toque corto y el auto no', () => {

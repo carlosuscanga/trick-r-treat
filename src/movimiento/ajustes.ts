@@ -70,6 +70,13 @@ function numero(entrada: Entrada, campo: string, donde: string): number {
   return valor;
 }
 
+// Fracción en (0, 1]: con 0 o menos, el pulgar cerca del origen la frenaría o la regresaría.
+function fraccion(entrada: Entrada, campo: string, donde: string): number {
+  const valor = numero(entrada, campo, donde);
+  if (valor <= 0 || valor > 1) throw new Error(`${donde}.${campo}: debe estar entre 0 (sin incluir) y 1`);
+  return valor;
+}
+
 function booleano(entrada: Entrada, campo: string, donde: string): boolean {
   const valor = entrada[campo];
   if (typeof valor !== 'boolean') throw new Error(`${donde}.${campo}: debe ser true o false`);
@@ -102,7 +109,7 @@ export function validarAjustes(datos: unknown): Ajustes {
     caminar: {
       velocidad: numero(caminar, 'velocidad', 'ajustes.caminar'),
       proporcional: booleano(caminar, 'proporcional', 'ajustes.caminar'),
-      velocidadMinima: numero(caminar, 'velocidadMinima', 'ajustes.caminar'),
+      velocidadMinima: fraccion(caminar, 'velocidadMinima', 'ajustes.caminar'),
     },
     joystick: {
       radio: numero(joystick, 'radio', 'ajustes.joystick'),

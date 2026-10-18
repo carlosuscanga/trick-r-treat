@@ -536,12 +536,12 @@ test.describe('velocidad proporcional', () => {
   test('prendida, un arrastre corto da menos velocidad que uno largo', async ({ page }) => {
     await abrirPanel(page);
     await page.locator('input[data-ajuste="caminar.proporcional"]').click();
-    await page.locator('#depurar-boton').click(); // cierra el panel antes de tocar
-    await siguienteFrame(page);
+    await abrirPanel(page); // el segundo clic lo cierra antes de tocar
 
     const corto = await velocidadConArrastre(page, 30);
     const largo = await velocidadConArrastre(page, 100);
-    expect(corto).toBeGreaterThan(0);
+    // dx 30 da fuerza 0.2: 360 · (0.3 + 0.7 · 0.2) = 158.4.
+    expect(corto).toBeCloseTo(158.4);
     expect(corto).toBeLessThan(largo);
     expect(largo).toBe(360);
   });

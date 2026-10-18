@@ -29,7 +29,8 @@ export function direccionJoystick(
 export function fuerzaJoystick(dx: number, radio: number, activa: number): number {
   const umbral = activa * radio;
   const f = (Math.abs(dx) - umbral) / (radio - umbral);
-  return f < 0 ? 0 : f > 1 ? 1 : f;
+  // `!(f > 0)` también atrapa NaN (radio igual al umbral).
+  return !(f > 0) ? 0 : f > 1 ? 1 : f;
 }
 
 /** Recorta (dx, dy) a un círculo de `radio` y lo escribe en `salida`. */

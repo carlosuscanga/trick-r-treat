@@ -66,6 +66,10 @@ describe('fuerzaJoystick', () => {
     expect(fuerzaJoystick(300, 75, 0.25)).toBe(1);
   });
 
+  it('con activa = 1 da 0 y no NaN', () => {
+    expect(fuerzaJoystick(75, 75, 1)).toBe(0);
+  });
+
   it('es simétrica con dx negativo', () => {
     expect(fuerzaJoystick(-40, 75, 0.25)).toBe(fuerzaJoystick(40, 75, 0.25));
   });

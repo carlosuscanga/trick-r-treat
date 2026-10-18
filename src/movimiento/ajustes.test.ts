@@ -46,6 +46,14 @@ describe('validarAjustes', () => {
     expect(() => validarAjustes(b)).toThrow('ajustes.caminar.velocidadMinima');
   });
 
+  it('velocidadMinima tiene que estar en (0, 1]', () => {
+    for (const malo of [0, -0.5, 1.2]) {
+      const a = copia();
+      a.caminar.velocidadMinima = malo;
+      expect(() => validarAjustes(a)).toThrow('ajustes.caminar.velocidadMinima');
+    }
+  });
+
   it('el JSON trae la velocidad proporcional apagada', () => {
     expect(AJUSTES_POR_DEFECTO.caminar.proporcional).toBe(false);
     expect(AJUSTES_POR_DEFECTO.caminar.velocidadMinima).toBe(0.3);
