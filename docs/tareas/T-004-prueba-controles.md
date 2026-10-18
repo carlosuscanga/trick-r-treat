@@ -6,7 +6,7 @@ hito: H1
 estado: en-progreso
 prioridad: alta
 depende: [T-003, T-034, T-035, T-045]
-plan: null
+plan: docs/planes/T-004-prueba-controles.md
 ---
 
 ## Qué
