@@ -177,7 +177,7 @@ function cerrar(datos, tarea) {
   writeFileSync(datos.readme, tablero);
 
   console.log(`${tarea.id} quedó hecha (sin commit todavía). Siguen:\n`);
-  console.log('1. Escribe el "Estado actual" en docs/tareas/README.md y anota lo hecho arriba de docs/tareas/historial.md.');
+  console.log('1. Escribe el "Estado actual" en docs/tareas/README.md y anota lo hecho arriba de docs/tareas/historial.md, en 2 o 3 líneas (tarea y PR, qué cambió y una decisión solo si no está en otro documento).');
   console.log(`2. Un solo commit: ${tarea.id}: cierra la tarea (con las líneas de atribución de la sesión)`);
   console.log(`3. Sube a main, a la vista:\n   ${COMANDO_PUSH}`);
   console.log(`4. El product owner borra la rama: git branch -d ${rama}`);
