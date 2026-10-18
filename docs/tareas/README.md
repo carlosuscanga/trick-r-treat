@@ -6,12 +6,11 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 
 Solo lo vigente. Se actualiza al cerrar cada sesión, y lo que se hizo en cada una va arriba de [`historial.md`](historial.md). Para seguir una sola tarea basta con "retoma T-NNN" ([`docs/README.md`](../README.md), "Sesiones con Claude").
 
-- **Fase:** H1 · Esqueleto en el iPhone. Falta T-004 para cerrar el hito (T-036 va en paralelo).
+- **Fase:** H1 · Esqueleto en el iPhone, con su objetivo cumplido: el rectángulo camina y salta en el iPhone desde Pages (T-004, **plan A**). Quedan T-036, T-005 y T-030, que no bloquean; la ruta crítica sigue con T-037.
 - **En curso:**
-  - **T-004** (prueba de controles, PR #12): la ronda 2 está en el PR (barril junto a la casa con regla de regreso, y casilla de velocidad proporcional). Falta la segunda ronda en el iPhone: filas 3, 11, 12, 15, 17, 19 y 20. Detalle en "para retomar", en su bitácora.
   - **T-046** (retomar tareas, PR #13 mergeado): la prueba se hizo con "retoma T-004" y funcionó (frontmatter → worktree → bitácora y plan). Observación: una sesión dentro de un worktree no puede tocar `main`; lo de `main` se hace al salir con `ExitWorktree keep`. Falta que el product owner la cierre.
-- **Siguiente paso:** segunda ronda de T-004 en el iPhone (en el worktree, `npm run dev -- --host`). Al cerrar T-004, decidir plan A, A′ o B y hacer la retro. En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
-- **Pendiente de decidir:** plan A, A′ o B al probar T-004 en el iPhone, y velocidad fija o proporcional. Después de T-004, la retro (¿hace falta otra skill?) y volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
+- **Siguiente paso:** T-037 (`EscenaBase`, `?depurar` y e2e de fugas), que sigue en la ruta crítica. En paralelo se pueden hacer T-036 (presupuesto de bundle), T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
+- **Pendiente de decidir:** volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
 ## Planeación de la v1
@@ -35,7 +34,7 @@ Se planea por oleadas: H1 a H3 van detallados, y H4 y H5 tienen tareas gruesas q
 
 **Riesgos:**
 
-- **Controles táctiles en iOS:** T-004, con plan de contingencia (A′: otros esquemas táctiles; B: computadora con teclado). Se decide al cerrar T-004.
+- **Controles táctiles en iOS:** T-004 cerró con **plan A** (2026-10-18): joystick y botones táctiles en web, sin contingencia.
 - **Pipeline de arte cutout:** T-012, antes de H3.
 - **Latencia de audio para Ritmo:** T-022.
 - **Memoria en el iPhone (recarga silenciosa por jetsam):** T-037 (fugas), T-041 (medición) y T-042 (guardar partida).
@@ -54,7 +53,7 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-001](T-001-limpieza-tecnica.md) | Limpieza técnica del entorno | codigo | hecha | alta | — | — |
 | [T-002](T-002-despliegue-github-pages.md) | Despliegue automático a GitHub Pages | codigo | hecha | alta | T-001 | [plan](../planes/T-002-despliegue-github-pages.md) |
 | [T-003](T-003-pantalla-base.md) | Pantalla base para iPhone | codigo | hecha | alta | T-001 | [plan](../planes/T-003-pantalla-base.md) |
-| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | en-progreso | alta | T-003, T-034, T-035, T-045 | [plan](../planes/T-004-prueba-controles.md) |
+| [T-004](T-004-prueba-controles.md) | Prueba de controles táctiles | codigo | hecha | alta | T-003, T-034, T-035, T-045 | [plan](../planes/T-004-prueba-controles.md) |
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |

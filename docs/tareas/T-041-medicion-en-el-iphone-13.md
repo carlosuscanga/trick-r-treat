@@ -30,3 +30,4 @@ Los presupuestos de tiempo y memoria son SLOs calculados, no medidos en el telé
 ## Bitácora
 
 - 2026-10-16: creada a partir de la guía de T-034 (sección 9, "Medir después en el iPhone 13").
+- 2026-10-18: dato de T-004: en Modo de bajo consumo el aviso de 30 fps aparece bien, y el product owner nota el juego "más trabadito". Medirlo aquí (M11).

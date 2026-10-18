@@ -3,12 +3,12 @@ id: T-004
 titulo: Prueba de controles táctiles
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-003, T-034, T-035, T-045]
 plan: docs/planes/T-004-prueba-controles.md
-rama: T-004-prueba-controles
-worktree: .claude/worktrees/T-004-prueba-controles
+rama: null
+worktree: null
 ---
 
 ## Qué
@@ -85,4 +85,4 @@ Es el mayor riesgo técnico: si saltar y moverse con controles táctiles no se s
   - **Una sola vez:** un subagente cambió un test sin necesidad y con una explicación falsa; el orquestador lo detectó al leer el diff (≈ 2 min). Confirma que el diff de cada subagente se lee, no solo su reporte.
   - **Acierto:** la revisión de la tarea 2 predijo que el saltito alcanzaría el auto; el iPhone lo confirmó. Las predicciones de sensación de los agentes sirven, pero solo el iPhone decide.
   - **¿Skill nueva? Recomendación: todavía no.** El error 1 se resuelve con una línea en `docs/planes/README.md` ("Pruebas"): no fijar en pruebas los valores que se afinan. El error 2 es candidato a skill ("Safari en iPhone": zoom de inputs, barras que cambian el tamaño, gestos), pero con dos casos es poco; si aparece un tercero, se crea con su tarea y evaluaciones, como T-035. Decisión del product owner pendiente.
-
+- 2026-10-18: PR #12 mergeado sin squash, con checks en verde. Tarea `hecha`. Decisión del product owner sobre la retro: no se crea skill todavía; si aparece un tercer detalle de Safari en iPhone, se crea con su propia tarea.

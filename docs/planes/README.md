@@ -79,6 +79,7 @@ Resumen en 2–3 frases y decisiones técnicas con su porqué.
 
 - Unitarias (`npm test`): qué casos cubren y en qué archivo `*.test.ts` van.
 - e2e (`npm run test:e2e`): qué comportamiento comprueban y en qué archivo `e2e/*.e2e.ts` van.
+- Las pruebas no fijan los valores que se afinan jugando (velocidades, tiempos, alturas): la lógica se prueba con valores propios del test, y los e2e leen el JSON de ajustes. Si no, cada ajuste en el iPhone rompe el CI (retro de T-004).
 - Manual en el iPhone: tabla de pasos con lo que se espera en cada uno. Va también en la descripción del PR.
 - Capas que no aplican y por qué.
 
