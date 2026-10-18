@@ -29,7 +29,7 @@ Lee el "Estado actual" y las tablas de `docs/tareas/README.md`, y propone **una*
 3. **Si falta algo, refina en ese momento**, en `main`:
    - Para cada hueco, propón una respuesta con tu recomendación y su porqué. Pregunta **una cosa a la vez** y espera la respuesta.
    - Escribe lo decidido en la tarea: el "Qué", los criterios (con la casilla de tres capas) y una línea en la bitácora con la fecha y "refinada al tomarla".
-   - Muestra el resumen y pregunta "¿Quieres revisarlo aquí o en Plannotator?". Con el OK, haz commit (`T-NNN: refina la tarea`) y push.
+   - Muestra el resumen y pregunta "¿Quieres revisarlo aquí o en Plannotator?". Con el OK, haz solo el commit (`T-NNN: refina la tarea`), sin push. El paso siguiente (`tomar`) corre `git pull --ff-only`, que acepta un `main` local adelantado, y el push que imprime sube los dos commits.
 4. **Arranca:** `npm run -s tarea -- tomar T-NNN --trailer="<línea>" …`, con un `--trailer` por cada línea de atribución de commits que tenga **esta** sesión (por ejemplo, `Co-Authored-By: …`). Deja la tarea `en-progreso` con su commit, crea el worktree con la rama en su nombre final y compila la base. Si algo falla a medias, el script dice qué quedó hecho y qué falta.
 5. **Push:** corre el comando que imprimió el script.
 6. **Entra:** `EnterWorktree` con la ruta absoluta que imprimió.
@@ -40,7 +40,7 @@ Lee el "Estado actual" y las tablas de `docs/tareas/README.md`, y propone **una*
 Para una sesión **nueva** que sigue una tarea ya arrancada, leyendo lo mínimo:
 
 1. La sesión se abre desde la carpeta principal del proyecto, para que cargue el token de GitHub.
-2. Lee **solo el frontmatter** de `docs/tareas/T-NNN-*.md` en `main`. Si `worktree` es `null`, la tarea no ha arrancado: sigue con "Tomar T-NNN".
+2. Lee **solo el frontmatter** de `docs/tareas/T-NNN-*.md` en `main`. Si `worktree` es `null` o no está, la tarea no ha arrancado: sigue con "Tomar T-NNN".
 3. `EnterWorktree` con `path` igual al valor de `worktree`.
 4. Ya en el worktree, lee la bitácora de la tarea (sobre todo una entrada "para retomar", si existe) y su plan. Se leen en el worktree, no en `main`, porque la copia de la rama es la más nueva.
 5. Sigue desde la primera casilla sin marcar del plan, o desde lo que diga "para retomar".
@@ -61,6 +61,6 @@ Después del merge (el product owner lo aprueba; si el modo auto bloquea `gh pr 
 
 ## Si algo falla
 
-- **El push falla porque `main` avanzó:** `git pull --rebase` y repite el push.
+- **El push falla porque `main` avanzó:** `git pull --rebase` y repite el push. Si el rebase choca en las tablas generadas de `docs/tareas/README.md`, acepta cualquiera de los dos lados y corre `npm run tablero` antes de continuar el rebase.
 - **`tomar` o `cerrar` se niegan:** lee el motivo y arréglalo (traer `main`, hacer commit o descartar cambios **preguntando antes**, terminar una dependencia). No edites el frontmatter a mano para saltarte la revisión.
 - **`git worktree remove` se niega porque hay cambios:** revisa qué son antes de hacer nada. Nunca `--force` sin el OK del product owner.

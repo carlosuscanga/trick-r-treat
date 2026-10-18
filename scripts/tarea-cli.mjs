@@ -20,6 +20,7 @@ const { leerTareas, generarTablero } = await import('./tablero.ts');
 const { nombreDeRama, rutaDeWorktree, revisarLista, marcarEnProgreso, marcarHecha } = await import('./tarea.ts');
 
 const COMANDO_PUSH =
+  'npm run -s tablero -- --revisar && ' +
   "GIT_SSH_COMMAND='ssh -i ~/.ssh/trick-r-treat-directo -o IdentitiesOnly=yes' " +
   'git push git@github.com:carlosuscanga/trick-r-treat.git main && git fetch origin';
 
@@ -165,6 +166,10 @@ function cerrar(datos, tarea) {
   const registrados = correr('listar worktrees', 'git', ['worktree', 'list', '--porcelain']);
   if (registrados.split('\n').some((linea) => linea === `worktree ${raiz}/${ruta}`)) {
     correr('quitar el worktree', 'git', ['worktree', 'remove', ruta]);
+  } else if (existsSync(`${raiz}/${ruta}`)) {
+    throw new Fallo(
+      `La carpeta ${ruta} existe, pero git no la reconoce como worktree. Revísala a mano antes de cerrar.`,
+    );
   } else {
     console.log(`El worktree ${ruta} ya no estaba registrado: se da por quitado.`);
   }
