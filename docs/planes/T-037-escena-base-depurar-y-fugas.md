@@ -67,7 +67,8 @@ window.__depurar = { instantanea(): Instantanea, metricas(): Metricas };
   - `e2e/fugas.e2e.ts` y `e2e/depurar.e2e.ts`.
 - Modificar:
   - `src/escenas/EscenaBase.ts`: `alLimpiar()`, `this.data.reset()` y se quita el comentario "mínima".
-  - `src/depurar/depurar.ts`: `montarDepurar(game)` y el tipo de `window.__depurar`.
+  - `src/depurar/depurar.ts`: el tipo de `window.__depurar`. Sigue sin importar Phaser, para que `depurar.test.ts` corra en Vitest.
+  - Crear `src/depurar/montar.ts`: `montarDepurar(game)`. Va aparte porque importa `contadores.ts`, que importa Phaser (desvío al programar).
   - `src/main.ts`: llama a `montarDepurar`.
   - `docs/planes/T-034-performance-y-memoria.md`: carpeta, `__juego` y el ejemplo de TEX-07.
   - Skill: `.claude/skills/rendimiento-y-memoria/SKILL.md` (tabla de bases mínimas) y sus referencias `medir.md` y `escenas-y-fugas.md`.
