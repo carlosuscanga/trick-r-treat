@@ -197,6 +197,7 @@ Lo que queda fuera de la v1 a propósito. No tiene tareas todavía.
 - `en-progreso`: se está trabajando, en su propio worktree. Puede haber varias a la vez.
 - `bloqueada`: no puede avanzar. Anotar el motivo en la bitácora.
 - `hecha`: cumple la definición de "hecho" de [`docs/README.md`](../README.md).
+- `descartada`: no se va a hacer. El archivo se queda y su bitácora dice por qué se descartó. No se puede tomar.
 
 ## Reglas
 

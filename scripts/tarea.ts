@@ -33,6 +33,7 @@ export function revisarLista(tarea: Tarea, texto: string, todas: Tarea[]): strin
   if (tarea.estado === 'bloqueada') return ['la tarea está bloqueada: revisa su bitácora'];
   if (tarea.estado === 'en-progreso') return ['la tarea ya arrancó (en-progreso): usa "retoma"'];
   if (tarea.estado === 'hecha') return ['la tarea ya está hecha'];
+  if (tarea.estado === 'descartada') return ['la tarea está descartada'];
 
   const faltantes: string[] = [];
   for (const id of tarea.depende) {

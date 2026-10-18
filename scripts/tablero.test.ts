@@ -111,6 +111,11 @@ describe('leerTareas', () => {
     });
   });
 
+  it('acepta una tarea descartada', () => {
+    const [descartada] = leerTareas([tarea('T-001-algo.md', { estado: 'descartada' })], []);
+    expect(descartada.estado).toBe('descartada');
+  });
+
   it('rechaza estado, tipo, hito y prioridad desconocidos', () => {
     const problemas = problemasDe(() =>
       leerTareas(

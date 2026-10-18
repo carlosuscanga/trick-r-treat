@@ -94,6 +94,10 @@ describe('revisarLista', () => {
   it('una tarea hecha ya está hecha', () => {
     expect(revisar(texto({ estado: 'hecha' }))[0]).toMatch(/ya está hecha/);
   });
+
+  it('una tarea descartada no se toma', () => {
+    expect(revisar(texto({ estado: 'descartada' }))).toEqual(['la tarea está descartada']);
+  });
 });
 
 describe('marcarEnProgreso', () => {

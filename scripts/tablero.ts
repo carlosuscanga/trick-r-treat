@@ -4,7 +4,7 @@
 // Plan: docs/tareas/T-047-tablero-generado.md
 
 export const HITOS = ['H1', 'H2', 'H3', 'H4', 'H5'] as const;
-export const ESTADOS = ['pendiente', 'en-progreso', 'bloqueada', 'hecha'] as const;
+export const ESTADOS = ['pendiente', 'en-progreso', 'bloqueada', 'hecha', 'descartada'] as const;
 export const TIPOS = ['diseno', 'codigo', 'arte', 'bug', 'investigacion'] as const;
 export const PRIORIDADES = ['alta', 'media', 'baja'] as const;
 
