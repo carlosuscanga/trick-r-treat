@@ -290,7 +290,7 @@ Es la primera porque valida el riesgo de las pruebas: si el truco del evento sin
 - Produce: `esModoDepurar(search: string): boolean` y `exponerJuego(game: Phaser.Game): void` (asigna `window.__juego`). `declare global { interface Window { __juego?: Phaser.Game } }`.
 - Produce (e2e): `type Dedo = { id: number; x: number; y: number }` con `x`, `y` en **coordenadas lógicas** del juego, y `tocar(page: Page, tipo: 'touchstart' | 'touchmove' | 'touchend' | 'touchcancel', dedos: Dedo[]): Promise<boolean>` (devuelve `defaultPrevented`).
 
-- [ ] **Paso 1: unitaria de `bloquearGestos`** en `src/plataforma/gestos.test.ts`, con un `doc` falso que guarda los listeners:
+- [x] **Paso 1: unitaria de `bloquearGestos`** en `src/plataforma/gestos.test.ts`, con un `doc` falso que guarda los listeners:
   ```ts
   it('cancela gesturestart, gesturechange y gestureend con listeners no pasivos', () => {
     // doc falso: addEventListener(tipo, fn, opciones) guarda [tipo, fn, opciones]
@@ -301,17 +301,17 @@ Es la primera porque valida el riesgo de las pruebas: si el truco del evento sin
     expect(e.preventDefault).toHaveBeenCalled();
   });
   ```
-- [ ] **Paso 2:** `npm test` → falla (no existe `gestos.ts`). Implementar `bloquearGestos`. `npm test` → pasa.
-- [ ] **Paso 3: base del juego.**
+- [x] **Paso 2:** `npm test` → falla (no existe `gestos.ts`). Implementar `bloquearGestos`. `npm test` → pasa.
+- [x] **Paso 3: base del juego.**
   - `EscenaBase` con la plantilla del skill.
   - `Arranque` hereda de `EscenaBase`, llama `super.init(data)` y usa `this.escuchar(this.scale, RESIZE, this.centrar)` en lugar de su `on`/`off` manual. Sin más cambios por ahora.
   - `main.ts`: `input: { activePointers: 3 }`, `fps: { panicMax: 0 }`, `bloquearGestos(document)`, y `if (esModoDepurar(location.search)) exponerJuego(game)`.
   - `index.html`: `#game, #game canvas { touch-action: none; }`.
-- [ ] **Paso 4: ayudante `tocar`** en `e2e/tactil.ts`.
+- [x] **Paso 4: ayudante `tocar`** en `e2e/tactil.ts`.
   - Convierte coordenadas lógicas a `clientX/clientY` con el `getBoundingClientRect()` del canvas y `__juego.scale.gameSize`.
   - Despacha sobre el `canvas` un `Event(tipo, { bubbles: true, cancelable: true })` con `changedTouches` y `touches` definidos con `Object.defineProperty`. Cada toque lleva `identifier`, `clientX`, `clientY`, `pageX`, `pageY`, `screenX`, `screenY` y `target: canvas`.
   - `new Touch()` no existe en este WebKit ("Illegal constructor").
-- [ ] **Paso 5: e2e de validación** en `e2e/controles.e2e.ts` (la página abre con `./?depurar`):
+- [x] **Paso 5: e2e de validación** en `e2e/controles.e2e.ts` (la página abre con `./?depurar`):
   ```ts
   test('dos dedos sintéticos quedan abajo a la vez en Phaser', async ({ page }) => {
     await tocar(page, 'touchstart', [{ id: 1, x: 300, y: 500 }]);
@@ -327,10 +327,10 @@ Es la primera porque valida el riesgo de las pruebas: si el truco del evento sin
   });
   test('sin ?depurar no existe window.__juego', async ({ page }) => { /* ... */ });
   ```
-- [ ] **Paso 6: correr `npm run test:e2e`.**
+- [x] **Paso 6: correr `npm run test:e2e`.**
   - Si "dos dedos" pasa, seguir.
   - **Si no pasa después de dos intentos:** no forzarlo. Anotarlo en la bitácora, borrar ese test y avisar al orquestador. El plan sigue con el multitouch cubierto por las unitarias de `ControlTactil` (tarea 3) y la prueba manual, y los e2e de la tarea 5 usan un solo dedo a la vez.
-- [ ] **Paso 7:** `npm test`, `npm run build` y `npm run test:e2e` en verde (los e2e de T-003 siguen pasando). Commit: `T-004: agrega la base táctil y valida el e2e de varios dedos`.
+- [x] **Paso 7:** `npm test`, `npm run build` y `npm run test:e2e` en verde (los e2e de T-003 siguen pasando). Commit: `T-004: agrega la base táctil y valida el e2e de varios dedos`.
 
 ---
 

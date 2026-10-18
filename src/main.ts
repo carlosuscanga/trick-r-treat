@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { Arranque } from './escenas/Arranque';
+import { esModoDepurar, exponerJuego } from './depurar/depurar';
 import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
+import { bloquearGestos } from './plataforma/gestos';
 import { pausarEnVertical } from './plataforma/orientacion';
 
 const contenedor = document.getElementById('game')!;
@@ -21,8 +23,14 @@ const game = new Phaser.Game({
     width: anchoParaPantalla(contenedor),
     height: ALTO,
   },
+  // Hasta 3 dedos a la vez (joystick + Saltar + Brazos); Phaser trae 1 por defecto.
+  input: { activePointers: 3 },
+  // Sin tope de delta: al volver del segundo plano no hay cámara lenta (FRA-03).
+  fps: { panicMax: 0 },
   scene: [Arranque],
 });
 
 ajustarAnchoAlContenedor(game, contenedor);
 pausarEnVertical(game);
+bloquearGestos(document);
+if (esModoDepurar(location.search)) exponerJuego(game);

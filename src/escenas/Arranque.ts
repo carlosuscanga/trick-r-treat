@@ -1,15 +1,22 @@
 import Phaser from 'phaser';
 import { motivoSinAudio } from '../plataforma/audio';
+import { EscenaBase } from './EscenaBase';
 
 // Primera escena: pide el primer toque, que en iOS es lo que desbloquea el audio.
 // Phaser desbloquea el audio solo con ese toque; aquí solo esperamos a que termine.
-export class Arranque extends Phaser.Scene {
+export class Arranque extends EscenaBase {
   private texto!: Phaser.GameObjects.Text;
   private esperandoDesbloqueo = false;
   private errorDeCarga: string | null = null;
 
   constructor() {
     super('Arranque');
+  }
+
+  init(data?: unknown) {
+    super.init(data);
+    this.esperandoDesbloqueo = false;
+    this.errorDeCarga = null;
   }
 
   preload() {
@@ -34,10 +41,7 @@ export class Arranque extends Phaser.Scene {
       .setOrigin(0.5);
 
     // El ancho del juego cambia con la pantalla: recentrar al cambiar.
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.centrar, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.scale.off(Phaser.Scale.Events.RESIZE, this.centrar, this);
-    });
+    this.escuchar(this.scale, Phaser.Scale.Events.RESIZE, this.centrar);
 
     this.input.on('pointerup', () => this.sonarPrueba());
   }
