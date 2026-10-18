@@ -1,6 +1,6 @@
 ---
 id: T-035
-titulo: Crear el skill rendimiento-y-memoria y su regla por ruta
+titulo: Crear el skill `rendimiento-y-memoria` y su regla por ruta
 tipo: codigo
 hito: H1
 estado: hecha

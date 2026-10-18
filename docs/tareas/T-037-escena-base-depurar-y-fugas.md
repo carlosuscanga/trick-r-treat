@@ -1,6 +1,6 @@
 ---
 id: T-037
-titulo: EscenaBase, ?depurar y e2e de fugas
+titulo: "`EscenaBase`, `?depurar` y e2e de fugas"
 tipo: codigo
 hito: H2
 estado: pendiente

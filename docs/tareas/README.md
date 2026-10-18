@@ -41,11 +41,13 @@ Se planea por oleadas: H1 a H3 van detallados, y H4 y H5 tienen tareas gruesas q
 
 ## Tablero
 
-Una tabla por hito. Los **carriles** muestran qué se puede hacer al mismo tiempo: las tareas de un carril van en secuencia, y los carriles distintos avanzan en paralelo.
+Una tabla por hito. Las tablas se **generan** con `npm run tablero` desde el frontmatter de cada tarea: no se editan a mano (`npm test` falla si quedan desfasadas). Los **carriles** muestran qué se puede hacer al mismo tiempo: las tareas de un carril van en secuencia, y los carriles distintos avanzan en paralelo.
 
 ### H1 · Esqueleto en el iPhone
 
 Al final: un rectángulo camina y salta en el iPhone desde un link público.
+
+<!-- tablero:H1 -->
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
@@ -57,12 +59,14 @@ Al final: un rectángulo camina y salta en el iPhone desde un link público.
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | pendiente | media | T-002 | — |
 | [T-031](T-031-tests-obligatorios-antes-del-merge.md) | Tests obligatorios antes del merge | codigo | hecha | alta | T-006 | [plan](../planes/T-031-tests-obligatorios-antes-del-merge.md) |
 | [T-033](T-033-e2e-obligatorio.md) | e2e obligatorio antes del merge | codigo | hecha | alta | T-003, T-031 | — |
-| [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [guía](../planes/T-034-performance-y-memoria.md) |
-| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | — |
-| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | en-progreso | alta | T-034 | — |
+| [T-034](T-034-performance-y-memoria.md) | Investigar performance, memoria y caché | investigacion | hecha | alta | T-003 | [plan](../planes/T-034-performance-y-memoria.md) |
+| [T-035](T-035-skill-rendimiento-y-memoria.md) | Crear el skill `rendimiento-y-memoria` y su regla por ruta | codigo | hecha | alta | T-034 | [plan](../planes/T-035-skill-rendimiento-y-memoria.md) |
+| [T-036](T-036-presupuesto-de-bundle-en-ci.md) | Presupuesto de bundle en CI | codigo | en-progreso | alta | T-034 | [plan](../planes/T-036-presupuesto-de-bundle-en-ci.md) |
 | [T-045](T-045-modelo-y-esfuerzo-en-planes.md) | Modelo y esfuerzo por paso en los planes | codigo | hecha | alta | — | — |
 | [T-046](T-046-retomar-tareas-en-sesion-nueva.md) | Retomar una tarea en una sesión nueva | codigo | hecha | media | — | [plan](../planes/T-046-retomar-tareas-en-sesion-nueva.md) |
 | [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | en-progreso | alta | — | — |
+
+<!-- /tablero:H1 -->
 
 ```
 A (ruta crítica)  T-001 ─→ T-003 ─→ T-034 ─→ T-035 ─→ T-004   ← el skill va antes de programar T-004
@@ -76,6 +80,8 @@ F (proceso)       T-045 ─→ T-046 ─→ T-047     ← T-047 en paralelo con 
 ### H2 · Bucle completo
 
 Al final: una partida entera con cajas de colores y 1 minijuego.
+
+<!-- tablero:H2 -->
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
@@ -91,6 +97,8 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
 
+<!-- /tablero:H2 -->
+
 ```
 A (ruta crítica)  T-037 ─┬→ T-007 ─→ T-009 ─→ T-010
 B                 T-038 ─┘      └──→ T-008 ─→ T-011   ← T-037 y T-038 en paralelo, ambas antes de T-007
@@ -103,6 +111,8 @@ F (medición)      T-037 ─→ T-041              ← en el iPhone; se repite e
 ### H3 · La demo → `hito-h3`
 
 Al final: el bucle con 1 minijuego, ya con arte, sonido, nombre y celebración. Mi vo lo juega.
+
+<!-- tablero:H3 -->
 
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
@@ -118,6 +128,8 @@ Al final: el bucle con 1 minijuego, ya con arte, sonido, nombre y celebración. 
 | [T-032](T-032-tutorial-pantalla-de-inicio.md) | Tutorial para añadir el juego a la pantalla de inicio | codigo | pendiente | baja | T-003, T-018 | — |
 | [T-040](T-040-manifest-de-assets-y-memoria.md) | Manifest de assets y memoria estimada por escena | codigo | pendiente | media | T-039, T-012 | — |
 | [T-042](T-042-guardar-y-reanudar-partida.md) | Guardar y reanudar la partida | codigo | pendiente | media | T-007 | — |
+
+<!-- /tablero:H3 -->
 
 ```
 A (personaje)   T-013 ──────────┐
@@ -135,6 +147,8 @@ I (medición)    T-041 (2.ª ronda)       ← con el primer arte real
 
 Al final: una partida variada, con 4 a 6 minijuegos, cada uno con su arte y su disfraz.
 
+<!-- tablero:H4 -->
+
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
 | [T-022](T-022-prueba-latencia-audio.md) | Prueba de latencia de audio en iPhone | investigacion | pendiente | media | T-003 | — |
@@ -142,19 +156,25 @@ Al final: una partida variada, con 4 a 6 minijuegos, cada uno con su arte y su d
 | [T-024](T-024-construir-minijuegos-elegidos.md) | Construir los minijuegos elegidos | codigo | pendiente | alta | T-009, T-013, T-023 | — |
 | [T-025](T-025-balance-dificultad-y-ventajas.md) | Balance de dificultades y ventajas | diseno | pendiente | media | T-024 | — |
 
+<!-- /tablero:H4 -->
+
 T-022 puede hacerse en cualquier momento después de T-003. T-024 se parte en una subtarea por minijuego, y esas subtareas van en paralelo.
 
 ### H5 · Exploración y v1 → `v1.0`
 
 Al final: el juego completo, con trepar, romper y dulces de ½. El regalo.
 
+<!-- tablero:H5 -->
+
 | ID | Tarea | Tipo | Estado | Prio | Depende | Plan |
 |----|-------|------|--------|------|---------|------|
 | [T-026](T-026-definir-exploracion.md) | Definir la exploración | diseno | pendiente | media | — | — |
 | [T-027](T-027-trepar-y-techos.md) | Trepar árboles y subir a techos | codigo | pendiente | media | T-008, T-026 | — |
 | [T-028](T-028-romper-objetos-y-medio-dulce.md) | Romper objetos y dulces de ½ | codigo | pendiente | media | T-008, T-026 | — |
-| [T-029](T-029-entrega-v1.md) | Pulido final y entrega de la v1 | codigo | pendiente | alta | todas | — |
+| [T-029](T-029-entrega-v1.md) | Pulido final y entrega de la v1 | codigo | pendiente | alta | T-001 … T-028 | — |
 | [T-043](T-043-service-worker-y-manifest.md) | Service worker, manifest y chunk *vendor* | codigo | pendiente | baja | T-039, T-018 | — |
+
+<!-- /tablero:H5 -->
 
 T-026 puede definirse en cualquier momento. T-027 y T-028 van en paralelo. T-043 va solo con el juego estable.
 
@@ -175,7 +195,7 @@ Lo que queda fuera de la v1 a propósito. No tiene tareas todavía.
 
 ## Reglas
 
-- El estado vive en el frontmatter del archivo **y** en el tablero. Al cambiarlo, actualizar ambos, siempre **en `main`**. Las ramas solo tocan los criterios y la bitácora de su propia tarea.
+- Los datos de una tarea (estado, prioridad, dependencias, plan) viven **solo en su frontmatter**. Al cambiarlos, correr `npm run tablero`, que regenera las tablas; `npm test` falla si quedan desfasadas. Los cambios de estado van siempre **en `main`**. Las ramas solo tocan los criterios y la bitácora de su propia tarea.
 - Los archivos no se mueven ni se borran al terminar; solo cambia el estado.
 - Una tarea grande se parte en subtareas con su propio ID.
 - Los IDs son consecutivos y no se reutilizan.
@@ -192,7 +212,7 @@ hito: H1 | H2 | H3 | H4 | H5
 estado: pendiente
 prioridad: alta | media | baja
 depende: []
-plan: null
+plan: null  # o requerido, o docs/planes/T-000-titulo.md
 rama: null
 worktree: null
 ---
