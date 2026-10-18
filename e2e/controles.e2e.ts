@@ -448,8 +448,22 @@ test.describe('panel ?depurar', () => {
     await entrarALaCalle(page);
     await abrirPanel(page);
 
-    // El joystick queda debajo del panel: Phaser ve que el dedo no está sobre el canvas.
-    await joystick(page, 1, 100);
+    // El joystick queda debajo del panel. Los eventos van al elemento que de verdad está
+    // bajo el dedo (el panel), como en Safari, y no directo al canvas.
+    const debajo = await page.evaluate(({ x, y }) => {
+      const caja = document.querySelector('canvas')!.getBoundingClientRect();
+      const { width, height } = window.__juego!.scale.gameSize;
+      const el = document.elementFromPoint(caja.left + (x / width) * caja.width, caja.top + (y / height) * caja.height);
+      return !!el?.closest('#depurar-panel');
+    }, JOY);
+    expect(debajo).toBe(true);
+
+    // Phaser sí ve el dedo (por su listener de window), pero como empezó fuera del canvas
+    // lo entrega como POINTER_DOWN_OUTSIDE, que los controles no escuchan.
+    await tocar(page, 'touchstart', [{ id: 1, ...JOY }], { bajoElDedo: true });
+    expect(await punterosAbajo(page)).toBe(1);
+    expect((await leerCalle(page)).joystickId).toBe(-1);
+    await tocar(page, 'touchmove', [{ id: 1, x: JOY.x + 100, y: JOY.y }], { bajoElDedo: true });
     await siguienteFrame(page);
     const estado = await leerCalle(page);
     expect(estado.joystickId).toBe(-1);

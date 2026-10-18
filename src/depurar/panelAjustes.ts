@@ -37,7 +37,7 @@ const ESTILOS = `
   width:44px;height:44px;border-radius:22px;border:0;background:#000b;color:#fff;font-size:22px;
   touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .depurar-panel{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:1000;
-  width:min(520px,calc(100vw - 112px));max-height:calc(100vh - 140px);overflow-y:auto;
+  width:min(520px,calc(100vw - 112px));max-height:calc(100vh - 140px);max-height:calc(100dvh - 140px);overflow-y:auto;
   box-sizing:border-box;padding:10px 14px;border-radius:12px;background:#000d;color:#fff;
   font:14px system-ui,sans-serif;pointer-events:auto;touch-action:auto;
   user-select:text;-webkit-user-select:text;-webkit-touch-callout:default;overscroll-behavior:contain}
@@ -140,6 +140,7 @@ export function montarPanel(game: Phaser.Game, ajustes: Ajustes, doc: Document =
       panel.append(caja);
       caja.focus();
       caja.select();
+      caja.setSelectionRange(0, caja.value.length);
     }
   });
 

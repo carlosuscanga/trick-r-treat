@@ -61,7 +61,7 @@ describe('plataformas', () => {
       { nombre: 'b', x: 500, ancho: 100, alto: 400 },
     ];
     const errores = revisarCalle(bloques, limites);
-    expect(errores.some((e) => e.includes('b') && e.includes('inalcanzable'))).toBe(true);
+    expect(errores.some((e) => e.includes('"b"') && e.includes('inalcanzable'))).toBe(true);
   });
 
   it('la banqueta es de toque corto y el auto no', () => {

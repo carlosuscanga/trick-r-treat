@@ -673,8 +673,11 @@ No se sugiere Fable: el riesgo está en la sensación en el iPhone, no en la com
 
 ## Desvíos durante la implementación
 
-La bitácora de [T-004](../tareas/T-004-prueba-controles.md) (2026-10-17) lista los desvíos. Los que cambian lo escrito arriba son estos tres:
+La bitácora de [T-004](../tareas/T-004-prueba-controles.md) (2026-10-17) lista los desvíos. Los que cambian lo escrito arriba son estos:
 
 - **Tarea 2, reglas 1, 3 y 4 de `pasoSalto`:** el búfer se compara con `>= 0`, y el corte de altura variable aplica también en el frame del salto.
 - **Tarea 3, disposición:** los valores 140/130/310/250 son solo los valores por defecto. La posición se calcula desde `ajustes.botones`.
+- **Tarea 4, `validarBloques`:** `sobre` debe apuntar a un bloque anterior en la lista.
+- **Tarea 5, suelo para el salto:** `enSuelo = blocked.down && velocity.y >= 0`.
 - **Tarea 6:** se agregó `topeVertical` (`max(caidaMax, v0)`) para que el tope de caída no recorte la subida.
+- **Revisión final:** el joystick se reancla tras un cambio de tamaño, para que las barras de Safari no muevan su origen, y `touchcancel` suelta todos los controles.
