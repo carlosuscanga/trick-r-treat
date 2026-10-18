@@ -1,0 +1,21 @@
+{
+  "salto": {
+    "alturaMax": 260,
+    "alturaMin": 70,
+    "tiempoSubida": 0.38,
+    "tiempoCaida": 0.27,
+    "caidaMax": 1500,
+    "coyoteMs": 100,
+    "bufferMs": 130,
+    "apiceColgado": false
+  },
+  "caminar": { "velocidad": 360 },
+  "joystick": { "radio": 75, "activa": 0.25, "suelta": 0.15, "margenBorde": 48 },
+  "botones": {
+    "radioToque": 75,
+    "radioDibujo": 60,
+    "margenAbajo": 40,
+    "saltar": { "derecha": 140, "abajo": 130 },
+    "brazos": { "derecha": 310, "abajo": 250 }
+  }
+}

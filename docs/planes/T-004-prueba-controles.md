@@ -367,9 +367,9 @@ Reglas de `pasoSalto`, en orden:
 4. Si no saltó, `!sostenido` y `vy < -vCorte` → `salida.vy = -vCorte` (corte de la altura variable).
 5. Gravedad: `gSubida` si `vy < 0`; `gBajada` si no. Con `apiceColgado`, `sostenido` y `|vy| < 120`, la mitad.
 
-- [ ] **Paso 1: unitarias de ajustes** (`ajustes.test.ts`): el JSON pasa la validación; un campo faltante o no numérico lanza un error que lo nombra; `derivarFisica(AJUSTES_POR_DEFECTO.salto)` da `gSubida ≈ 3601`, `v0 ≈ 1368.4`, `gBajada ≈ 7133` y `vCorte ≈ 710` (`toBeCloseTo`, 0 decimales).
-- [ ] **Paso 2:** que falle → implementar → que pase.
-- [ ] **Paso 3: unitarias del salto** (`salto.test.ts`). Usan un ayudante de prueba `simular(f, sostenerMs, dtFrameMs)` que llama a `pasoSalto` por frame e integra la posición a 120 pasos fijos por segundo, como Arcade en la escena:
+- [x] **Paso 1: unitarias de ajustes** (`ajustes.test.ts`): el JSON pasa la validación; un campo faltante o no numérico lanza un error que lo nombra; `derivarFisica(AJUSTES_POR_DEFECTO.salto)` da `gSubida ≈ 3601`, `v0 ≈ 1368.4`, `gBajada ≈ 7133` y `vCorte ≈ 710` (`toBeCloseTo`, 0 decimales).
+- [x] **Paso 2:** que falle → implementar → que pase.
+- [x] **Paso 3: unitarias del salto** (`salto.test.ts`). Usan un ayudante de prueba `simular(f, sostenerMs, dtFrameMs)` que llama a `pasoSalto` por frame e integra la posición a 120 pasos fijos por segundo, como Arcade en la escena:
   - `salta desde el suelo con vy = -v0 y emite 'salto'`;
   - `coyote: salta a 100 ms de dejar el suelo, no a 101 ms` (pasos de `dtMs = 1`);
   - `búfer: Saltar 130 ms antes de aterrizar salta al tocar suelo; 131 ms no`;
@@ -378,8 +378,8 @@ Reglas de `pasoSalto`, en orden:
   - `cae con gBajada > gSubida`;
   - `la altura máxima es la misma con frames de 8.3, 16.7 y 33.3 ms (±2 %)`;
   - `apiceColgado apagado no cambia la gravedad; encendido la reduce a la mitad cerca del ápice`.
-- [ ] **Paso 4:** que falle → implementar `salto.ts` → que pase.
-- [ ] **Paso 5:** `npm test`, `npm run build`. Commit: `T-004: agrega los ajustes y la lógica del salto`.
+- [x] **Paso 4:** que falle → implementar `salto.ts` → que pase.
+- [x] **Paso 5:** `npm test`, `npm run build`. Commit: `T-004: agrega los ajustes y la lógica del salto`.
 
 ---
 
