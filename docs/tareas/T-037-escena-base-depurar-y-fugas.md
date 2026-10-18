@@ -3,10 +3,12 @@ id: T-037
 titulo: "`EscenaBase`, `?depurar` y e2e de fugas"
 tipo: codigo
 hito: H2
-estado: pendiente
+estado: en-progreso
 prioridad: alta
 depende: [T-004, T-034]
 plan: requerido
+rama: T-037-escena-base-depurar-y-fugas
+worktree: .claude/worktrees/T-037-escena-base-depurar-y-fugas
 ---
 
 ## Qué
