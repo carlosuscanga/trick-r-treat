@@ -1,0 +1,10 @@
+[
+  { "nombre": "auto", "x": 420, "ancho": 260, "alto": 140 },
+  { "nombre": "banqueta", "x": 900, "ancho": 3000, "alto": 40 },
+  { "nombre": "bote", "x": 1100, "ancho": 90, "alto": 60, "sobre": "banqueta" },
+  { "nombre": "calabaza", "x": 1700, "ancho": 70, "alto": 50, "sobre": "banqueta" },
+  { "nombre": "lapida", "x": 2200, "ancho": 60, "alto": 90, "sobre": "banqueta" },
+  { "nombre": "portico", "x": 2900, "ancho": 220, "alto": 140, "sobre": "banqueta" },
+  { "nombre": "casa", "x": 3120, "ancho": 600, "alto": 340, "sobre": "banqueta" },
+  { "nombre": "cerca", "x": 4050, "ancho": 500, "alto": 70 }
+]

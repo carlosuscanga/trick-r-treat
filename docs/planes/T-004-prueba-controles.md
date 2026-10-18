@@ -467,7 +467,7 @@ Reglas de `pasoSalto`, en orden:
   - pórtico (140 sobre la banqueta, pegado a la casa: 180);
   - dos o tres adornos de Halloween de ejemplo: calabaza, lápida y cerca.
 
-- [ ] **Paso 1: unitarias:**
+- [x] **Paso 1: unitarias:**
   - `la calle de prueba cumple la regla` (`revisarCalle(BLOQUES_CALLE_PRUEBA, limitesDeSalto(AJUSTES_POR_DEFECTO))` → `[]`);
   - `un bloque de 450 rompe la altura máxima`;
   - `un bloque a 230 sobre la calle sin escalón intermedio es inalcanzable`;
@@ -476,8 +476,8 @@ Reglas de `pasoSalto`, en orden:
   - `la banqueta es de toque corto y el auto no`;
   - `si el salto crece, los límites crecen` (alturaMax 320 → escalonMax 272);
   - `validarBloques rechaza un sobre inexistente y nombres repetidos`.
-- [ ] **Paso 2:** que falle → implementar → que pase.
-- [ ] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega la calle de prueba y su regla de plataformas`.
+- [x] **Paso 2:** que falle → implementar → que pase.
+- [x] **Paso 3:** `npm test`, `npm run build`. Commit: `T-004: agrega la calle de prueba y su regla de plataformas`.
 
 ---
 
