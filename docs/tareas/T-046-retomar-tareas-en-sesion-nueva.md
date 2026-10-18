@@ -33,3 +33,4 @@ Hoy "Estado actual" mezcla lo vigente con el historial de cada sesión, y crece.
 ## Bitácora
 
 - 2026-10-17: creada. El product owner preguntó si retomar con "retoma T-NNN" era eficiente. Se hace al abrir la siguiente ventana de uso, porque la actual estaba al 96%.
+- 2026-10-17: incluir en el protocolo un `git fetch` después de cada push directo a `main`. Ese push va por URL con la deploy key, no por `origin`, así que `origin/main` local queda viejo y el editor muestra "1 adelante" aunque el push sí se hizo.
