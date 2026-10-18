@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "test": "vitest run --dir src && vitest run --dir scripts",
     "tablero": "node scripts/tablero-cli.mjs",
+    "tarea": "node scripts/tarea-cli.mjs",
     "test:presupuestos": "vitest run --dir presupuestos --silent=false",
     "test:e2e": "playwright test"
   },
