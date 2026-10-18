@@ -7,9 +7,9 @@ Tablero del proyecto, como un Jira en markdown. Cada tarea es un archivo `T-NNN-
 Solo lo vigente. Se actualiza al cerrar cada sesión, y lo que se hizo en cada una va arriba de [`historial.md`](historial.md). Para seguir una sola tarea basta con "retoma T-NNN" ([`docs/README.md`](../README.md), "Sesiones con Claude").
 
 - **Fase:** H2 · Bucle completo. H1 cerró el 2026-10-18 (tag `hito-h1`): el rectángulo camina y salta en el iPhone desde Pages (T-004, **plan A**), y el CI ya tiene presupuesto de bundle (T-036). T-005, T-030 y T-047 pasaron a H2.
-- **En curso:** T-047 (tablero generado desde el frontmatter), que salió de la retro de proceso del 2026-10-18.
+- **En curso:** nada. T-047 cerró: las tablas del tablero se generan con `npm run tablero` desde el frontmatter y ya no se editan a mano.
 - **Siguiente paso:** T-037 (`EscenaBase`, `?depurar` y e2e de fugas), que sigue en la ruta crítica. El JS inicial pesa 317.6 de 340 KiB: si un PR se pasa, no se sube el límite sin decisión del product owner (T-036, "Riesgos" del plan). En paralelo se pueden hacer T-005 (investigación de minijuegos), T-012 (pipeline de arte; seguir las reglas de arte de la guía: NPOT, ≤ 2048 px, 1x y atlas por escena), T-018 (nombre del juego) y T-030 (cierre automático; ahora tiene que convivir con el ruleset: el plan de T-031 propone una segunda deploy key como *secret*).
-- **Pendiente de decidir:** volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
+- **Pendiente de decidir:** de la retro de proceso del 2026-10-18 (ver historial): proceso según el tamaño de la tarea (T-047 ya probó "plan dentro de la tarea" para una tarea chica), estimación S/M/L contra lo real, podar reglas en cada retro de hito, pendientes con fecha, una mini revisión con Mi vo al cerrar H2 y bajar T-038 a T-040 hasta tener la medición de T-041. Si T-029 debe depender también de T-030 a T-047 (hoy solo de T-001 a T-028). Volver a medir la activación del skill (`docs/planes/T-035-evaluaciones/activacion.py --variante con-config`); si queda por debajo de 8/10, ajustar la `description`. Para T-037: corregir el `POST_STEP` de TEX-07 en la guía y decidir sobre `window.__juego`. Si la regla de pushes directos a `main` (`docs/README.md`) debe incluir también los cambios a `CLAUDE.md`. Las revisiones con Mi vo fuera de la demo, cuando el product owner lo decida. T-032 (tutorial de pantalla de inicio) queda en prioridad baja y no bloquea la demo.
 - **Al retomar:** abrir Claude desde la carpeta principal, para que cargue el token del proyecto. Comprobar con `gh auth status` que sale `github_pat_…`.
 
 ## Planeación de la v1
@@ -96,7 +96,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-038](T-038-config-rendimiento-y-webgl.md) | Config de rendimiento y robustez WebGL | codigo | pendiente | alta | T-034 | — |
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |
-| [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | en-progreso | alta | — | — |
+| [T-047](T-047-tablero-generado.md) | Tablero generado desde el frontmatter | codigo | hecha | alta | — | — |
 
 <!-- /tablero:H2 -->
 

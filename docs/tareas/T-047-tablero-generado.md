@@ -3,11 +3,11 @@ id: T-047
 titulo: Tablero generado desde el frontmatter
 tipo: codigo
 hito: H2
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: []
 plan: null
-rama: T-047-tablero-generado
+rama: null
 worktree: null
 ---
 
@@ -55,3 +55,4 @@ Tarea chica: el plan va aquí y no en `docs/planes/`.
 - 2026-10-18: revisión con `code-reviewer-opus55`: sin bloqueantes. Se corrigieron: reglas contradictorias sobre si una rama toca el tablero (ahora puede cambiar `plan:` y regenerar), revisar el tablero antes del push con la deploy key, la plantilla con un comentario `#` que el lector rechazaba, claves y dependencias repetidas, comillas en listas, el filtro de archivos del CLI y `engines` a `>=22.18.0` (Node corre `.ts` desde esa versión). **Pendiente del product owner:** T-029 no depende de T-030 a T-047; decidir si se agregan.
 - 2026-10-18: pasa de H1 a H2 al cerrar H1 (decisión del product owner, desde la sesión que cerró T-036). Solo cambia `hito:` en el frontmatter.
 - 2026-10-18: el product owner corrió `npm run tablero` con el Node 20 de la Mac y salió `ERR_UNKNOWN_FILE_EXTENSION`. El CLI ahora revisa la versión antes de importar el `.ts` y pide `nvm use`.
+- 2026-10-18: PR #15 mergeado sin squash, con checks en verde. Tarea `hecha`. Es la primera tarea que se cierra con el flujo nuevo: solo cambia el frontmatter y `npm run tablero` regenera la fila.
