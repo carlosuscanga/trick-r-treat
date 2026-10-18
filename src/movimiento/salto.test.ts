@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { AJUSTES_POR_DEFECTO, derivarFisica, type Fisica } from './ajustes';
 import { crearEstadoSalto, pasoSalto, type EstadoSalto, type SalidaSalto } from './salto';
 
-const F = derivarFisica(AJUSTES_POR_DEFECTO.salto);
+// Valores fijos: la lógica se prueba sin depender de lo que se afine en el iPhone.
+const F = derivarFisica({ ...AJUSTES_POR_DEFECTO.salto, alturaMax: 260, alturaMin: 70, tiempoSubida: 0.38, tiempoCaida: 0.27 });
 
 /** Paso fijo de Arcade en la escena: 120 pasos por segundo. */
 const PASO_MS = 1000 / 120;

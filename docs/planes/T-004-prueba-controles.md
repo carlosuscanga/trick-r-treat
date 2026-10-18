@@ -750,3 +750,12 @@ Sigue sin Phaser. Las demás revisiones (altura máxima, grosor, se sale) no cam
 - [x] `npm test`, `npm run test:e2e` y `npm run build` en verde.
 - [x] Revisión con `code-reviewer-opus55`.
 - [x] Push al PR #12 y filas 19 y 20 en su descripción.
+
+### Tarea 10: valores afinados en el iPhone y curva de velocidad
+
+Pedido del product owner en la segunda ronda: para lograr una velocidad baja hay que mover el pulgar muy poco.
+
+- `ajustes.json` toma los valores que el product owner copió de `?depurar`: `tiempoSubida` 0.25, `tiempoCaida` 0.19, `velocidad` 561 y `proporcional` prendida.
+- `caminar.curva` (1 a 4, por defecto 2): la velocidad sigue `velocidadMinima + (1 − velocidadMinima) · fuerza ^ curva`. Los extremos no cambian, pero a media distancia del pulgar va al 47.5 % y no al 65 %. Tiene su deslizador en el panel.
+- Las pruebas de la lógica del salto y de la física usan valores fijos, no los de `ajustes.json`, para que afinar en el iPhone no rompa pruebas. Los e2e leen la velocidad de `ajustes.json`.
+- **Modelo y esfuerzo:** lo hizo el orquestador (Opus) directamente; son pocas líneas y las pruebas ya estaban.

@@ -133,7 +133,8 @@ describe('plataformas', () => {
   it('los límites por defecto salen de los ajustes', () => {
     expect(limites.escalonMax).toBeCloseTo(221);
     expect(limites.escalonCorto).toBeCloseTo(59.5);
-    expect(limites.distanciaMax).toBeCloseTo(198.9, 1);
+    // 0.85 · 561 · (0.25 + 0.19)
+    expect(limites.distanciaMax).toBeCloseTo(209.8, 1);
   });
 
   it('validarBloques rechaza un sobre inexistente y nombres repetidos', () => {

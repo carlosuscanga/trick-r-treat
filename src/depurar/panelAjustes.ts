@@ -21,6 +21,7 @@ const CAMPOS: readonly Campo[] = [
   { ruta: 'salto.tiempoCaida', etiqueta: 'Tiempo de caída (s)', min: 0.15, max: 0.5, step: 0.01 },
   { ruta: 'caminar.velocidad', etiqueta: 'Velocidad (px/s)', min: 200, max: 600, step: 1 },
   { ruta: 'caminar.velocidadMinima', etiqueta: 'Velocidad mínima (fracción)', min: 0.1, max: 1, step: 0.05 },
+  { ruta: 'caminar.curva', etiqueta: 'Curva de velocidad (1 = lineal)', min: 1, max: 4, step: 0.1 },
   { ruta: 'salto.coyoteMs', etiqueta: 'Coyote (ms)', min: 0, max: 200, step: 1 },
   { ruta: 'salto.bufferMs', etiqueta: 'Búfer (ms)', min: 0, max: 250, step: 1 },
   { ruta: 'botones.radioToque', etiqueta: 'Radio de toque (px)', min: 50, max: 110, step: 1 },

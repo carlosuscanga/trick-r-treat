@@ -29,6 +29,8 @@ export type Ajustes = {
     proporcional: boolean;
     /** Fracción de `velocidad` al pasar la zona muerta (con `proporcional`). */
     velocidadMinima: number;
+    /** Exponente de la fuerza (con `proporcional`): 1 es lineal; más alto deja más recorrido a las velocidades bajas. */
+    curva: number;
   };
   joystick: { radio: number; activa: number; suelta: number; margenBorde: number };
   botones: {
@@ -77,6 +79,13 @@ function fraccion(entrada: Entrada, campo: string, donde: string): number {
   return valor;
 }
 
+// Exponente de 1 a 4: menor que 1 haría al revés (acelera de golpe con el pulgar cerca).
+function curva(entrada: Entrada, campo: string, donde: string): number {
+  const valor = numero(entrada, campo, donde);
+  if (valor < 1 || valor > 4) throw new Error(`${donde}.${campo}: debe estar entre 1 y 4`);
+  return valor;
+}
+
 function booleano(entrada: Entrada, campo: string, donde: string): boolean {
   const valor = entrada[campo];
   if (typeof valor !== 'boolean') throw new Error(`${donde}.${campo}: debe ser true o false`);
@@ -110,6 +119,7 @@ export function validarAjustes(datos: unknown): Ajustes {
       velocidad: numero(caminar, 'velocidad', 'ajustes.caminar'),
       proporcional: booleano(caminar, 'proporcional', 'ajustes.caminar'),
       velocidadMinima: fraccion(caminar, 'velocidadMinima', 'ajustes.caminar'),
+      curva: curva(caminar, 'curva', 'ajustes.caminar'),
     },
     joystick: {
       radio: numero(joystick, 'radio', 'ajustes.joystick'),

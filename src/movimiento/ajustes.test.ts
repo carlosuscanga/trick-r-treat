@@ -54,9 +54,18 @@ describe('validarAjustes', () => {
     }
   });
 
-  it('el JSON trae la velocidad proporcional apagada', () => {
-    expect(AJUSTES_POR_DEFECTO.caminar.proporcional).toBe(false);
+  it('el JSON trae la velocidad proporcional afinada en el iPhone', () => {
+    expect(AJUSTES_POR_DEFECTO.caminar.proporcional).toBe(true);
     expect(AJUSTES_POR_DEFECTO.caminar.velocidadMinima).toBe(0.3);
+    expect(AJUSTES_POR_DEFECTO.caminar.curva).toBe(2);
+  });
+
+  it('curva tiene que estar entre 1 y 4', () => {
+    for (const malo of [0.5, 4.5, '2']) {
+      const a = copia();
+      a.caminar.curva = malo;
+      expect(() => validarAjustes(a)).toThrow('ajustes.caminar.curva');
+    }
   });
 
   it('una sección faltante lanza un error que la nombra', () => {
@@ -73,9 +82,12 @@ describe('validarAjustes', () => {
   });
 });
 
+// Valores fijos para las cuentas: no dependen de lo que se afine en el iPhone.
+const SALTO = { ...AJUSTES_POR_DEFECTO.salto, alturaMax: 260, alturaMin: 70, tiempoSubida: 0.38, tiempoCaida: 0.27, caidaMax: 1500 };
+
 describe('derivarFisica', () => {
   it('deriva gravedades y velocidades de la altura y los tiempos', () => {
-    const f = derivarFisica(AJUSTES_POR_DEFECTO.salto);
+    const f = derivarFisica(SALTO);
     expect(f.gSubida).toBeCloseTo(3601, 0);
     expect(f.v0).toBeCloseTo(1368.4, 0);
     expect(f.gBajada).toBeCloseTo(7133, 0);
@@ -92,8 +104,8 @@ describe('derivarFisica', () => {
 });
 
 describe('topeVertical', () => {
-  it('con los valores por defecto manda la caída máxima', () => {
-    expect(topeVertical(derivarFisica(AJUSTES_POR_DEFECTO.salto))).toBe(1500);
+  it('si la caída máxima es mayor que v0, manda la caída máxima', () => {
+    expect(topeVertical(derivarFisica(SALTO))).toBe(1500);
   });
 
   it('si el salto despega más rápido que la caída máxima, manda v0', () => {

@@ -1,5 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
+import ajustesJson from '../src/movimiento/ajustes.json' with { type: 'json' };
 import { aCss, tocar } from './tactil';
+
+// Velocidad completa por defecto (la que se afina en el iPhone).
+const VEL = ajustesJson.caminar.velocidad;
 
 // e2e de los controles táctiles. Que se sientan bien se prueba a mano en el iPhone.
 
@@ -161,7 +165,7 @@ test.describe('calle de prueba', () => {
   test('joystick a la derecha mueve a Mi vo a la derecha y al soltar frena en el siguiente frame', async ({ page }) => {
     await joystick(page, 1, 100);
     await siguienteFrame(page);
-    expect((await leerCalle(page)).vx).toBe(360);
+    expect((await leerCalle(page)).vx).toBe(VEL);
 
     await tocar(page, 'touchend', [{ id: 1, x: JOY.x + 100, y: JOY.y }]);
     await siguienteFrame(page);
@@ -171,7 +175,7 @@ test.describe('calle de prueba', () => {
   test('joystick a la izquierda mueve a la izquierda', async ({ page }) => {
     await joystick(page, 1, -100);
     await siguienteFrame(page);
-    expect((await leerCalle(page)).vx).toBe(-360);
+    expect((await leerCalle(page)).vx).toBe(-VEL);
   });
 
   test('Saltar despega (velocity.y < 0) y Mi vo vuelve al suelo', async ({ page }) => {
@@ -193,7 +197,7 @@ test.describe('calle de prueba', () => {
     await tocar(page, 'touchstart', [{ id: 2, x: saltar.x, y: saltar.y }]);
     await siguienteFrame(page);
     const estado = await leerCalle(page);
-    expect(estado.vx).toBe(360);
+    expect(estado.vx).toBe(VEL);
     expect(estado.vy).toBeLessThan(0);
   });
 
@@ -254,7 +258,7 @@ test.describe('calle de prueba', () => {
     const estado = await leerCalle(page);
     expect(estado.direccion).toBe(1);
     expect(estado.joystickId).not.toBe(-1);
-    expect(estado.vx).toBe(360);
+    expect(estado.vx).toBe(VEL);
     // La disposición se recalculó con el ancho nuevo.
     const { ancho, derecha } = await page.evaluate(() => ({
       ancho: window.__juego!.scale.gameSize.width,
@@ -378,7 +382,7 @@ test.describe('calle de prueba', () => {
       return { texto: calle.textoBrazos.alpha as number, vx: calle.miVo.body.velocity.x as number };
     });
     expect(estado.texto).toBeGreaterThan(0);
-    expect(estado.vx).toBe(360);
+    expect(estado.vx).toBe(VEL);
   });
 });
 
@@ -536,21 +540,21 @@ test.describe('velocidad proporcional', () => {
     return vx;
   }
 
-  test('prendida, un arrastre corto da menos velocidad que uno largo', async ({ page }) => {
+  test('prendida (por defecto), un arrastre corto da menos velocidad que uno largo', async ({ page }) => {
+    const corto = await velocidadConArrastre(page, 30);
+    const largo = await velocidadConArrastre(page, 100);
+    // dx 30 da fuerza 0.2; con curva 2: VEL · (0.3 + 0.7 · 0.2²).
+    expect(corto).toBeCloseTo(VEL * (0.3 + 0.7 * 0.04));
+    expect(corto).toBeLessThan(largo);
+    expect(largo).toBe(VEL);
+  });
+
+  test('apagada, el arrastre corto y el largo dan la velocidad completa', async ({ page }) => {
     await abrirPanel(page);
     await page.locator('input[data-ajuste="caminar.proporcional"]').click();
     await abrirPanel(page); // el segundo clic lo cierra antes de tocar
 
-    const corto = await velocidadConArrastre(page, 30);
-    const largo = await velocidadConArrastre(page, 100);
-    // dx 30 da fuerza 0.2: 360 · (0.3 + 0.7 · 0.2) = 158.4.
-    expect(corto).toBeCloseTo(158.4);
-    expect(corto).toBeLessThan(largo);
-    expect(largo).toBe(360);
-  });
-
-  test('apagada, el arrastre corto y el largo dan la velocidad completa', async ({ page }) => {
-    expect(await velocidadConArrastre(page, 30)).toBe(360);
-    expect(await velocidadConArrastre(page, 100)).toBe(360);
+    expect(await velocidadConArrastre(page, 30)).toBe(VEL);
+    expect(await velocidadConArrastre(page, 100)).toBe(VEL);
   });
 });
