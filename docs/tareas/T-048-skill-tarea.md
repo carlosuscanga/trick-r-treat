@@ -6,7 +6,7 @@ hito: H2
 estado: en-progreso
 prioridad: alta
 depende: []
-plan: requerido
+plan: docs/planes/T-048-skill-tarea.md
 rama: T-048-skill-tarea
 worktree: .claude/worktrees/T-048-skill-tarea
 ---
