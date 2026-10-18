@@ -205,6 +205,18 @@ Lo que queda fuera de la v1 a propósito. No tiene tareas todavía.
 - Una tarea grande se parte en subtareas con su propio ID.
 - Los IDs son consecutivos y no se reutilizan.
 - Si la tarea toca varios archivos o tiene decisiones técnicas, se escribe un plan en `docs/planes/` con el mismo ID antes de programar.
+- Las tareas se toman, retoman y cierran con el skill `tarea` ("toma T-NNN", "retoma T-NNN", "cierra T-NNN"). Proceso en [`docs/README.md`](../README.md), "Trabajo en paralelo".
+
+## Definition of Ready
+
+Cuándo una tarea está **lista** para tomarse. Una tarea puede nacer incompleta: se revisa al tomarla y, si le falta algo, se refina en ese momento con el product owner, en `main`, antes de crear el worktree. No hay rutina fija de refinamiento.
+
+1. El "Qué" dice qué cambia para quien juega o para el proyecto, **sin decisiones abiertas**. Las que quedan se deciden al refinar o se anotan como fuera de alcance.
+2. Los criterios de aceptación se pueden marcar con un sí o un no, e incluyen la casilla de las tres capas de pruebas.
+3. Las dependencias están `hecha`. Si se pisa con otra tarea (las dos crean lo mismo, o una necesita algo que la otra no promete), dice quién hace qué.
+4. Si necesita plan, dice `plan: requerido`. El plan se escribe en la rama, como primer paso, y no se programa hasta que el product owner lo apruebe.
+
+`npm run tarea -- revisar T-NNN` revisa lo mecánico: el estado, las dependencias, que el "Qué" no esté vacío y la casilla de tres capas. Lo demás lo juzga Claude con el skill `tarea`.
 
 ## Plantilla
 
