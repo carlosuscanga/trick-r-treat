@@ -18,14 +18,15 @@ Referencia para medir rendimiento y memoria en Phaser 3.90 sobre Safari de iPhon
 - Exponer `window.__depurar` y un overlay DOM solo con `?depurar` en la URL. Ningún código del juego usa `__depurar`.
 - Overlay: un `<pre>` DOM actualizado cada 500 ms, nunca un `Text` de Phaser (alteraría la medición).
 - Separar la lógica en módulos puros, sin importar Phaser:
-  - `src/depuracion/metricas.ts`: `percentil`, `resumirFrames`, `memoriaTexturasMiB`.
-  - `src/depuracion/fugas.ts`: `crecimientos(antes, despues)`.
-- Lo que lee Phaser va aparte: `src/depuracion/contadores.ts` y `src/depuracion/overlay.ts`.
+  - `src/depurar/metricas.ts`: `percentil`, `resumirFrames`, `memoriaTexturasMiB`.
+  - `src/depurar/fugas.ts`: `crecimientos(antes, despues)`.
+- Lo que lee Phaser va aparte: `src/depurar/contadores.ts` y `src/depurar/overlay.ts`.
+- `window.__juego` (el `Phaser.Game`) también existe solo con `?depurar`: los e2e lo usan para manejar escenas; `__depurar` trae `instantanea()` (contadores de fuga) y `metricas()` (fps, p95, tirones, GPU, recargas).
 - Contadores (APIs de 3.90): `game.scale.listenerCount('resize')`; suma de `eventNames()`/`listenerCount` de `game.events`, `registry.events`, `sound` y `textures`; `textures.getTextureKeys().length`; `sound.getAll().length`; `cache.audio.getKeys().length`; `anims.anims.size`; `CanvasPool.total()`; `scene.getScenes(true)`; `children.length`; `tweens.getTweens().length`; MiB de `renderer.glTextureWrappers` (×4/3 si es POT); `game.loop.actualFps` y `rawDelta`; *draw calls* envolviendo `gl.drawArrays`.
 
 **Si todavía no existe**
 Criterio del product owner: si la tarea lo necesita, crea la base mínima con el comentario "mínima; T-0NN la completa"; no la refines; si ya existe, úsala.
-- `?depurar` y el e2e de fugas: los completa T-037. La mínima es solo `?depurar` → `window.__juego` para que el e2e llegue al juego; sin overlay ni contadores.
+- `?depurar` y el e2e de fugas ya existen (T-037): úsalos y no los reescribas.
 - `presupuestos/bundle.test.ts`: lo completa T-036.
 - Manifest de assets (`src/datos/assets.json`): lo completa T-040.
 

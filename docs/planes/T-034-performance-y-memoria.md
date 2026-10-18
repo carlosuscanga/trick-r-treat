@@ -30,7 +30,7 @@ Las rutas `phaser/src/...` son de `node_modules/phaser/src/` (Phaser **3.90.0**)
 | b | `TileSprite` de pantalla completa: ~8 MiB o ~23.8 MiB | **Son cosas distintas.** Con un frame de 1872×720, `TileSprite` crea: (1) `canvas` de ancho×alto, 1872×720 (`TileSprite.js:181`), 5.14 MiB en CPU, si WebKit reserva su *backing store* 🔬; (2) `fillCanvas` POT de 2048×1024 (`:258, :267, :277`), 8 MiB en CPU; (3) la textura GL `fillPattern` de ese canvas (`:470`), 8 MiB que, por ser POT, genera mipmaps (`WebGLTextureWrapper.js:356-361`) → **10.67 MiB en GPU**. Sumada la textura original (5.14 MiB), queda en **23.8 MiB**, o **29 MiB** con el canvas (1). Como `Image` cuesta **5.14 MiB**. El informe 04 contó solo la copia GL sin mipmaps; el 03 contó original + `fillCanvas` + GL con mipmaps. El A15 tiene memoria unificada: CPU y GPU salen de los mismos 4 GB. ✅ (cálculo desde el código) |
 | c | Base de 91 MiB de PreFX y `disablePreFX: true` | **Confirmado.** Sin `disablePreFX`, `PipelineManager.boot` crea `ceil(min(ancho, alto)/32) − 1 = 22` tamaños cuadrados (de 32 a 704 px) × 3 copias, más 3 *render targets* de pantalla completa (`PipelineManager.js:403-428`). El cálculo da ≈57 MiB, coherente con los −61 MiB medidos ✅. `disablePreFX` **solo** quita eso y `FX_PIPELINE` (`:403, :462`). **Siguen disponibles:** los postFX de cámara y de objeto (`postPipelineClasses` depende de `disablePostFX`, `:383-401`) y Light2D/PointLight (clases por defecto, `:94-101`) ✅. **Se pierde** `obj.preFX.*`: `FX.enable` pondría `pipeline = FX_PIPELINE`, que queda `undefined` (`FX.js:229`). Que falle con error o en silencio es 🔬. **Recomendación: `disablePreFX: true`**. Los brillos se pintan en el arte, con sprites de halo en `ADD` o con `postFX` de objeto (cada instancia reserva un *render target* de pantalla completa: ≈5.1 MiB, ver FRA-05). |
 | d | Memoria: texturas ≤ 64 MiB (05) o total ≤ 150 MB (03) | **Un solo presupuesto por capas** (sección 5): base de Phaser ≤ 32 MiB + postFX ≤ 11 MiB + texturas del juego ≤ 64 MiB + PCM ≤ 40 MB ≈ **≤ 150 MiB de assets vivos**. La huella total de la pestaña (JS, WebKit, copias en CPU) se vigila aparte: ≤ 300 MB, alarma en 450 MB. Todo 🔬 hasta la prueba de estrés. |
-| e | `?debug` / `?depurar=1` / `?e2e` | **Una sola bandera: `?depurar`** (basta con que exista), que expone **`window.__depurar`**. El código vive en `src/depuracion/`. Funciona también en Pages (los e2e corren contra el build). |
+| e | `?debug` / `?depurar=1` / `?e2e` | **Una sola bandera: `?depurar`** (basta con que exista), que expone **`window.__depurar`**. El código vive en `src/depurar/`. También existe `window.__juego` (el `Phaser.Game`, para los e2e). Corregido en T-037. Funciona también en Pages (los e2e corren contra el build). |
 | f | "`physics: { default: 'arcade' }` en una escena deja `this.physics` undefined" | **Cierto solo si el juego no declara física.** `GetPhysicsPlugins.js:20-52` toma `config.physics.default` **del juego** (`Config.js:486`) y, de la escena, cada **clave** + `Physics`. `{ default: 'arcade' }` en una escena pide un plugin `DefaultPhysics` que no existe, y `PluginManager.addToScene` lo salta en silencio (`hasCore`). Si el juego tiene `physics: { default: 'arcade' }`, **todas** las escenas tienen Arcade, y la escena ajusta con `physics: { arcade: {...} }`. La configuración de la escena gana en el `Merge` (`ArcadePhysics.js:191-197`). Hoy `main.ts` no declara física ✅. Convención en ESC-07. |
 | g1 | Música "en streaming con HTML5 Audio" (05) vs Web Audio (03) | Phaser 3.90 **no hace streaming** con Web Audio (`AudioFile.js:124-125`, comentado), y `disableWebAudio` cambia **todo** el juego a HTML5, donde iOS ignora `volume` ✅. **Música en Web Audio, mono y en bucle corto.** El streaming solo con `MediaElementSource` fuera de Phaser, y solo si el presupuesto no alcanza 🔬. |
 | g2 | Assets de minijuego: liberar (02/03) o dejar cargados (04, hipótesis) | **Liberar.** Seis atlas NPOT de 2000² son 91.6 MiB (128 MiB si son POT), más que todo el presupuesto ✅ (cálculo). |
@@ -103,6 +103,8 @@ Cada regla trae qué hacer o no hacer, por qué, un ejemplo y cómo se verifica 
 - **Ejemplo:**
   ```ts
   this.alLimpiar(() => this.game.events.once(Phaser.Core.Events.POST_STEP, () => {
+    // Con scene.restart() la escena ya volvió a arrancar en este mismo step y usa la textura: no borrar.
+    if (this.sys.getStatus() !== Phaser.Scenes.SHUTDOWN) return;
     for (const k of ['lluvia']) if (this.textures.exists(k)) this.textures.remove(k);
   }));
   ```
@@ -334,7 +336,7 @@ Qué limpia Phaser solo en `SHUTDOWN` ✅: DisplayList (`DisplayList.js:235-251`
 ### 4.9 Depuración (DEP)
 
 **DEP-01 · `?depurar` en la URL expone `window.__depurar` y un overlay DOM; la lógica de medición vive sin Phaser** ✅
-- **Archivos:** `src/depuracion/metricas.ts` (pura: `percentil`, `resumirFrames`, `memoriaTexturasMiB`), `src/depuracion/fugas.ts` (pura: `crecimientos(antes, despues)`), `src/depuracion/contadores.ts` (lee Phaser) y `src/depuracion/overlay.ts` (un `<pre>` actualizado cada 500 ms).
+- **Archivos:** `src/depurar/metricas.ts` (pura: `percentil`, `resumirFrames`, `memoriaTexturasMiB`), `src/depurar/fugas.ts` (pura: `crecimientos(antes, despues)`), `src/depurar/contadores.ts` (lee Phaser) y `src/depurar/overlay.ts` (un `<pre>` actualizado cada 500 ms). Con `?depurar` también existe `window.__juego` (el `Phaser.Game`), que usan los e2e para manejar escenas.
 - **Por qué:** el overlay no puede ser un `Text` de Phaser: alteraría la medición (TEX-06). Importar código con Phaser en Vitest truena con `window is not defined` ✅. El prototipo suma ≈0.8 KiB gzip ✅. Ningún código del juego usa `__depurar`.
 - **Contadores** (APIs de 3.90 ✅): `game.scale.listenerCount('resize')`; suma de `eventNames()/listenerCount` de `game.events`, `registry.events`, `sound` y `textures`; `textures.getTextureKeys().length`; `sound.getAll().length`; `cache.audio.getKeys().length`; `anims.anims.size`; `CanvasPool.total()`; `scene.getScenes(true)`; `children.length`; `tweens.getTweens().length`; MiB de `renderer.glTextureWrappers` (×4/3 si es POT); `game.loop.actualFps` y `rawDelta`; *draw calls* (envolviendo `gl.drawArrays`).
 - **Verifica:** unitarias de `metricas.ts` y `fugas.ts`; los e2e lo usan.
@@ -449,7 +451,7 @@ Nota: `performance.now()` tiene resolución de 1 ms en WebKit ✅, así que los 
 - `EscenaBase`, ESC-01 a ESC-07, y los arreglos de `Arranque` (ESC-06).
 - Config del juego: `disablePreFX: true`, `fps: { panicMax: 0 }`, sin `fps.limit`, sin `disableWebAudio` y la convención de física por escena.
 - ROB-01 (pérdida de contexto) y RED-04 (aviso de versión nueva).
-- `?depurar` (`src/depuracion/`) y el e2e de fugas.
+- `?depurar` (`src/depurar/`) y el e2e de fugas.
 - `presupuestos/bundle.test.ts` en el job `build`.
 - Reglas de código: POO-03 y FRA-04 desde la primera línea.
 - RED-03 (`src/assets/` + `paraLoader`) antes del primer asset de arte. Avisar a T-012: NPOT, ≤ 2048, 1x y atlas por escena.

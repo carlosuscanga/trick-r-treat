@@ -53,7 +53,7 @@ Reglas TEX-01 a TEX-09 (texturas y arte) y FRA-05 a FRA-08 (postFX, Light2D, cut
   }));
   ```
   No remuevas lo compartido (Mi vo, HUD, Calle).
-- **Si todavía no existe:** `alLimpiar()` llega con la `EscenaBase` completa (T-037). Con la mínima, registra la liberación con `this.events.once(Phaser.Scenes.Events.SHUTDOWN, …)` y no agregues `alLimpiar()`. El e2e de fugas puede contar `textures.getTextureKeys()` a mano mientras no exista `?depurar`.
+- `alLimpiar()` ya existe en `EscenaBase` (T-037). El e2e de fugas cuenta las texturas con `__depurar.instantanea().texturas`.
 - **Verifica:** e2e de fugas (las claves del minijuego desaparecen al salir y la lista vuelve a la base).
 - **Por qué:** las texturas sobreviven a la escena porque el manager es global; `textures.remove` libera GPU y CPU. [Guía, TEX](../../../../docs/planes/T-034-performance-y-memoria.md#42-texturas-y-arte-tex).
 
