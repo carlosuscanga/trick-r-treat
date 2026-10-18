@@ -9,7 +9,7 @@ function armar() {
   const oyentes = new Map<string, () => void>();
   const renderer = { on: (ev: string, fn: () => void) => void oyentes.set(ev, fn) };
   const game = { pause: vi.fn(), resume: vi.fn() };
-  const sonido = { pauseAll: vi.fn(), resumeAll: vi.fn() };
+  const sonido = { getAllPlaying: () => [] };
   const pausa = crearPausa(game, sonido);
   pausarSinContexto(renderer, pausa, eventos);
   return { game, pausa, emitir: (ev: string) => oyentes.get(ev)!() };
