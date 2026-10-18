@@ -92,6 +92,9 @@ jobs:
 
       - run: npm run build
 
+      # Presupuesto de bundle (T-036): falla si el JS inicial o dist/ se pasan.
+      - run: npm run test:presupuestos
+
       - name: Sube dist/ como artifact de Pages
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

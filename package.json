@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run --dir src",
+    "test:presupuestos": "vitest run --dir presupuestos --silent=false",
     "test:e2e": "playwright test"
   },
   "repository": {
