@@ -3,12 +3,12 @@ id: T-036
 titulo: Presupuesto de bundle en CI
 tipo: codigo
 hito: H1
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-034]
 plan: docs/planes/T-036-presupuesto-de-bundle-en-ci.md
-rama: T-036-presupuesto-de-bundle-en-ci
-worktree: .claude/worktrees/T-036-presupuesto-de-bundle-en-ci
+rama: null
+worktree: null
 ---
 
 ## Qué
@@ -41,3 +41,4 @@ Es el presupuesto más barato y determinista: si el JS inicial crece sin querer,
 - 2026-10-18: desvío del plan. Vitest 5 oculta los `console.log` de los tests que pasan (probado con `CI=true`), así que `test:presupuestos` lleva `--silent=false` para que los totales salgan en el log del CI.
 - 2026-10-18: revisión de código (Opus `high`) sin defectos graves. Se corrigieron tres casos borde al leer `index.html`, aunque Vite hoy no genera ninguno: (1) `type`/`rel` en mayúsculas, sin comillas o con varios tokens; perder un `modulepreload` daba un falso verde. (2) La misma ruta como `script` y como `modulepreload` se contaba dos veces. (3) Una ruta con `?query` o `#hash` no se encontraba en `dist/`. Los tres casos tienen test.
 - 2026-10-18: verificación local en verde: `npm test` (17 archivos, 136 tests), `npm run build`, `npm run test:presupuestos` (13 tests; hoy 317.6 KiB, 0.01 MB y 1.23 MB) y `npm run test:e2e` (31 tests). Falta confirmar en el PR que los totales salgan en el log del job `build`.
+- 2026-10-18: PR #14 mergeado. Confirmado en el log del job `build` del PR que salen los totales (317.6 KiB, 0.01 MB y 1.23 MB). Tarea `hecha`; con ella cierra H1 (tag `hito-h1`).

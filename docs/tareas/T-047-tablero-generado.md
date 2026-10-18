@@ -2,7 +2,7 @@
 id: T-047
 titulo: Tablero generado desde el frontmatter
 tipo: codigo
-hito: H1
+hito: H2
 estado: en-progreso
 prioridad: alta
 depende: []
@@ -50,3 +50,4 @@ Tarea chica: el plan va aquí y no en `docs/planes/`.
 
 - 2026-10-18: creada en la retro de proceso. El product owner la aprueba y arranca de una vez. Va en el carril F (proceso) de H1 y no bloquea T-037.
 - 2026-10-18: **desvío del proceso, decidido por el product owner:** por ser chica, se hace en la sesión de `main`, en una rama sin worktree y con el plan dentro de la tarea. El PR sigue siendo obligatorio por el ruleset. Esta rama toca el tablero y frontmatters de otras tareas: es el objetivo de la tarea, y conviene mergearla antes de cerrar otra.
+- 2026-10-18: pasa de H1 a H2 al cerrar H1 (decisión del product owner, desde la sesión que cerró T-036). Solo cambia `hito:` en el frontmatter.
