@@ -89,7 +89,15 @@ Cada tarea en progreso vive en su propio **worktree**: una carpeta aparte, con s
 
 ## Sesiones con Claude
 
-- **Al empezar:** preguntar "¿qué sigue?". Claude lee el "Estado actual" y el tablero (`tareas/README.md`) y propone la siguiente tarea.
+- **Al empezar:** preguntar "¿qué sigue?". Claude lee el "Estado actual" y el tablero (`tareas/README.md`) y propone la siguiente tarea. Para seguir una tarea que ya arrancó, decir "retoma T-NNN" (viñeta siguiente).
+- **Retomar T-NNN:** una sesión **nueva** (no `claude --resume`) sigue una tarea leyendo solo tres cosas: el frontmatter de la tarea, su bitácora y su plan. Sirve cuando la sesión anterior ya acumuló mucho contexto. Pasos:
+  1. Abrir la sesión desde la carpeta principal del proyecto (viñeta "Abrir y retomar sesiones").
+  2. Leer **solo el frontmatter** de `tareas/T-NNN-*.md` en `main`. Si `worktree` está vacío, la tarea no ha arrancado: se sigue el flujo normal desde "Arrancar" ("Trabajo en paralelo", paso 2).
+  3. Entrar al worktree con `EnterWorktree` y `path` igual al valor de `worktree`.
+  4. Ya en el worktree, leer la bitácora de la tarea (sobre todo una entrada "para retomar", si existe) y su plan. Estas dos se leen en el worktree y no en `main`, porque la copia de la rama es la más nueva.
+  5. Seguir desde la primera casilla sin marcar del plan, o desde lo que diga "para retomar".
+
+  No se leen el tablero ni el "Estado actual" completos. Si la tarea no tiene plan, la bitácora basta.
 - **Durante:** una tarea por worktree. Decisiones y bloqueos van a la bitácora de la tarea.
 - **Al terminar:** Claude actualiza la bitácora en la rama, y el estado, el tablero y el "Estado actual" en `main`.
 - **Varias tareas a la vez:** una sesión **orquestadora** trabaja en `main`. Es la única que edita el tablero y el "Estado actual", hace los merges con el OK del product owner, y avisa a las demás. Cada tarea tiene su sesión **trabajadora** en su worktree. Las sesiones se hablan con `ListAgents` y `SendMessage`. Si una sesión *retiene* un mensaje (pasa cuando tienen distinto modo de permisos), el product owner lo aprueba en la terminal de esa sesión. No se reenvía mientras esté retenido.
