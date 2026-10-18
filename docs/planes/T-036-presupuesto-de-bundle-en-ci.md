@@ -42,7 +42,8 @@ Hoy (2026-10-18) el JS inicial pesa **317.6 KiB** en gzip nivel 6: T-004 sumó �
    - Lógica: los casos de "Pruebas" de abajo.
    - *Gate*: existe `dist/index.html`; el JS inicial existe, no está vacío y su gzip pesa ≤ 340 KiB; ningún archivo de `dist/` que no termine en `.js` pasa de 1 MB; la suma de `dist/` es ≤ 12 MB. Imprime con `console.log` una línea por presupuesto (`JS inicial (gzip): 317.6 KiB de 340`, etc.) para ver la tendencia en el log del CI.
    - Verificar: `npm run build && npm run test:presupuestos` pasa en verde y muestra los totales.
-3. **Scripts** en `package.json`: `"test": "vitest run --dir src"` y `"test:presupuestos": "vitest run --dir presupuestos"`.
+3. **Scripts** en `package.json`: `"test": "vitest run --dir src"` y `"test:presupuestos": "vitest run --dir presupuestos --silent=false"`.
+   - Desvío: `--silent=false` no venía en la guía. Sin él, Vitest 5 oculta los `console.log` de los tests que pasan (probado con `CI=true`), y los totales no saldrían en el log del CI.
    - Verificar: `npm test` corre los mismos 17 archivos de hoy, y ninguno de `presupuestos/`.
 4. **Probar que el *gate* detecta lo que debe** (sin commit; se anota en la bitácora):
    - Con `MAX_JS_INICIAL_KIB = 300`, el test falla y dice cuánto pesa y cuál es el límite.
