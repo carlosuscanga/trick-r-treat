@@ -30,6 +30,11 @@
         inset: 0;
       }
 
+      /* Sin gestos del navegador sobre el juego: los dedos son del joystick y los botones. */
+      #game, #game canvas {
+        touch-action: none;
+      }
+
       #gira-telefono {
         display: none;
         position: fixed;

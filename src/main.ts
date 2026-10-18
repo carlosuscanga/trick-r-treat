@@ -1,6 +1,11 @@
 import Phaser from 'phaser';
 import { Arranque } from './escenas/Arranque';
+import { CallePrueba } from './escenas/CallePrueba';
+import { esModoDepurar, exponerJuego } from './depurar/depurar';
+import { montarPanel } from './depurar/panelAjustes';
+import { AJUSTES_POR_DEFECTO, type Ajustes } from './movimiento/ajustes';
 import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
+import { bloquearGestos } from './plataforma/gestos';
 import { pausarEnVertical } from './plataforma/orientacion';
 
 const contenedor = document.getElementById('game')!;
@@ -21,8 +26,21 @@ const game = new Phaser.Game({
     width: anchoParaPantalla(contenedor),
     height: ALTO,
   },
-  scene: [Arranque],
+  // Hasta 3 dedos a la vez (joystick + Saltar + Brazos); Phaser trae 1 por defecto.
+  input: { activePointers: 3 },
+  // Sin tope de delta: al volver del segundo plano no hay cámara lenta (FRA-03).
+  fps: { panicMax: 0 },
+  scene: [Arranque, CallePrueba],
 });
+
+// Ajustes vivos del movimiento: las escenas los leen de aquí y el panel ?depurar los cambia.
+const ajustes: Ajustes = structuredClone(AJUSTES_POR_DEFECTO);
+game.registry.set('ajustes', ajustes);
 
 ajustarAnchoAlContenedor(game, contenedor);
 pausarEnVertical(game);
+bloquearGestos(document);
+if (esModoDepurar(location.search)) {
+  exponerJuego(game);
+  montarPanel(game, ajustes);
+}

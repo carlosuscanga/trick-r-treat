@@ -1,15 +1,24 @@
 import Phaser from 'phaser';
 import { motivoSinAudio } from '../plataforma/audio';
+import { EscenaBase } from './EscenaBase';
 
 // Primera escena: pide el primer toque, que en iOS es lo que desbloquea el audio.
 // Phaser desbloquea el audio solo con ese toque; aquí solo esperamos a que termine.
-export class Arranque extends Phaser.Scene {
+export class Arranque extends EscenaBase {
   private texto!: Phaser.GameObjects.Text;
   private esperandoDesbloqueo = false;
   private errorDeCarga: string | null = null;
+  private yendoALaCalle = false;
 
   constructor() {
     super('Arranque');
+  }
+
+  init(data?: unknown) {
+    super.init(data);
+    this.esperandoDesbloqueo = false;
+    this.errorDeCarga = null;
+    this.yendoALaCalle = false;
   }
 
   preload() {
@@ -34,10 +43,7 @@ export class Arranque extends Phaser.Scene {
       .setOrigin(0.5);
 
     // El ancho del juego cambia con la pantalla: recentrar al cambiar.
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.centrar, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.scale.off(Phaser.Scale.Events.RESIZE, this.centrar, this);
-    });
+    this.escuchar(this.scale, Phaser.Scale.Events.RESIZE, this.centrar);
 
     this.input.on('pointerup', () => this.sonarPrueba());
   }
@@ -47,6 +53,9 @@ export class Arranque extends Phaser.Scene {
   }
 
   private sonarPrueba() {
+    // Un segundo toque mientras espera la calle no repite el sonido ni el cambio.
+    if (this.yendoALaCalle) return;
+
     // El toque llega a la escena antes de que Phaser termine el desbloqueo.
     if (this.sound.locked) {
       if (!this.esperandoDesbloqueo) {
@@ -62,11 +71,19 @@ export class Arranque extends Phaser.Scene {
     if (!this.cache.audio.exists('prueba')) {
       const { m4a, aac } = this.sys.game.device.audio;
       this.texto.setText(`Sin sonido: ${motivoSinAudio(m4a || aac, this.errorDeCarga)}`);
+      this.irALaCalle();
       return;
     }
 
     this.sound.play('prueba');
     this.texto.setText('¡Audio listo! 🎃');
+    this.irALaCalle();
+  }
+
+  // Deja leer el mensaje un momento y pasa a la calle de prueba (T-007 pondrá el Menú en medio).
+  private irALaCalle() {
+    this.yendoALaCalle = true;
+    this.time.delayedCall(800, () => this.scene.start('CallePrueba'));
   }
 }
 
