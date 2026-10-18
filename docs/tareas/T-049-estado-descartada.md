@@ -3,12 +3,12 @@ id: T-049
 titulo: Estado `descartada` en el tablero
 tipo: codigo
 hito: H2
-estado: en-progreso
+estado: hecha
 prioridad: media
 depende: []
 plan: null
-rama: T-049-estado-descartada
-worktree: .claude/worktrees/T-049-estado-descartada
+rama: null
+worktree: null
 ---
 
 ## Qué
@@ -31,8 +31,8 @@ T-030 (cierre automático con una GitHub Action) ya no hace falta, porque "cierr
 - [x] `npm run tablero` acepta `estado: descartada`, y un estado desconocido sigue fallando.
 - [x] `revisar` y `tomar` se niegan con una tarea descartada y lo dicen.
 - [x] "Estados" en `docs/tareas/README.md` incluye `descartada`.
-- [ ] Después del merge, en `main`: T-030 queda `descartada`, con el motivo en su bitácora.
-- [ ] Pruebas en tres capas según el plan: unitarias, e2e y manual (o el porqué de la que no aplica).
+- [x] Después del merge, en `main`: T-030 queda `descartada`, con el motivo en su bitácora.
+- [x] Pruebas en tres capas según el plan: unitarias, e2e y manual (o el porqué de la que no aplica).
 
 ## Plan
 
@@ -49,3 +49,4 @@ Tarea chica: el plan va aquí y no en `docs/planes/`.
 
 - 2026-10-18: creada al decidir descartar T-030 (decisión del product owner). Nace lista, para probar "toma T-NNN" sobre una tarea lista, que es una de las casillas abiertas de T-048.
 - 2026-10-18: tomada. El script la dio por lista y la revisión con criterio no encontró huecos (el tablero no calcula avance por hito, así que no hay que decidir cómo cuenta `descartada`). `tomar` también pasa por `revisarLista`, así que un solo cambio cubre las dos negativas. Unitarias primero (fallaron por el estado no válido), luego el código. `npm test`, `npm run build`, `npm run test:presupuestos` y `npm run test:e2e` en verde. Falta la prueba manual en la Mac, después del merge, con T-030.
+- 2026-10-18: PR #18 mergeado. Cerrada con `npm run tarea -- cerrar T-049`. En `main`, T-030 pasó a `descartada` y la prueba manual en la Mac salió como se esperaba: `npm run tablero` sin error, con T-030 `descartada` en la tabla de H2; `revisar T-030` imprime "la tarea está descartada" y sale con código 1; `npm test` en verde.
