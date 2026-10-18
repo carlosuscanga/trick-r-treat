@@ -17,34 +17,35 @@ function consultaFalsa(enVertical: boolean) {
   return { consulta: consulta as unknown as MediaQueryList, girar };
 }
 
-function juegoFalso() {
-  return { pause: vi.fn(), resume: vi.fn() };
+function pausaFalsa() {
+  return { activar: vi.fn(), quitar: vi.fn() };
 }
 
 describe('pausarEnVertical', () => {
-  it('si arranca en vertical, el juego empieza en pausa', () => {
-    const game = juegoFalso();
-    pausarEnVertical(game, consultaFalsa(true).consulta);
-    expect(game.pause).toHaveBeenCalledTimes(1);
-    expect(game.resume).not.toHaveBeenCalled();
+  it('si arranca en vertical, activa el motivo vertical', () => {
+    const pausa = pausaFalsa();
+    pausarEnVertical(pausa, consultaFalsa(true).consulta);
+    expect(pausa.activar).toHaveBeenCalledTimes(1);
+    expect(pausa.activar).toHaveBeenCalledWith('vertical');
+    expect(pausa.quitar).not.toHaveBeenCalled();
   });
 
-  it('si arranca en horizontal, el juego corre', () => {
-    const game = juegoFalso();
-    pausarEnVertical(game, consultaFalsa(false).consulta);
-    expect(game.resume).toHaveBeenCalledTimes(1);
-    expect(game.pause).not.toHaveBeenCalled();
+  it('si arranca en horizontal, no pausa (solo quita un motivo que no estaba)', () => {
+    const pausa = pausaFalsa();
+    pausarEnVertical(pausa, consultaFalsa(false).consulta);
+    expect(pausa.activar).not.toHaveBeenCalled();
+    expect(pausa.quitar).toHaveBeenCalledWith('vertical');
   });
 
-  it('al girar a horizontal se reanuda y al volver a vertical se pausa', () => {
-    const game = juegoFalso();
+  it('al girar a horizontal quita el motivo y al volver a vertical lo activa', () => {
+    const pausa = pausaFalsa();
     const { consulta, girar } = consultaFalsa(true);
-    pausarEnVertical(game, consulta);
+    pausarEnVertical(pausa, consulta);
 
     girar(false);
-    expect(game.resume).toHaveBeenCalledTimes(1);
+    expect(pausa.quitar).toHaveBeenCalledTimes(1);
 
     girar(true);
-    expect(game.pause).toHaveBeenCalledTimes(2);
+    expect(pausa.activar).toHaveBeenCalledTimes(2);
   });
 });
