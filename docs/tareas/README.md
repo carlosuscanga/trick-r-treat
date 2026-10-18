@@ -92,7 +92,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 | [T-011](T-011-hud-y-fin-de-partida.md) | HUD y fin de partida | codigo | pendiente | alta | T-008 | — |
 | [T-012](T-012-prueba-pipeline-arte.md) | Prueba del pipeline de arte | investigacion | pendiente | alta | — | — |
 | [T-030](T-030-cierre-automatico-tareas.md) | Cierre automático de tareas al hacer merge | codigo | descartada | media | T-002 | — |
-| [T-037](T-037-escena-base-depurar-y-fugas.md) | `EscenaBase`, `?depurar` y e2e de fugas | codigo | en-progreso | alta | T-004, T-034 | requerido |
+| [T-037](T-037-escena-base-depurar-y-fugas.md) | `EscenaBase`, `?depurar` y e2e de fugas | codigo | en-progreso | alta | T-004, T-034 | [plan](../planes/T-037-escena-base-depurar-y-fugas.md) |
 | [T-038](T-038-config-rendimiento-y-webgl.md) | Config de rendimiento y robustez WebGL | codigo | pendiente | alta | T-034 | — |
 | [T-039](T-039-assets-versionados.md) | Assets versionados y aviso de versión nueva | codigo | pendiente | alta | T-034 | — |
 | [T-041](T-041-medicion-en-el-iphone-13.md) | Medición en el iPhone 13 y calibración de presupuestos | investigacion | pendiente | alta | T-037 | — |

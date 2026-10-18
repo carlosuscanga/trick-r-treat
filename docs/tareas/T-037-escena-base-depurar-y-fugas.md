@@ -6,7 +6,7 @@ hito: H2
 estado: en-progreso
 prioridad: alta
 depende: [T-004, T-034]
-plan: requerido
+plan: docs/planes/T-037-escena-base-depurar-y-fugas.md
 rama: T-037-escena-base-depurar-y-fugas
 worktree: .claude/worktrees/T-037-escena-base-depurar-y-fugas
 ---
@@ -43,3 +43,4 @@ Phaser limpia lo de la escena en `SHUTDOWN`, pero no lo global (listeners en `sc
 - 2026-10-18: pedido del product owner tras T-004: que el panel `?depurar` recuerde los valores en el iPhone entre visitas (en el navegador, con `localStorage`) y tenga un botón "volver a los valores por defecto". Así se puede afinar en Pages, de forma casual, sin perder lo ajustado al recargar. Las pruebas no deben depender de lo guardado (ver `docs/planes/README.md`, "Pruebas").
 - 2026-10-18: segundo pedido del product owner para el panel `?depurar`: un ícono de ayuda (?) en cada ajuste con **dos partes obligatorias**: (1) **qué es**, en palabras simples, y (2) **cómo se prueba**: los pasos en la calle de prueba y qué se debería notar al subir o bajar el valor. Ejemplo: "Curva de velocidad. Qué es: cuánto recorrido del pulgar se queda en velocidades bajas. Cómo probarla: camina con el pulgar cerca del centro del joystick; con más curva es más fácil ir lento, con menos acelera antes." Hoy hay ajustes que no se entienden solo con el nombre (por ejemplo, ápice colgado).
 - 2026-10-18: refinada al tomarla. Decisiones del product owner: (1) los dos pedidos del panel de ajustes pasan a una tarea aparte, T-050, para no agrandar la ruta crítica; (2) el código va en `src/depurar/`, la carpeta que ya existe, y se corrigen la guía y el skill; (3) `window.__juego` se queda junto a `window.__depurar`. Se agregan el criterio de TEX-07 (pendiente de T-035), la casilla de tres capas, `plan: requerido` y la dependencia de T-004.
+- 2026-10-18: plan escrito y aprobado por el product owner (`docs/planes/T-037-escena-base-depurar-y-fugas.md`). Se agregó un segundo ciclo al e2e de fugas (`Arranque` ↔ `CallePrueba`).
