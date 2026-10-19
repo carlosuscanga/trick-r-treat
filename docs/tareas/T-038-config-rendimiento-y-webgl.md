@@ -3,12 +3,12 @@ id: T-038
 titulo: Config de rendimiento y robustez WebGL
 tipo: codigo
 hito: H2
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-034]
 plan: null
-rama: T-038-config-rendimiento-y-webgl
-worktree: .claude/worktrees/T-038-config-rendimiento-y-webgl
+rama: null
+worktree: null
 ---
 
 ## Qué
