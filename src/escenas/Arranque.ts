@@ -86,7 +86,7 @@ export class Arranque extends EscenaBase {
   // Deja leer el mensaje un momento y pasa a la calle de prueba (T-007 pondrá el Menú en medio).
   private irALaCalle() {
     this.yendoALaCalle = true;
-    this.time.delayedCall(800, () => this.scene.start('CallePrueba'));
+    this.time.delayedCall(800, () => this.scene.start('Calle'));
   }
 }
 

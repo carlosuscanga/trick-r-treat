@@ -2,7 +2,10 @@ import Phaser from 'phaser';
 import { ControlTactil } from '../controles/controlTactil';
 import type { Disposicion } from '../controles/disposicion';
 import { crearIntenciones, limpiarFlancos, type Intenciones } from '../controles/intenciones';
+import { DULCES_POR_DIFICULTAD, PUERTAS } from '../datos';
 import { ANCHO_CALLE, BLOQUES_CALLE_PRUEBA, X_INICIO, alturaSuperior } from '../datos/plataformas';
+import { gameState } from '../estado/GameState';
+import { puertaCercana } from '../flujo/flujo';
 import { AJUSTES_CAMBIADOS, derivarFisica, topeVertical, type Ajustes, type Fisica } from '../movimiento/ajustes';
 import { velocidadCaminar } from '../movimiento/caminar';
 import { crearEstadoSalto, pasoSalto, type EstadoSalto, type SalidaSalto } from '../movimiento/salto';
@@ -11,8 +14,9 @@ import { VigiaFps } from '../plataforma/vigiaFps';
 import { ControlesTactiles } from './ControlesTactiles';
 import { EscenaBase } from './EscenaBase';
 
-// Calle de prueba de T-004: Mi vo (un rectángulo) camina con el joystick, salta con
-// altura variable y responde a Brazos, sobre cajas grises, con la cámara siguiéndola.
+// La Calle: Mi vo (un rectángulo) camina con el joystick, salta con altura variable y
+// responde a Brazos, sobre cajas grises, con la cámara siguiéndola (T-004). Tiene 8 puertas
+// de prueba (T-007): Brazos junto a una no visitada entra a ella; T-008 las dibuja de verdad.
 
 /** Parte superior de la calle (el piso), en y de mundo. */
 const PISO = 620;
@@ -31,10 +35,13 @@ const LERP_Y = 0.15;
 const ZONA_MUERTA_ANCHO = 0.25;
 const ZONA_MUERTA_ALTO = 300;
 const PROFUNDIDAD_HUD = 1000;
+// Puertas placeholder: un rectángulo sobre el piso con su número y sus dulces.
+const PUERTA = { ancho: 120, alto: 220, color: 0x8a4b1f, borde: 0xffc27a };
+const ALFA_VISITADA = 0.25;
 
 type Rectangulo = Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.Body };
 
-export class CallePrueba extends EscenaBase {
+export class Calle extends EscenaBase {
   private cuerpo!: Rectangulo;
   private intencionesVivas!: Intenciones;
   private control!: ControlTactil;
@@ -50,11 +57,14 @@ export class CallePrueba extends EscenaBase {
   private tweenBrazos!: Phaser.Tweens.Tween;
   private tweenDestello!: Phaser.Tweens.Tween;
   private tweenAviso!: Phaser.Tweens.Tween;
+  private puertasVista: Phaser.GameObjects.GameObject[] = [];
+  // Creado una vez: update() no puede crear closures (POO-03).
+  private readonly estaVisitada = (indice: number) => gameState.estaVisitada(indice);
 
   constructor() {
     // Física declarada en la escena (ESC-07), a 120 pasos fijos por segundo, con la
     // gravedad por cuerpo (la pone el salto) y no de mundo.
-    super({ key: 'CallePrueba', physics: { arcade: { fps: 120, gravity: { x: 0, y: 0 } } } });
+    super({ key: 'Calle', physics: { arcade: { fps: 120, gravity: { x: 0, y: 0 } } } });
   }
 
   // Solo lectura, para los e2e.
@@ -74,6 +84,10 @@ export class CallePrueba extends EscenaBase {
   get disposicion(): Disposicion {
     return this.tactiles.disposicion;
   }
+  /** Índice de la puerta no visitada al alcance de Mi vo, o null. */
+  get puertaAlAlcance(): number | null {
+    return puertaCercana(this.cuerpo.x, PUERTAS.puertas, this.estaVisitada, PUERTAS.radio);
+  }
 
   init(data?: unknown) {
     super.init(data);
@@ -82,6 +96,7 @@ export class CallePrueba extends EscenaBase {
     this.intencionesVivas = crearIntenciones();
     this.vigia = new VigiaFps();
     this.evento = null;
+    this.puertasVista = [];
   }
 
   create() {
@@ -92,6 +107,7 @@ export class CallePrueba extends EscenaBase {
 
     this.physics.world.setBounds(0, MUNDO_ARRIBA, ANCHO_CALLE, ALTO - MUNDO_ARRIBA);
     const solidos = this.crearCalle();
+    this.crearPuertas();
     this.crearMiVo(solidos);
 
     const camara = this.cameras.main;
@@ -102,11 +118,20 @@ export class CallePrueba extends EscenaBase {
     this.tactiles = new ControlesTactiles(this, this.control, this.ajustes);
     this.crearAvisos();
     this.reacomodar();
+    this.atenuarVisitadas();
 
     this.escuchar(this.scale, Phaser.Scale.Events.RESIZE, this.alCambiarTamano);
     this.escuchar(this.game.events, Phaser.Core.Events.HIDDEN, this.soltarTodo);
     this.escuchar(this.game.events, Phaser.Core.Events.BLUR, this.soltarTodo);
     this.escuchar(this.game.events, AJUSTES_CAMBIADOS, this.alCambiarAjustes);
+
+    // WAKE y SLEEP son de la propia escena: se quitan al apagarla (ESC-02), no con escuchar().
+    this.events.on(Phaser.Scenes.Events.WAKE, this.alDespertar, this);
+    this.events.on(Phaser.Scenes.Events.SLEEP, this.soltarTodo, this);
+    this.alLimpiar(() => {
+      this.events.off(Phaser.Scenes.Events.WAKE, this.alDespertar, this);
+      this.events.off(Phaser.Scenes.Events.SLEEP, this.soltarTodo, this);
+    });
   }
 
   // Sin asignaciones (POO-03): todo lo que usa se creó en init() o create().
@@ -128,7 +153,11 @@ export class CallePrueba extends EscenaBase {
     if (body.velocity.y > this.fisica.caidaMax) body.velocity.y = this.fisica.caidaMax;
     if (s.evento !== null) this.evento = s.evento;
 
-    if (i.brazosPresionado) this.destelloBrazos();
+    if (i.brazosPresionado) {
+      const puerta = this.puertaAlAlcance;
+      if (puerta !== null) this.entrarAPuerta(puerta);
+      else this.destelloBrazos();
+    }
     if (this.vigia.registrar(delta)) {
       this.avisoFps.setVisible(true);
       this.tweenAviso.restart();
@@ -149,6 +178,45 @@ export class CallePrueba extends EscenaBase {
       this.add.text(b.x + 6, arriba + 4, b.nombre, estilo);
     }
     return solidos;
+  }
+
+  /** Las 8 puertas de PUERTAS como rectángulos sobre el piso; se crean una vez. */
+  private crearPuertas(): void {
+    const estilo = { fontSize: '26px', color: '#ffffff', align: 'center', fontStyle: 'bold' };
+    PUERTAS.puertas.forEach((puerta, i) => {
+      const caja = this.add
+        .rectangle(puerta.x, PISO - PUERTA.alto / 2, PUERTA.ancho, PUERTA.alto, PUERTA.color)
+        .setStrokeStyle(3, PUERTA.borde);
+      const dulces = DULCES_POR_DIFICULTAD[puerta.dificultad];
+      const texto = this.add
+        .text(puerta.x, PISO - PUERTA.alto + 16, `Casa ${i + 1}\n${dulces} ${dulces === 1 ? 'dulce' : 'dulces'}`, estilo)
+        .setOrigin(0.5, 0);
+      this.puertasVista.push(caja, texto);
+    });
+  }
+
+  /** Atenúa las puertas ya visitadas (placeholder; T-008 las dibuja de verdad). */
+  private atenuarVisitadas(): void {
+    for (let i = 0; i < PUERTAS.puertas.length; i++) {
+      const alfa = gameState.estaVisitada(i) ? ALFA_VISITADA : 1;
+      (this.puertasVista[2 * i] as Phaser.GameObjects.Rectangle).setAlpha(alfa);
+      (this.puertasVista[2 * i + 1] as Phaser.GameObjects.Text).setAlpha(alfa);
+    }
+  }
+
+  /** Duerme la Calle (Mi vo se queda donde está) y abre la Puerta de esa casa. */
+  private entrarAPuerta(indice: number): void {
+    // La Puerta llega en el paso 3: mientras no exista, Brazos hace el destello de siempre.
+    if (!this.scene.manager.keys['Puerta']) {
+      this.destelloBrazos();
+      return;
+    }
+    this.scene.sleep();
+    this.scene.launch('Puerta', { casa: indice });
+  }
+
+  private alDespertar(): void {
+    this.atenuarVisitadas();
   }
 
   private crearMiVo(solidos: Phaser.Physics.Arcade.StaticGroup): void {

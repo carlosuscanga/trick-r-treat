@@ -33,7 +33,7 @@ Decisiones técnicas:
   - `src/datos/index.ts` y `src/datos/datos.test.ts`: `validarPuertas` y `PUERTAS`.
   - `src/escenas/Arranque.ts`: ESC-06 y paso al Menú.
   - `src/main.ts`: registrar las escenas nuevas en lugar de `CallePrueba`.
-  - `e2e/controles.e2e.ts`, `e2e/fugas.e2e.ts` y `e2e/depurar.e2e.ts`: `CallePrueba` → `Calle`, y llegar a la Calle por el nuevo camino.
+  - `e2e/controles.e2e.ts`, `e2e/fugas.e2e.ts`, `e2e/depurar.e2e.ts` y `e2e/config.e2e.ts`: `CallePrueba` → `Calle`, y llegar a la Calle por el nuevo camino.
 
 ## Pasos
 
@@ -41,7 +41,7 @@ Cada paso termina con un commit, push de la rama y una línea "para retomar" en 
 
 - [x] 1. **Lógica y datos.** `flujo.ts`, `puertas-prueba.json`, `validarPuertas` y sus unitarias.
   - Verificar: `npm test` en verde.
-- [ ] 2. **La Calle.** Renombrar `CallePrueba` → `Calle`, dibujar las 8 puertas, entrar con Brazos (dormir la Calle y arrancar Puerta). Adaptar los e2e existentes al nombre nuevo.
+- [x] 2. **La Calle.** Renombrar `CallePrueba` → `Calle`, dibujar las 8 puertas, entrar con Brazos (dormir la Calle y arrancar Puerta). Adaptar los e2e existentes al nombre nuevo.
   - Verificar: `npm run test:e2e` con los e2e de controles, depurar y fugas en verde.
 - [ ] 3. **Escenas placeholder.** Menú, SelectorDisfraz, Puerta, MinijuegoPrueba, Resultado y FinJuego; Arranque → Menú con ESC-06; registrarlas en `main.ts`. Lo importante en la zona segura de 1280×720, con `reacomodar` en `resize`.
   - Verificar: `npm run dev -- --host` y recorrer una partida a mano en el navegador.

@@ -42,3 +42,4 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 - 2026-10-18: al revisar el plan, el product owner pidió dos botones en FinJuego, como en FIFA: "Jugar otra vez" con el mismo disfraz e "Ir al menú" para cambiarlo.
 - 2026-10-18: plan aprobado. Por el límite semanal (95 %), un subagente por paso, y cada uno se detiene después de su commit. Para retomar: empezar por el paso 1 del plan.
 - 2026-10-18: paso 1 hecho (lógica y datos, con unitarias). Para retomar: paso 2 del plan (la Calle).
+- 2026-10-18: paso 2 hecho (Calle con 8 puertas; Brazos detecta la puerta y entra cuando exista la escena Puerta). Desvíos: también se adaptó `e2e/config.e2e.ts` (usaba `CallePrueba`); la Calle suelta los controles al dormirse (evento SLEEP) para que no queden dedos pegados al volver. Para retomar: paso 3 del plan (escenas placeholder).

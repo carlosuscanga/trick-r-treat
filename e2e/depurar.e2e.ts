@@ -95,11 +95,11 @@ test.describe('con ?depurar', () => {
     const errores = recolectarErrores(page);
     const antes = await leerInstantanea(page);
 
-    await irA(page, 'Arranque', 'CallePrueba');
-    await page.evaluate(() => window.__juego!.scene.remove('CallePrueba'));
+    await irA(page, 'Arranque', 'Calle');
+    await page.evaluate(() => window.__juego!.scene.remove('Calle'));
     await esperarFrames(page);
 
-    // Vuelve a Arranque desde el SceneManager (CallePrueba ya no existe) y espera su create.
+    // Vuelve a Arranque desde el SceneManager (Calle ya no existe) y espera su create.
     await page.evaluate(
       () =>
         new Promise<void>((listo) => {

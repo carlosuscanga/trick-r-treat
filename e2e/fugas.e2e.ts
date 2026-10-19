@@ -37,13 +37,13 @@ test.describe('fugas', () => {
   test('ir y volver a la calle de prueba 30 veces no deja fugas', async ({ page }) => {
     const errores = recolectarErrores(page);
     const paso = async (p: typeof page) => {
-      await irA(p, 'Arranque', 'CallePrueba');
-      await irA(p, 'CallePrueba', 'Arranque');
+      await irA(p, 'Arranque', 'Calle');
+      await irA(p, 'Calle', 'Arranque');
     };
 
     await paso(page);
     const antes = await leerInstantanea(page);
-    console.log('antes (Arranque <-> CallePrueba):', JSON.stringify(antes));
+    console.log('antes (Arranque <-> Calle):', JSON.stringify(antes));
     await ciclar(page, paso, CICLOS);
     const despues = await leerInstantanea(page);
 
