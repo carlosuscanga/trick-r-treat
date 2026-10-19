@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import ajustesJson from '../src/movimiento/ajustes.json' with { type: 'json' };
+import { irACalle } from './camino';
 import { aCss, tocar } from './tactil';
 
 // Velocidad completa por defecto (la que se afina en el iPhone).
@@ -80,12 +81,10 @@ type Disposicion = {
 
 const JOY = { x: 300, y: 500 };
 
-// Abre ./?depurar, da el primer toque y espera a que la calle esté activa y Mi vo en el suelo.
+// Abre ./?depurar, va a la Calle por el SceneManager y espera a que la calle esté activa y Mi vo en el suelo.
 async function entrarALaCalle(page: Page) {
   await page.goto('./?depurar');
-  await esperarJuego(page);
-  await tocar(page, 'touchstart', [{ id: 99, x: 640, y: 360 }]);
-  await tocar(page, 'touchend', [{ id: 99, x: 640, y: 360 }]);
+  await irACalle(page);
   await esperarEnElSuelo(page);
 }
 

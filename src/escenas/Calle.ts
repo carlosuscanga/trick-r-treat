@@ -206,11 +206,6 @@ export class Calle extends EscenaBase {
 
   /** Duerme la Calle (Mi vo se queda donde está) y abre la Puerta de esa casa. */
   private entrarAPuerta(indice: number): void {
-    // La Puerta llega en el paso 3: mientras no exista, Brazos hace el destello de siempre.
-    if (!this.scene.manager.keys['Puerta']) {
-      this.destelloBrazos();
-      return;
-    }
     this.scene.sleep();
     this.scene.launch('Puerta', { casa: indice });
   }

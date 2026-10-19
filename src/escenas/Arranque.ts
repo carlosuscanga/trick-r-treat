@@ -8,7 +8,7 @@ export class Arranque extends EscenaBase {
   private texto!: Phaser.GameObjects.Text;
   private esperandoDesbloqueo = false;
   private errorDeCarga: string | null = null;
-  private yendoALaCalle = false;
+  private yendoAlMenu = false;
 
   constructor() {
     super('Arranque');
@@ -18,7 +18,7 @@ export class Arranque extends EscenaBase {
     super.init(data);
     this.esperandoDesbloqueo = false;
     this.errorDeCarga = null;
-    this.yendoALaCalle = false;
+    this.yendoAlMenu = false;
   }
 
   preload() {
@@ -53,8 +53,8 @@ export class Arranque extends EscenaBase {
   }
 
   private sonarPrueba() {
-    // Un segundo toque mientras espera la calle no repite el sonido ni el cambio.
-    if (this.yendoALaCalle) return;
+    // Un segundo toque mientras espera el menú no repite el sonido ni el cambio.
+    if (this.yendoAlMenu) return;
 
     // El toque llega a la escena antes de que Phaser termine el desbloqueo.
     if (this.sound.locked) {
@@ -64,9 +64,12 @@ export class Arranque extends EscenaBase {
           this.esperandoDesbloqueo = false;
           this.sonarPrueba();
         };
-        this.sound.once(Phaser.Sound.Events.UNLOCKED, alDesbloquear);
-        // Si la escena se apaga antes del desbloqueo, el listener no queda colgado en sound.
-        this.alLimpiar(() => this.sound.off(Phaser.Sound.Events.UNLOCKED, alDesbloquear));
+        // Por escuchar(): si la escena se apaga antes del desbloqueo, el listener se quita (ESC-06).
+        const alDesbloquearUnaVez = () => {
+          this.sound.off(Phaser.Sound.Events.UNLOCKED, alDesbloquearUnaVez, this);
+          alDesbloquear();
+        };
+        this.escuchar(this.sound, Phaser.Sound.Events.UNLOCKED, alDesbloquearUnaVez);
       }
       return;
     }
@@ -74,19 +77,19 @@ export class Arranque extends EscenaBase {
     if (!this.cache.audio.exists('prueba')) {
       const { m4a, aac } = this.sys.game.device.audio;
       this.texto.setText(`Sin sonido: ${motivoSinAudio(m4a || aac, this.errorDeCarga)}`);
-      this.irALaCalle();
+      this.irAlMenu();
       return;
     }
 
     this.sound.play('prueba');
     this.texto.setText('¡Audio listo! 🎃');
-    this.irALaCalle();
+    this.irAlMenu();
   }
 
-  // Deja leer el mensaje un momento y pasa a la calle de prueba (T-007 pondrá el Menú en medio).
-  private irALaCalle() {
-    this.yendoALaCalle = true;
-    this.time.delayedCall(800, () => this.scene.start('Calle'));
+  // Deja leer el mensaje un momento y pasa al menú.
+  private irAlMenu() {
+    this.yendoAlMenu = true;
+    this.time.delayedCall(800, () => this.scene.start('Menu'));
   }
 }
 

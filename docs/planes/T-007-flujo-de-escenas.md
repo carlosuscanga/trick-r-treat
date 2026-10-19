@@ -43,7 +43,7 @@ Cada paso termina con un commit, push de la rama y una línea "para retomar" en 
   - Verificar: `npm test` en verde.
 - [x] 2. **La Calle.** Renombrar `CallePrueba` → `Calle`, dibujar las 8 puertas, entrar con Brazos (dormir la Calle y arrancar Puerta). Adaptar los e2e existentes al nombre nuevo.
   - Verificar: `npm run test:e2e` con los e2e de controles, depurar y fugas en verde.
-- [ ] 3. **Escenas placeholder.** Menú, SelectorDisfraz, Puerta, MinijuegoPrueba, Resultado y FinJuego; Arranque → Menú con ESC-06; registrarlas en `main.ts`. Lo importante en la zona segura de 1280×720, con `reacomodar` en `resize`.
+- [x] 3. **Escenas placeholder.** Menú, SelectorDisfraz, Puerta, MinijuegoPrueba, Resultado y FinJuego; Arranque → Menú con ESC-06; registrarlas en `main.ts`. Lo importante en la zona segura de 1280×720, con `reacomodar` en `resize`.
   - Verificar: `npm run dev -- --host` y recorrer una partida a mano en el navegador.
 - [ ] 4. **e2e del flujo y de fugas.** `flujo.e2e.ts` y el ciclo nuevo en `fugas.e2e.ts`.
   - Verificar: `npm run test:e2e` en verde.
