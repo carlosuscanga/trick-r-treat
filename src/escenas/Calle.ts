@@ -89,6 +89,11 @@ export class Calle extends EscenaBase {
     return puertaCercana(this.cuerpo.x, PUERTAS.puertas, this.estaVisitada, PUERTAS.radio);
   }
 
+  /** Id del disfraz elegido, o null (solo lectura, para los e2e). */
+  get disfrazId(): string | null {
+    return gameState.disfraz?.id ?? null;
+  }
+
   init(data?: unknown) {
     super.init(data);
     // start/restart reusan la instancia: el estado empieza de cero aquí (ESC-03).

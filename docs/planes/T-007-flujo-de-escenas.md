@@ -45,7 +45,7 @@ Cada paso termina con un commit, push de la rama y una línea "para retomar" en 
   - Verificar: `npm run test:e2e` con los e2e de controles, depurar y fugas en verde.
 - [x] 3. **Escenas placeholder.** Menú, SelectorDisfraz, Puerta, MinijuegoPrueba, Resultado y FinJuego; Arranque → Menú con ESC-06; registrarlas en `main.ts`. Lo importante en la zona segura de 1280×720, con `reacomodar` en `resize`.
   - Verificar: `npm run dev -- --host` y recorrer una partida a mano en el navegador.
-- [ ] 4. **e2e del flujo y de fugas.** `flujo.e2e.ts` y el ciclo nuevo en `fugas.e2e.ts`.
+- [x] 4. **e2e del flujo y de fugas.** `flujo.e2e.ts` y el ciclo nuevo en `fugas.e2e.ts`.
   - Verificar: `npm run test:e2e` en verde.
 - [ ] 5. **Cierre.** `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`; una revisión de código; marcar criterios; PR con la tabla de prueba manual.
 
