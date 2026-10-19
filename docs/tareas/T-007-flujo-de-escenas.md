@@ -27,12 +27,12 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 
 ## Criterios de aceptación
 
-- [ ] Se puede pasar por todas las escenas del diagrama de `concepto.md`.
-- [ ] Mi vo puede entrar a cualquiera de las 8 puertas, en cualquier orden, y una casa visitada no se vuelve a abrir.
-- [ ] Resultado muestra los dulces ganados (los de la dificultad de la puerta) o un susto placeholder.
-- [ ] La partida termina en FinJuego al llegar a 10 dulces, a 3 sustos o al quedarse sin casas.
-- [ ] FinJuego ofrece "Jugar otra vez" (partida nueva con el mismo disfraz, directo a la Calle) e "Ir al menú" (para cambiar de disfraz).
-- [ ] `CallePrueba` ya no existe y el panel de ajustes funciona en la Calle.
+- [x] Se puede pasar por todas las escenas del diagrama de `concepto.md`.
+- [x] Mi vo puede entrar a cualquiera de las 8 puertas, en cualquier orden, y una casa visitada no se vuelve a abrir.
+- [x] Resultado muestra los dulces ganados (los de la dificultad de la puerta) o un susto placeholder.
+- [x] La partida termina en FinJuego al llegar a 10 dulces, a 3 sustos o al quedarse sin casas.
+- [x] FinJuego ofrece "Jugar otra vez" (partida nueva con el mismo disfraz, directo a la Calle) e "Ir al menú" (para cambiar de disfraz).
+- [x] `CallePrueba` ya no existe y el panel de ajustes funciona en la Calle.
 - [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la lógica del flujo (a qué escena se va después de Resultado), e2e que recorre la partida de punta a punta, y manual en el iPhone.
 
 ## Bitácora
@@ -46,3 +46,4 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 - 2026-10-18: paso 3 hecho (Menú, SelectorDisfraz, Puerta, MinijuegoPrueba, Resultado y FinJuego conectados; Arranque → Menú con ESC-06). Para retomar: paso 4 del plan (e2e del flujo y de fugas). Desvíos: botones comunes en `src/escenas/Boton.ts` (caja + texto, una sola pulsación por botón); cada escena expone `botones` (campos con la `caja` Rectangle para tocar y su `texto`); Resultado aplica el resultado en `init()` con la bandera `aplicado` (una vez por entrada); se quitó de la Calle el guard que esperaba a que existiera Puerta; helper `e2e/camino.ts` (`irACalle`) usado en controles y config (fugas y depurar no lo necesitaron). Sin cambios de lógica de controles.
 - 2026-10-18: paso 4 hecho (e2e del flujo completo y ciclo de fugas de 8 casas × 3 partidas). Para retomar: paso 5 del plan (verificación, revisión y PR). Sin bugs en las escenas. Desvíos: helpers compartidos en `e2e/flujo.ts`; getter público mínimo `Calle.disfrazId` (solo lectura) para comprobar que Jugar otra vez conserva el disfraz; "Jugar otra vez" se probó en dos casos (tras perder: sustos y puertas; tras ganar: dulces); "reiniciar Arranque N veces" ya estaba cubierto en `fugas.e2e.ts` (30 veces).
 - 2026-10-18: revisión de código (Opus) sin hallazgos serios; arreglados el doble toque que atravesaba pantallas, el toque cancelado por el sistema, un forEach en código por frame y Resultado no idempotente, con e2e de doble toque y de joystick suelto. Para retomar: paso 5b (marcar criterios y abrir el PR).
+- 2026-10-18: criterios marcados salvo la casilla de pruebas, que espera la prueba manual en el iPhone. PR abierto. La prueba de doble toque en e2e dispara los dos toques casi a la vez y quizá pasaría sin el arreglo: se cubre con la prueba manual M9. Para retomar: prueba manual en el iPhone (tabla del PR), marcar la casilla de pruebas y el paso 5, y hacer el merge.

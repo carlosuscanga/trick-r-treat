@@ -82,6 +82,8 @@ Cada paso termina con un commit, push de la rama y una línea "para retomar" en 
 | M7 | Jugar otra vez → ganar hasta 10 dulces | Va directo a la Calle con el mismo disfraz, en 0 y con todas las puertas abiertas; al llegar a 10, FinJuego "ganaste" |
 | M7b | Ir al menú → Jugar | Pasa por el SelectorDisfraz y deja elegir otro disfraz |
 | M8 | En medio de la partida, salir a otra app y volver | Sigue donde estaba, sin cámara lenta ni pantalla negra |
+| M9 | Doble toque rápido en "Tocar" de la Puerta y en "Seguir" de Resultado | El segundo toque no hace nada: no gana el minijuego sin jugar ni se salta la pantalla siguiente |
+| M10 | Dentro de la Puerta, girar a vertical y volver a horizontal; luego volver a la Calle | La Calle se ve bien acomodada, sin cortes ni controles fuera de lugar |
 
 - **Capas que no aplican:** ninguna; las tres aplican.
 
