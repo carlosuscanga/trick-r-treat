@@ -33,7 +33,7 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 - [x] La partida termina en FinJuego al llegar a 10 dulces, a 3 sustos o al quedarse sin casas.
 - [x] FinJuego ofrece "Jugar otra vez" (partida nueva con el mismo disfraz, directo a la Calle) e "Ir al menú" (para cambiar de disfraz).
 - [x] `CallePrueba` ya no existe y el panel de ajustes funciona en la Calle.
-- [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la lógica del flujo (a qué escena se va después de Resultado), e2e que recorre la partida de punta a punta, y manual en el iPhone.
+- [x] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la lógica del flujo (a qué escena se va después de Resultado), e2e que recorre la partida de punta a punta, y manual en el iPhone.
 
 ## Bitácora
 

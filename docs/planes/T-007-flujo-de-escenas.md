@@ -47,7 +47,7 @@ Cada paso termina con un commit, push de la rama y una línea "para retomar" en 
   - Verificar: `npm run dev -- --host` y recorrer una partida a mano en el navegador.
 - [x] 4. **e2e del flujo y de fugas.** `flujo.e2e.ts` y el ciclo nuevo en `fugas.e2e.ts`.
   - Verificar: `npm run test:e2e` en verde.
-- [ ] 5. **Cierre.** `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`; una revisión de código; marcar criterios; PR con la tabla de prueba manual.
+- [x] 5. **Cierre.** `npm test`, `npm run test:e2e`, `npm run build` y `npm run test:presupuestos`; una revisión de código; marcar criterios; PR con la tabla de prueba manual.
 
 ## Pruebas
 
