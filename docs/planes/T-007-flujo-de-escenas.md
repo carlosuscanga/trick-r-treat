@@ -39,7 +39,7 @@ Decisiones técnicas:
 
 Cada paso termina con un commit, push de la rama y una línea "para retomar" en la bitácora. Si el límite semanal se acaba a la mitad, la siguiente sesión sigue desde la primera casilla sin marcar.
 
-- [ ] 1. **Lógica y datos.** `flujo.ts`, `puertas-prueba.json`, `validarPuertas` y sus unitarias.
+- [x] 1. **Lógica y datos.** `flujo.ts`, `puertas-prueba.json`, `validarPuertas` y sus unitarias.
   - Verificar: `npm test` en verde.
 - [ ] 2. **La Calle.** Renombrar `CallePrueba` → `Calle`, dibujar las 8 puertas, entrar con Brazos (dormir la Calle y arrancar Puerta). Adaptar los e2e existentes al nombre nuevo.
   - Verificar: `npm run test:e2e` con los e2e de controles, depurar y fugas en verde.
