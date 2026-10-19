@@ -85,7 +85,7 @@ Al final: una partida entera con cajas de colores y 1 minijuego.
 |----|-------|------|--------|------|---------|------|
 | [T-005](T-005-investigar-minijuegos.md) | Investigar minijuegos de referencia | investigacion | pendiente | alta | — | — |
 | [T-006](T-006-gamestate-y-datos.md) | GameState y datos en JSON | codigo | hecha | alta | T-001 | [plan](../planes/T-006-gamestate-y-datos.md) |
-| [T-007](T-007-flujo-de-escenas.md) | Flujo de escenas placeholder | codigo | pendiente | alta | T-004, T-006, T-037, T-038 | — |
+| [T-007](T-007-flujo-de-escenas.md) | Flujo de escenas placeholder | codigo | pendiente | alta | T-004, T-006, T-037, T-038 | requerido |
 | [T-008](T-008-calle-de-8-casas.md) | Calle de 8 casas con sorteo | codigo | pendiente | alta | T-007 | — |
 | [T-009](T-009-catalogo-de-minijuegos.md) | Catálogo de minijuegos y contrato | codigo | pendiente | alta | T-007 | requerido |
 | [T-010](T-010-minijuego-lluvia-de-dulces.md) | Minijuego Lluvia de dulces | codigo | pendiente | alta | T-009 | — |
