@@ -6,7 +6,7 @@ hito: H2
 estado: en-progreso
 prioridad: alta
 depende: [T-004, T-006, T-037, T-038]
-plan: requerido
+plan: docs/planes/T-007-flujo-de-escenas.md
 rama: T-007-flujo-de-escenas
 worktree: .claude/worktrees/T-007-flujo-de-escenas
 ---
@@ -31,7 +31,7 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 - [ ] Mi vo puede entrar a cualquiera de las 8 puertas, en cualquier orden, y una casa visitada no se vuelve a abrir.
 - [ ] Resultado muestra los dulces ganados (los de la dificultad de la puerta) o un susto placeholder.
 - [ ] La partida termina en FinJuego al llegar a 10 dulces, a 3 sustos o al quedarse sin casas.
-- [ ] "Jugar otra vez" reinicia la partida.
+- [ ] FinJuego ofrece "Jugar otra vez" (partida nueva con el mismo disfraz, directo a la Calle) e "Ir al menú" (para cambiar de disfraz).
 - [ ] `CallePrueba` ya no existe y el panel de ajustes funciona en la Calle.
 - [ ] Pruebas en las tres capas (unitarias, e2e y manual): unitarias de la lógica del flujo (a qué escena se va después de Resultado), e2e que recorre la partida de punta a punta, y manual en el iPhone.
 
@@ -39,3 +39,5 @@ Es el esqueleto del bucle completo. Con él se puede recorrer el juego de punta 
 
 - 2026-10-16: creada en la planeación de la v1.
 - 2026-10-18: refinada al tomarla. Decisiones del product owner: (1) minijuego placeholder con botones Ganar/Perder, sin contrato (eso es de T-009); (2) 8 puertas fijas, que se visitan en cualquier orden y se entra con Brazos; (3) T-007 conecta Resultado → FinJuego con `haGanado()`/`haPerdido()` de GameState, y T-011 se queda con el HUD; (4) la Calle reemplaza a `CallePrueba`. El diseño del nivel no entra. Se agregan la casilla de tres capas y `plan: requerido`.
+- 2026-10-18: al revisar el plan, el product owner pidió dos botones en FinJuego, como en FIFA: "Jugar otra vez" con el mismo disfraz e "Ir al menú" para cambiarlo.
+- 2026-10-18: plan aprobado. Por el límite semanal (95 %), un subagente por paso, y cada uno se detiene después de su commit. Para retomar: empezar por el paso 1 del plan.
