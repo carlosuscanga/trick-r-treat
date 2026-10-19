@@ -60,10 +60,13 @@ export class Arranque extends EscenaBase {
     if (this.sound.locked) {
       if (!this.esperandoDesbloqueo) {
         this.esperandoDesbloqueo = true;
-        this.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+        const alDesbloquear = () => {
           this.esperandoDesbloqueo = false;
           this.sonarPrueba();
-        });
+        };
+        this.sound.once(Phaser.Sound.Events.UNLOCKED, alDesbloquear);
+        // Si la escena se apaga antes del desbloqueo, el listener no queda colgado en sound.
+        this.alLimpiar(() => this.sound.off(Phaser.Sound.Events.UNLOCKED, alDesbloquear));
       }
       return;
     }

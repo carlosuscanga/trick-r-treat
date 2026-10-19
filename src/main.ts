@@ -7,7 +7,9 @@ import { montarPanel } from './depurar/panelAjustes';
 import { AJUSTES_POR_DEFECTO, type Ajustes } from './movimiento/ajustes';
 import { ALTO, ajustarAnchoAlContenedor, anchoParaPantalla } from './plataforma/escala';
 import { bloquearGestos } from './plataforma/gestos';
+import { pausarSinContexto } from './plataforma/contexto';
 import { pausarEnVertical } from './plataforma/orientacion';
+import { crearPausa } from './plataforma/pausa';
 
 const contenedor = document.getElementById('game')!;
 
@@ -15,6 +17,8 @@ const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: contenedor,
   backgroundColor: '#1a1a2e',
+  // TEX-08: sin los pipelines preFX se ahorran ~61 MiB de GPU. Se renuncia a `.preFX`; quedan postFX y Light2D.
+  disablePreFX: true,
   // Los assets se piden desde la base de Vite ('/' en dev, '/trick-r-treat/' en Pages),
   // no desde la URL de la página: así no se rompen si la página está en una subruta.
   loader: {
@@ -39,7 +43,15 @@ const ajustes: Ajustes = structuredClone(AJUSTES_POR_DEFECTO);
 game.registry.set('ajustes', ajustes);
 
 ajustarAnchoAlContenedor(game, contenedor);
-pausarEnVertical(game);
+// Una sola pausa con motivos (vertical, contexto): nadie más llama game.pause()/resume().
+const pausa = crearPausa(game, game.sound);
+pausarEnVertical(pausa);
+if (game.renderer.type === Phaser.WEBGL) {
+  pausarSinContexto(game.renderer, pausa, {
+    perder: Phaser.Renderer.Events.LOSE_WEBGL,
+    restaurar: Phaser.Renderer.Events.RESTORE_WEBGL,
+  });
+}
 bloquearGestos(document);
 if (esModoDepurar(location.search)) {
   montarDepurar(game);

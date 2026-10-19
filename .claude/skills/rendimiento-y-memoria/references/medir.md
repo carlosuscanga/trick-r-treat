@@ -88,6 +88,8 @@ Tabla para la descripción del PR o del hito. [Guía 6.3](../../../../docs/plane
 | M14 | Bloquear el teléfono 2 min y desbloquear | Igual que M13; "recargas inesperadas: 0" |
 | M15 | Tocar el teléfono tras 15 min | Tibio, no caliente; sin caída progresiva de fps |
 
+M13 y M14 se prueban con el build (`npm run build` y `npm run preview -- --host`) o en Pages, **nunca con `npm run dev`**: tras ≈30 s en segundo plano, iOS corta el WebSocket de Vite, y su cliente recarga la página al reconectar (`vite/dist/client/client.mjs`, "server connection lost"). Esa recarga no es del juego (visto en T-038).
+
 ## Herramientas de medición
 
 [Guía sección 7](../../../../docs/planes/T-034-performance-y-memoria.md#7-cómo-medir-herramientas)

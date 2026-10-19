@@ -3,17 +3,20 @@
 Reglas para que el juego sobreviva a la pérdida de contexto WebGL, a que iOS mate la pestaña y a los cambios de visibilidad. Solo Phaser 3.90.
 
 ### ROB-01 · Pausar en LOSE_WEBGL y reanudar en RESTORE_WEBGL
-- **Hacer:** escuchar los eventos del renderer WebGL: al perder el contexto, pausar el juego y el sonido; al restaurarlo, redibujar las texturas dinámicas y reanudar. Phaser restaura solo las texturas normales, pero no el contenido de `RenderTexture`/`DynamicTexture`.
+- **Hacer:** escuchar los eventos del renderer WebGL: al perder el contexto, pausar; al restaurarlo, redibujar las texturas dinámicas y reanudar. Phaser restaura solo las texturas normales, pero no el contenido de `RenderTexture`/`DynamicTexture`.
   ```ts
   const r = game.renderer;
   if (r instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
-    r.on(Phaser.Renderer.Events.LOSE_WEBGL, () => { game.pause(); game.sound.pauseAll(); });
-    r.on(Phaser.Renderer.Events.RESTORE_WEBGL, () => { redibujarDinamicas(); game.resume(); game.sound.resumeAll(); });
+    r.on(Phaser.Renderer.Events.LOSE_WEBGL, () => pausa.activar('contexto'));
+    r.on(Phaser.Renderer.Events.RESTORE_WEBGL, () => { redibujarDinamicas(); pausa.quitar('contexto'); });
   }
   ```
-  No uses `Phaser.Core.Events.CONTEXT_LOST` (nunca se emite) ni llames dos veces a `setContextHandlers()`.
-- **Si todavía no existe:** si la tarea lo necesita, crea la base mínima de este manejo en la config del juego con el comentario "mínima; T-038 la completa"; no la refines. Si ya existe, úsala.
-- **Verifica:** e2e (Playwright WebKit): `WEBGL_lose_context.loseContext()` deja el juego pausado y `restoreContext()` lo reanuda con el píxel conocido bien dibujado. Revisión: ningún `CONTEXT_LOST` en el código.
+  La pausa es por motivos (`src/plataforma/pausa.ts`): juego y sonido se pausan mientras haya al menos un motivo activo (`'vertical'`, `'contexto'`); se pausan los sonidos que sonaban y se reanudan solo esos. `src/plataforma/contexto.ts` ya lo hace; no lo reimplementes.
+  - **Nunca** llames `game.pause()`, `game.resume()`, `sound.pauseAll()` ni `sound.resumeAll()` directo: una pausa nueva agrega su motivo.
+  - **Nunca** dejes una `RenderTexture` o `DynamicTexture` sin redibujarla en `RESTORE_WEBGL`. Quien la crea la registra en esa misma tarea.
+  - No uses `Phaser.Core.Events.CONTEXT_LOST` (nunca se emite) ni llames dos veces a `setContextHandlers()`.
+- **Ya existe:** `src/plataforma/pausa.ts` y `src/plataforma/contexto.ts`; úsalos.
+- **Verifica:** e2e (Playwright WebKit): `WEBGL_lose_context.loseContext()` deja el juego pausado y `restoreContext()` lo reanuda; otro caso cubre la restauración con la pantalla en vertical (sigue pausado). Revisión: ningún `CONTEXT_LOST` en el código.
 - **Por qué:** sin esto la lógica sigue corriendo con la pantalla negra y se pierden las texturas dinámicas. [Guía, 4.8](../../../../docs/planes/T-034-performance-y-memoria.md#48-robustez-rob).
 
 ### ROB-02 · Jetsam: diseñar para la recarga silenciosa
