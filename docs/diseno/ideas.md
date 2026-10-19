@@ -10,3 +10,4 @@ Ideas sin compromiso. No están en el diseño vigente; cuando una se adopte, pas
 - **Disfraces encontrables:** desbloquear disfraces nuevos explorando el vecindario.
 - **Agacharse:** con el joystick hacia abajo. No entra en la v1.
 - **Gestos de Brazos:** toque = golpe, doble toque = patada, mantener = agarrar. Mientras se mantiene B, Mi vo debe mostrar que está cargando la acción (observación del product owner en T-004). No entra en la v1.
+- **Casas visitadas según el resultado:** marcar la casa de un color si Mi vo ganó y de otro si perdió, para ver de un vistazo cómo va la calle (observación del product owner en T-007). Candidata para T-008, que dibuja las casas visitadas.
