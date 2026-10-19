@@ -8,7 +8,6 @@ import { EscenaBase } from './EscenaBase';
 // Resultado placeholder: aplica el resultado de la casa a gameState y deja seguir.
 export class Resultado extends EscenaBase {
   private titulo!: Phaser.GameObjects.Text;
-  private aplicado = false;
   private _gano = false;
   private _dulcesGanados = 0;
   /** Lo que pasó en esta casa (solo lectura, para los e2e). */
@@ -26,22 +25,19 @@ export class Resultado extends EscenaBase {
 
   init(data: { casa: number; gano: boolean }) {
     super.init(data);
-    this.aplicado = false;
     this._gano = data.gano;
-    this._dulcesGanados = 0;
+    this._dulcesGanados = data.gano ? DULCES_POR_DIFICULTAD[PUERTAS.puertas[data.casa].dificultad] : 0;
     this.botones.seguir = undefined;
     this.aplicar(data.casa, data.gano);
   }
 
-  // Una sola vez por entrada: visitarCasa lanza si la casa ya se visitó.
+  // Idempotente: si la casa ya se visitó (p. ej. un restart() de la escena), no se aplica otra vez.
   private aplicar(casa: number, gano: boolean) {
-    if (this.aplicado) return;
-    this.aplicado = true;
+    if (gameState.estaVisitada(casa)) return;
     gameState.visitarCasa(casa);
     if (gano) {
       const dulces = DULCES_POR_DIFICULTAD[PUERTAS.puertas[casa].dificultad];
       gameState.ganarCasa(dulces);
-      this._dulcesGanados = dulces;
     } else {
       gameState.recibirSusto();
     }

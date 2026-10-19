@@ -1,9 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 import { esperarFrames, recolectarErrores } from './fugas';
+import { tocar } from './tactil';
 import {
   DULCES_POR_DIFICULTAD,
   PUERTAS,
   colocarJuntoAPuerta,
+  dobleToque,
   entrarAPuerta,
   esperarActiva,
   jugarCasa,
@@ -162,5 +164,49 @@ test.describe('flujo', () => {
     await esperarFrames(page, 3);
     const segundo = await page.evaluate(() => (window.__juego!.scene.getScene('Calle') as any).disfrazId as string);
     expect(segundo).not.toBe(primero);
+  });
+
+  test('doble toque en Tocar de la Puerta: se queda en el minijuego, no salta a Resultado', async ({ page }) => {
+    await entrarAPuerta(page, 0);
+    await dobleToque(page, 'Puerta', 'tocar');
+    await esperarActiva(page, 'MinijuegoPrueba');
+    await esperarFrames(page, 5);
+    expect(await activas(page)).toEqual(['MinijuegoPrueba']);
+  });
+
+  test('doble toque en Seguir de un Resultado final: queda en FinJuego, no pasa a la Calle ni al Menú', async ({ page }) => {
+    await jugarCasa(page, 0, false);
+    await jugarCasa(page, 1, false);
+    await entrarAPuerta(page, 2);
+    await jugarHastaResultado(page, false);
+    await dobleToque(page, 'Resultado', 'seguir');
+    await esperarActiva(page, 'FinJuego');
+    await esperarFrames(page, 5);
+    expect(await activas(page)).toEqual(['FinJuego']);
+  });
+
+  test('joystick que no se queda pegado: se suelta dentro de la Puerta y la Calle vuelve quieta', async ({ page }) => {
+    const joy = await page.evaluate(() => {
+      const z = (window.__juego!.scene.getScene('Calle') as any).disposicion.zonaJoystick;
+      return { x: z.x + z.ancho / 2, y: z.y + z.alto / 2 };
+    });
+    const dedoJoy = 1;
+    await tocar(page, 'touchstart', [{ id: dedoJoy, ...joy }]);
+    await tocar(page, 'touchmove', [{ id: dedoJoy, x: joy.x + 100, y: joy.y }]);
+    await esperarFrames(page, 3);
+    // Con el joystick sostenido: junto a la puerta, Brazos y a la Puerta.
+    await entrarAPuerta(page, 3);
+    // El dedo se suelta ya dentro de la Puerta, donde la Calle no lo oye.
+    await tocar(page, 'touchend', [{ id: dedoJoy, x: joy.x + 100, y: joy.y }]);
+    await jugarHastaResultado(page, true);
+    await seguir(page, 'Calle');
+
+    const direccion = () =>
+      page.evaluate(() => (window.__juego!.scene.getScene('Calle') as any).intenciones.direccion as number);
+    expect(await direccion()).toBe(0);
+    const antes = await xMiVo(page);
+    await esperarFrames(page, 10);
+    expect(await direccion()).toBe(0);
+    expect(await xMiVo(page)).toBe(antes);
   });
 });

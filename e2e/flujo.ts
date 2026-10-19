@@ -15,32 +15,39 @@ export function esperarActiva(page: Page, escena: string): Promise<unknown> {
   return page.waitForFunction((k) => !!window.__juego!.scene.isActive(k), escena);
 }
 
-/** Centro (en px del juego) del botón `nombre` de `escena`. */
-function centroDelBoton(page: Page, escena: string, nombre: string): Promise<{ x: number; y: number }> {
-  return page.evaluate(
-    ({ escena, nombre }) => {
+/** Espera a que el botón (`botones[nombre]`, o `botones[indice]` si hay índice) acepte toques y devuelve su centro. */
+async function esperarBoton(page: Page, escena: string, nombre: string, indice?: number): Promise<{ x: number; y: number }> {
+  const clave: string | number = indice ?? nombre;
+  await page.waitForFunction(
+    ({ escena, clave }) => {
       const e = window.__juego!.scene.getScene(escena) as any;
-      const caja = e.botones[nombre].caja;
+      return !!window.__juego!.scene.isActive(escena) && !!e.botones?.[clave]?.listo;
+    },
+    { escena, clave },
+  );
+  return page.evaluate(
+    ({ escena, clave }) => {
+      const caja = (window.__juego!.scene.getScene(escena) as any).botones[clave].caja;
       return { x: caja.x as number, y: caja.y as number };
     },
-    { escena, nombre },
+    { escena, clave },
   );
 }
 
-/** Toca un botón real de la escena activa (`botones[nombre].caja`) con un toque sobre el canvas. */
+/** Toca un botón real de la escena activa (`botones[nombre]`), cuando ya acepta toques, con un toque sobre el canvas. */
 export async function tocarBoton(page: Page, escena: string, nombre: string, indice?: number): Promise<void> {
-  const centro =
-    indice === undefined
-      ? await centroDelBoton(page, escena, nombre)
-      : await page.evaluate(
-          ({ escena, indice }) => {
-            const caja = (window.__juego!.scene.getScene(escena) as any).botones[indice].caja;
-            return { x: caja.x as number, y: caja.y as number };
-          },
-          { escena, indice },
-        );
+  const centro = await esperarBoton(page, escena, nombre, indice);
   await tocar(page, 'touchstart', [{ id: DEDO, ...centro }]);
   await tocar(page, 'touchend', [{ id: DEDO, ...centro }]);
+}
+
+/** Dos toques seguidos, sin esperar, sobre el botón (que sí se espera a que esté listo). */
+export async function dobleToque(page: Page, escena: string, nombre: string): Promise<void> {
+  const centro = await esperarBoton(page, escena, nombre);
+  for (let n = 0; n < 2; n++) {
+    await tocar(page, 'touchstart', [{ id: DEDO, ...centro }]);
+    await tocar(page, 'touchend', [{ id: DEDO, ...centro }]);
+  }
 }
 
 /** Toca el canvas en el centro (el "toca para empezar"). */

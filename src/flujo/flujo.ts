@@ -15,14 +15,14 @@ export function puertaCercana(
 ): number | null {
   let mejor: number | null = null;
   let distanciaMejor = Infinity;
-  puertas.forEach((puerta, i) => {
-    if (visitadas(i)) return;
-    const distancia = Math.abs(puerta.x - x);
+  for (let i = 0; i < puertas.length; i++) {
+    if (visitadas(i)) continue;
+    const distancia = Math.abs(puertas[i].x - x);
     if (distancia <= radio && distancia < distanciaMejor) {
       mejor = i;
       distanciaMejor = distancia;
     }
-  });
+  }
   return mejor;
 }
 
