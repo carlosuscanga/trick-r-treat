@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { DULCES_POR_DIFICULTAD, PUERTAS } from '../src/datos';
+import { BLOQUES_CALLE_PRUEBA, alturaSuperior } from '../src/datos/plataformas';
 import { esperarFrames } from './fugas';
 import { tocar } from './tactil';
 
@@ -71,13 +72,37 @@ export async function tocarBrazos(page: Page): Promise<void> {
   await tocar(page, 'touchend', [{ id: DEDO_BRAZOS, ...brazos }]);
 }
 
-/** Pone a Mi vo sobre la puerta `i` (x del JSON), sin moverla con el joystick. */
-export async function colocarJuntoAPuerta(page: Page, i: number): Promise<void> {
+/** Pone a Mi vo sobre la puerta `i` (x del JSON), sin moverla con el joystick. `y` opcional: si no, conserva la suya. */
+export async function colocarJuntoAPuerta(page: Page, i: number, y?: number): Promise<void> {
   const x = PUERTAS.puertas[i].x;
-  await page.evaluate((x) => {
-    const miVo = (window.__juego!.scene.getScene('Calle') as any).miVo;
-    miVo.body.reset(x, miVo.y);
-  }, x);
+  await page.evaluate(
+    ({ x, y }) => {
+      const miVo = (window.__juego!.scene.getScene('Calle') as any).miVo;
+      miVo.body.reset(x, y ?? miVo.y);
+    },
+    { x, y },
+  );
+  await esperarFrames(page);
+}
+
+/** Altura de la cara de arriba del bloque más alto que cubre la x de la puerta `i` (0 si no hay), del JSON de la calle. */
+export function alturaBloqueSobrePuerta(i: number): number {
+  const x = PUERTAS.puertas[i].x;
+  return Math.max(0, ...BLOQUES_CALLE_PRUEBA.filter((b) => b.x <= x && x < b.x + b.ancho).map((b) => alturaSuperior(b, BLOQUES_CALLE_PRUEBA)));
+}
+
+/** Pone a Mi vo parada encima del bloque que cubre la puerta `i` y espera a que se apoye. */
+export async function colocarSobreBloqueDePuerta(page: Page, i: number): Promise<void> {
+  const x = PUERTAS.puertas[i].x;
+  const altura = alturaBloqueSobrePuerta(i);
+  await page.evaluate(
+    ({ x, altura }) => {
+      const miVo = (window.__juego!.scene.getScene('Calle') as any).miVo;
+      miVo.body.reset(x, miVo.y - altura);
+    },
+    { x, altura },
+  );
+  await page.waitForFunction(() => (window.__juego!.scene.getScene('Calle') as any).miVo.body.blocked.down);
   await esperarFrames(page);
 }
 

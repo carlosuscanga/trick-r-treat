@@ -37,6 +37,9 @@ const ZONA_MUERTA_ALTO = 300;
 const PROFUNDIDAD_HUD = 1000;
 // Puertas placeholder: un rectángulo sobre el piso con su número y sus dulces.
 const PUERTA = { ancho: 120, alto: 220, color: 0x8a4b1f, borde: 0xffc27a };
+// Solo se entra a una puerta con los pies a esta altura o menos sobre el piso: la calle y la
+// banqueta (40), no un bloque alto encima de la puerta. Margen de 4 px para el redondeo.
+const ALTURA_SUELO_PUERTA = 44;
 const ALFA_VISITADA = 0.25;
 
 type Rectangulo = Phaser.GameObjects.Rectangle & { body: Phaser.Physics.Arcade.Body };
@@ -86,7 +89,16 @@ export class Calle extends EscenaBase {
   }
   /** Índice de la puerta no visitada al alcance de Mi vo, o null. */
   get puertaAlAlcance(): number | null {
-    return puertaCercana(this.cuerpo.x, PUERTAS.puertas, this.estaVisitada, PUERTAS.radio);
+    const body = this.cuerpo.body;
+    return puertaCercana(
+      this.cuerpo.x,
+      body.blocked.down,
+      PISO - body.bottom,
+      ALTURA_SUELO_PUERTA,
+      PUERTAS.puertas,
+      this.estaVisitada,
+      PUERTAS.radio,
+    );
   }
 
   /** Id del disfraz elegido, o null (solo lectura, para los e2e). */

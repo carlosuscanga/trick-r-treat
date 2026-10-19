@@ -4,7 +4,9 @@ import { tocar } from './tactil';
 import {
   DULCES_POR_DIFICULTAD,
   PUERTAS,
+  alturaBloqueSobrePuerta,
   colocarJuntoAPuerta,
+  colocarSobreBloqueDePuerta,
   dobleToque,
   entrarAPuerta,
   esperarActiva,
@@ -104,6 +106,22 @@ test.describe('flujo', () => {
     await tocarBrazos(page);
     await esperarFrames(page, 5);
     expect(await activas(page)).toEqual(['Calle']);
+  });
+
+  test('techo: sobre el bloque que queda encima de una puerta no se entra, y en el suelo sí', async ({ page }) => {
+    const i = PUERTAS.puertas.findIndex((_, k) => alturaBloqueSobrePuerta(k) > 100);
+    expect(i).toBeGreaterThanOrEqual(0);
+    const ySuelo = await page.evaluate(() => (window.__juego!.scene.getScene('Calle') as any).miVo.y as number);
+    await colocarSobreBloqueDePuerta(page, i);
+    expect(await puertaAlAlcance(page)).toBeNull();
+    await tocarBrazos(page);
+    await esperarFrames(page, 5);
+    expect(await activas(page)).toEqual(['Calle']);
+
+    await colocarJuntoAPuerta(page, i, ySuelo);
+    expect(await puertaAlAlcance(page)).toBe(i);
+    await tocarBrazos(page);
+    await esperarActiva(page, 'Puerta');
   });
 
   test('calle dormida: al volver de Resultado, Mi vo sigue en la misma x', async ({ page }) => {

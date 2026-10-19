@@ -6,13 +6,19 @@ import type { GameState } from '../estado/GameState';
 /**
  * Índice de la puerta no visitada más cercana a `x` dentro de `radio`, o `null`.
  * `visitadas` dice si una casa ya se visitó (por ejemplo `gameState.estaVisitada`).
+ * Solo se entra desde el suelo: `apoyada` (pisa algo) y con los pies a `alturaPies` o menos
+ * de `alturaSueloMax` sobre la calle. Sobre un bloque alto o en el aire siempre es `null`.
  */
 export function puertaCercana(
   x: number,
+  apoyada: boolean,
+  alturaPies: number,
+  alturaSueloMax: number,
   puertas: readonly Puerta[],
   visitadas: (indice: number) => boolean,
   radio: number,
 ): number | null {
+  if (!apoyada || alturaPies > alturaSueloMax) return null;
   let mejor: number | null = null;
   let distanciaMejor = Infinity;
   for (let i = 0; i < puertas.length; i++) {

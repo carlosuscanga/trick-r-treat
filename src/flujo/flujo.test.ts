@@ -42,19 +42,31 @@ describe('puertaCercana', () => {
   const ninguna = () => false;
 
   it('encuentra una puerta dentro del radio', () => {
-    expect(puertaCercana(1030, puertas, ninguna, 50)).toBe(2);
+    expect(puertaCercana(1030, true, 0, 44, puertas, ninguna, 50)).toBe(2);
   });
 
   it('devuelve null fuera del radio', () => {
-    expect(puertaCercana(600, puertas, ninguna, 50)).toBeNull();
+    expect(puertaCercana(600, true, 0, 44, puertas, ninguna, 50)).toBeNull();
   });
 
   it('ignora la puerta cercana si ya se visitó', () => {
-    expect(puertaCercana(1030, puertas, (i) => i === 2, 50)).toBeNull();
+    expect(puertaCercana(1030, true, 0, 44, puertas, (i) => i === 2, 50)).toBeNull();
   });
 
   it('con dos dentro del radio elige la más cercana', () => {
-    expect(puertaCercana(170, puertas, ninguna, 100)).toBe(1);
-    expect(puertaCercana(130, puertas, ninguna, 100)).toBe(0);
+    expect(puertaCercana(170, true, 0, 44, puertas, ninguna, 100)).toBe(1);
+    expect(puertaCercana(130, true, 0, 44, puertas, ninguna, 100)).toBe(0);
+  });
+
+  it('sobre un bloque alto devuelve null aunque esté dentro del radio', () => {
+    expect(puertaCercana(1030, true, 380, 44, puertas, ninguna, 50)).toBeNull();
+  });
+
+  it('en el aire devuelve null aunque esté dentro del radio', () => {
+    expect(puertaCercana(1030, false, 0, 44, puertas, ninguna, 50)).toBeNull();
+  });
+
+  it('en el suelo, incluso sobre un escalón bajo, devuelve la puerta', () => {
+    expect(puertaCercana(1030, true, 40, 44, puertas, ninguna, 50)).toBe(2);
   });
 });
