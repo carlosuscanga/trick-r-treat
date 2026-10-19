@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { tocar } from './tactil';
+import { irACalle } from './camino';
 
 // e2e de T-038: la config que leyó Phaser, la base de GPU y la pausa al perder el contexto WebGL.
 
@@ -94,13 +94,11 @@ test('con el contexto perdido y la pantalla en vertical, restaurar no reanuda ha
   await page.waitForFunction(() => window.__juego!.isPaused === false);
 });
 
-test('CallePrueba tiene física Arcade aunque la config no define una por defecto', async ({ page }) => {
-  await tocar(page, 'touchstart', [{ id: 99, x: 640, y: 360 }]);
-  await tocar(page, 'touchend', [{ id: 99, x: 640, y: 360 }]);
-  await page.waitForFunction(() => !!window.__juego?.scene.isActive('CallePrueba'));
+test('Calle tiene física Arcade aunque la config no define una por defecto', async ({ page }) => {
+  await irACalle(page);
 
   const fisica = await page.evaluate(() => {
-    const calle = window.__juego!.scene.getScene('CallePrueba');
+    const calle = window.__juego!.scene.getScene('Calle');
     const config = calle.sys.settings.physics as Record<string, unknown>;
     return {
       fisica: !!calle.physics,

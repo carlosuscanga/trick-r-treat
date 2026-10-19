@@ -1,0 +1,13 @@
+{
+  "radio": 120,
+  "puertas": [
+    { "x": 800, "dificultad": "facil" },
+    { "x": 1300, "dificultad": "media" },
+    { "x": 1800, "dificultad": "dificil" },
+    { "x": 2300, "dificultad": "facil" },
+    { "x": 2800, "dificultad": "media" },
+    { "x": 3300, "dificultad": "dificil" },
+    { "x": 3800, "dificultad": "facil" },
+    { "x": 4300, "dificultad": "media" }
+  ]
+}

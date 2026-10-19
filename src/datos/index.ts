@@ -2,10 +2,13 @@
 // mete en el build y existen antes de que arranque cualquier escena.
 
 import disfracesJson from './disfraces.json' with { type: 'json' };
+import puertasJson from './puertas-prueba.json' with { type: 'json' };
 import vecinosJson from './vecinos.json' with { type: 'json' };
-import type { Dificultad, Disfraz, TipoReto, TipoSusto, Vecino } from './tipos';
+import { GameState } from '../estado/GameState';
+import { ANCHO_CALLE } from './plataformas';
+import type { Dificultad, Disfraz, Puertas, TipoReto, TipoSusto, Vecino } from './tipos';
 
-export type { Dificultad, Disfraz, TipoReto, TipoSusto, Vecino } from './tipos';
+export type { Dificultad, Disfraz, Puerta, Puertas, TipoReto, TipoSusto, Vecino } from './tipos';
 
 /** Dulces que da una casa según su dificultad. */
 export const DULCES_POR_DIFICULTAD = {
@@ -26,6 +29,7 @@ const TIPOS_RETO: Record<TipoReto, true> = {
   ritmo: true,
   punteria: true,
 };
+const DIFICULTADES: Record<Dificultad, true> = { facil: true, media: true, dificil: true };
 const TIPOS_SUSTO: Record<TipoSusto, true> = {
   salta: true,
   tiembla: true,
@@ -100,5 +104,29 @@ export function validarVecinos(datos: unknown): Vecino[] {
   return vecinos;
 }
 
+export function validarPuertas(datos: unknown): Puertas {
+  const archivo = 'puertas-prueba.json';
+  if (typeof datos !== 'object' || datos === null || Array.isArray(datos)) {
+    throw new Error(`${archivo}: debe ser un objeto`);
+  }
+  const { radio, puertas: crudas } = datos as Record<string, unknown>;
+  if (typeof radio !== 'number' || !Number.isFinite(radio) || radio <= 0) {
+    throw new Error(`${archivo}: "radio" debe ser un número > 0`);
+  }
+  const puertas = lista(crudas, `${archivo}, "puertas"`).map((entrada, i) => {
+    const donde = `${archivo}, puerta ${i}`;
+    const x = entrada.x;
+    if (typeof x !== 'number' || !Number.isFinite(x) || x < 0 || x > ANCHO_CALLE) {
+      throw new Error(`${donde}: "x" debe ser un número entre 0 y ${ANCHO_CALLE}`);
+    }
+    return { x, dificultad: unoDe(DIFICULTADES, texto(entrada, 'dificultad', donde), 'dificultad', donde) };
+  });
+  if (puertas.length !== GameState.CASAS_POR_CALLE) {
+    throw new Error(`${archivo}: debe tener ${GameState.CASAS_POR_CALLE} puertas y tiene ${puertas.length}`);
+  }
+  return { radio, puertas };
+}
+
 export const DISFRACES: readonly Disfraz[] = validarDisfraces(disfracesJson);
 export const VECINOS: readonly Vecino[] = validarVecinos(vecinosJson);
+export const PUERTAS: Puertas = validarPuertas(puertasJson);

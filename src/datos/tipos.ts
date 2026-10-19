@@ -9,6 +9,20 @@ export type Dificultad = 'facil' | 'media' | 'dificil';
 /** Cómo asusta un vecino cuando Mi vo pierde. */
 export type TipoSusto = 'salta' | 'tiembla' | 'se-agranda';
 
+/** Una puerta de la calle: dónde está y qué tan difícil es su minijuego. */
+export interface Puerta {
+  /** Posición en x de la calle, en px de mundo. */
+  x: number;
+  dificultad: Dificultad;
+}
+
+/** Puertas de la calle y qué tan cerca hay que estar para tocar. */
+export interface Puertas {
+  /** Distancia máxima en x para estar "cerca" de una puerta, en px. */
+  radio: number;
+  puertas: Puerta[];
+}
+
 export interface Disfraz {
   id: string;
   nombre: string;

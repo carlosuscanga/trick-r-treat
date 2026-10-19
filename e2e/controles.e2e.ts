@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import ajustesJson from '../src/movimiento/ajustes.json' with { type: 'json' };
+import { irACalle } from './camino';
 import { aCss, tocar } from './tactil';
 
 // Velocidad completa por defecto (la que se afina en el iPhone).
@@ -70,7 +71,7 @@ test('sin cámara lenta al volver y con 3 dedos táctiles (config de la tarea 1)
 
 // --- Calle de prueba ---------------------------------------------------------
 
-// Lo que los e2e leen de la escena CallePrueba (sus campos públicos de solo lectura).
+// Lo que los e2e leen de la escena Calle (sus campos públicos de solo lectura).
 type Circulo = { x: number; y: number; r: number };
 type Disposicion = {
   saltar: Circulo;
@@ -80,20 +81,18 @@ type Disposicion = {
 
 const JOY = { x: 300, y: 500 };
 
-// Abre ./?depurar, da el primer toque y espera a que la calle esté activa y Mi vo en el suelo.
+// Abre ./?depurar, va a la Calle por el SceneManager y espera a que la calle esté activa y Mi vo en el suelo.
 async function entrarALaCalle(page: Page) {
   await page.goto('./?depurar');
-  await esperarJuego(page);
-  await tocar(page, 'touchstart', [{ id: 99, x: 640, y: 360 }]);
-  await tocar(page, 'touchend', [{ id: 99, x: 640, y: 360 }]);
+  await irACalle(page);
   await esperarEnElSuelo(page);
 }
 
 async function esperarEnElSuelo(page: Page) {
   await page.waitForFunction(() => {
     const juego = window.__juego!;
-    if (!juego.scene.isActive('CallePrueba')) return false;
-    const calle = juego.scene.getScene('CallePrueba') as any;
+    if (!juego.scene.isActive('Calle')) return false;
+    const calle = juego.scene.getScene('Calle') as any;
     return !!calle.miVo?.body?.blocked.down;
   });
 }
@@ -103,14 +102,14 @@ function siguienteFrame(page: Page) {
   return page.evaluate(
     () =>
       new Promise<void>((listo) => {
-        window.__juego!.scene.getScene('CallePrueba').events.once('postupdate', () => listo());
+        window.__juego!.scene.getScene('Calle').events.once('postupdate', () => listo());
       }),
   );
 }
 
 function leerCalle(page: Page) {
   return page.evaluate(() => {
-    const calle = window.__juego!.scene.getScene('CallePrueba') as any;
+    const calle = window.__juego!.scene.getScene('Calle') as any;
     const body = calle.miVo.body;
     return {
       vx: body.velocity.x as number,
@@ -125,14 +124,14 @@ function leerCalle(page: Page) {
 
 function disposicion(page: Page): Promise<Disposicion> {
   return page.evaluate(() => {
-    const d = (window.__juego!.scene.getScene('CallePrueba') as any).disposicion;
+    const d = (window.__juego!.scene.getScene('Calle') as any).disposicion;
     return JSON.parse(JSON.stringify(d));
   });
 }
 
 function esperarAterrizaje(page: Page) {
   return page.waitForFunction(
-    () => (window.__juego!.scene.getScene('CallePrueba') as any).ultimoEvento === 'aterrizaje',
+    () => (window.__juego!.scene.getScene('Calle') as any).ultimoEvento === 'aterrizaje',
   );
 }
 
@@ -150,10 +149,10 @@ test.describe('calle de prueba', () => {
   test('tras el primer toque llega a la calle de prueba', async ({ page }) => {
     const estado = await page.evaluate(() => {
       const juego = window.__juego!;
-      const calle = juego.scene.getScene('CallePrueba') as any;
+      const calle = juego.scene.getScene('Calle') as any;
       return {
         arranque: juego.scene.isActive('Arranque'),
-        calle: juego.scene.isActive('CallePrueba'),
+        calle: juego.scene.isActive('Calle'),
         // La física es de la escena (ESC-07), a 120 pasos por segundo y sin gravedad de mundo.
         fps: calle.physics.world.fps as number,
         gravedadMundo: calle.physics.world.gravity.y as number,
@@ -234,7 +233,7 @@ test.describe('calle de prueba', () => {
     // Solo se cancela el dedo de Saltar; el del joystick sigue abajo para Phaser.
     await tocar(page, 'touchcancel', [{ id: 2, x: saltar.x, y: saltar.y }]);
     const estado = await page.evaluate(() => {
-      const calle = window.__juego!.scene.getScene('CallePrueba') as any;
+      const calle = window.__juego!.scene.getScene('Calle') as any;
       return {
         direccion: calle.intenciones.direccion,
         sostenido: calle.intenciones.saltarSostenido,
@@ -282,7 +281,7 @@ test.describe('calle de prueba', () => {
     // Sin esperar al touchmove, la perilla ya está bajo el pulgar en la escala nueva.
     const perilla = await page.evaluate(({ x, y }) => {
       const juego = window.__juego!;
-      const calle = juego.scene.getScene('CallePrueba') as any;
+      const calle = juego.scene.getScene('Calle') as any;
       const p = calle.tactiles.perilla;
       return { x: p.x as number, y: p.y as number, dedoX: juego.scale.transformX(x), dedoY: juego.scale.transformY(y) };
     }, css);
@@ -307,7 +306,7 @@ test.describe('calle de prueba', () => {
     const despues = await page.evaluate(() => {
       const juego = window.__juego!;
       juego.events.emit('hidden');
-      const calle = juego.scene.getScene('CallePrueba') as any;
+      const calle = juego.scene.getScene('Calle') as any;
       return {
         direccion: calle.intenciones.direccion,
         sostenido: calle.intenciones.saltarSostenido,
@@ -326,7 +325,7 @@ test.describe('calle de prueba', () => {
           hidden: juego.events.listenerCount('hidden'),
           blur: juego.events.listenerCount('blur'),
           ajustes: juego.events.listenerCount('ajustes-cambiados'),
-          shutdown: juego.scene.getScene('CallePrueba').events.listenerCount('shutdown'),
+          shutdown: juego.scene.getScene('Calle').events.listenerCount('shutdown'),
         };
       });
     const antes = await contar();
@@ -334,7 +333,7 @@ test.describe('calle de prueba', () => {
 
     for (let i = 0; i < 5; i++) {
       const frame = await page.evaluate(() => window.__juego!.loop.frame);
-      await page.evaluate(() => window.__juego!.scene.getScene('CallePrueba').scene.restart());
+      await page.evaluate(() => window.__juego!.scene.getScene('Calle').scene.restart());
       // stop y start se encolan: esperar un par de frames.
       await page.waitForFunction((f) => window.__juego!.loop.frame >= f + 2, frame);
     }
@@ -345,7 +344,7 @@ test.describe('calle de prueba', () => {
     // ultimoEvento frame a frame hasta que vuelve a aterrizar.
     const { saltar } = await disposicion(page);
     await page.evaluate(() => {
-      const calle = window.__juego!.scene.getScene('CallePrueba') as any;
+      const calle = window.__juego!.scene.getScene('Calle') as any;
       const w = window as any;
       w.__cuenta = { salto: 0, aterrizaje: 0 };
       let previo = calle.ultimoEvento;
@@ -378,7 +377,7 @@ test.describe('calle de prueba', () => {
     await siguienteFrame(page);
     await siguienteFrame(page);
     const estado = await page.evaluate(() => {
-      const calle = window.__juego!.scene.getScene('CallePrueba') as any;
+      const calle = window.__juego!.scene.getScene('Calle') as any;
       return { texto: calle.textoBrazos.alpha as number, vx: calle.miVo.body.velocity.x as number };
     });
     expect(estado.texto).toBeGreaterThan(0);
