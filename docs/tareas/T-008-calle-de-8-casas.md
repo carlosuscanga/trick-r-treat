@@ -27,3 +27,4 @@ Elegir casa es la decisión central de riesgo y recompensa del juego.
 ## Bitácora
 
 - 2026-10-16: creada en la planeación de la v1.
+- 2026-10-19: pendiente heredado de T-007: en la calle de prueba, la puerta 6 (x=3300) quedó dentro del bloque `casa` y no se alcanza jugando (desde un bloque alto ya no se entra). La calle de esta tarea debe poner cada puerta al frente de su casa, sobre la banqueta o el pavimento. Hay un intento sin verificar en el stash `t007-puerta6-wip-sin-verificar`. Idea del product owner: colores de casa según ganó o perdió (`docs/diseno/ideas.md`).

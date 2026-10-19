@@ -3,12 +3,12 @@ id: T-007
 titulo: Flujo de escenas placeholder
 tipo: codigo
 hito: H2
-estado: en-progreso
+estado: hecha
 prioridad: alta
 depende: [T-004, T-006, T-037, T-038]
 plan: docs/planes/T-007-flujo-de-escenas.md
-rama: T-007-flujo-de-escenas
-worktree: .claude/worktrees/T-007-flujo-de-escenas
+rama: null
+worktree: null
 ---
 
 ## Qué
