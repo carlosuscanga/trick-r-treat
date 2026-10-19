@@ -54,7 +54,7 @@ Después del merge (el product owner lo aprueba; si el modo auto bloquea `gh pr 
 1. Si la sesión está en el worktree: `ExitWorktree keep`.
 2. `npm run -s tarea -- cerrar T-NNN`. Comprueba el merge, quita el worktree y deja la tarea `hecha` y el tablero al día, **sin commit**.
 3. Si un criterio solo se podía verificar en `main` (por ejemplo, que Pages publique), verifícalo ahora y márcalo.
-4. Actualiza el "Estado actual" de `docs/tareas/README.md` (solo lo vigente: fase, en curso, siguiente paso y pendientes) y agrega arriba de `docs/tareas/historial.md` qué se hizo.
+4. Actualiza el "Estado actual" de `docs/tareas/README.md` (solo lo vigente: fase, en curso, siguiente paso y pendientes) y agrega arriba de `docs/tareas/historial.md` qué se hizo, en 2 o 3 líneas (tarea y PR, qué cambió y, solo si la hubo, una decisión que no esté en otro documento; el detalle ya está en la bitácora y el PR).
 5. Un solo commit, `T-NNN: cierra la tarea`, con las líneas de atribución de la sesión. Luego el push, visible.
 6. Si otras ramas abiertas se ven afectadas, avísales que traigan `main` (`git merge origin/main`).
 7. Pide al product owner borrar la rama local: `git branch -d <rama>` (el hook `dcg` no deja que el agente borre ramas).
